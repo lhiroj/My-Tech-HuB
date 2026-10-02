@@ -3,6277 +3,4407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#6c4df6">
-
+<meta name="theme-color" content="#6c5ce7">
 <title>My AI HUB</title>
 
 <style>
-
-/* =========================================================
-   MY AI HUB
-   Tek dosyalık web uygulaması
-   ========================================================= */
-
-/* -------------------------
-   DEĞİŞKENLER
-------------------------- */
-
-:root {
-    --bg: #f5f6fb;
-    --bg-secondary: #eef0f7;
-    --card: #ffffff;
-    --card-hover: #fafaff;
-
-    --text: #171827;
-    --text-secondary: #747789;
-    --text-light: #a0a3b2;
-
-    --primary: #6c4df6;
-    --primary-dark: #5639dc;
-    --primary-light: #eeeaff;
-
-    --success: #2cad72;
-    --danger: #e05252;
-    --warning: #e6a52c;
-
-    --border: #e5e6ee;
-
-    --shadow:
-        0 8px 30px rgba(32, 25, 80, 0.07);
-
-    --radius: 18px;
-    --sidebar-width: 255px;
+:root{
+    --bg:#f5f6fa;
+    --surface:#ffffff;
+    --surface2:#f0f1f6;
+    --text:#171923;
+    --muted:#737887;
+    --border:#e4e6ed;
+    --primary:#6c5ce7;
+    --primary2:#8b7cf6;
+    --success:#16a085;
+    --danger:#e74c3c;
+    --warning:#f39c12;
+    --shadow:0 10px 35px rgba(30,30,60,.08);
+    --radius:20px;
 }
 
-/* -------------------------
-   DARK MODE
-------------------------- */
-
-body.dark {
-    --bg: #101117;
-    --bg-secondary: #171820;
-    --card: #1b1c25;
-    --card-hover: #22232e;
-
-    --text: #f4f4f7;
-    --text-secondary: #a4a6b4;
-    --text-light: #777a8a;
-
-    --primary-light: #292344;
-
-    --border: #2b2d38;
-
-    --shadow:
-        0 8px 30px rgba(0, 0, 0, 0.22);
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-/* -------------------------
-   RESET
-------------------------- */
-
-* {
-    box-sizing: border-box;
+html,body{
+    width:100%;
+    min-height:100%;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-
-    background: var(--bg);
-    color: var(--text);
-
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    transition:
-        background .2s,
-        color .2s;
+body.dark{
+    --bg:#101116;
+    --surface:#181a21;
+    --surface2:#22242c;
+    --text:#f4f5f8;
+    --muted:#a3a6b1;
+    --border:#30333d;
+    --shadow:0 10px 35px rgba(0,0,0,.25);
 }
 
 button,
 input,
 textarea,
-select {
-    font: inherit;
+select{
+    font:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+    border:0;
+    cursor:pointer;
 }
 
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
 }
 
-input,
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+.sidebar{
+    width:260px;
+    min-height:100vh;
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    padding:20px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:100;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:28px;
+}
+
+.brand-logo{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    display:grid;
+    place-items:center;
+    font-size:22px;
+    font-weight:800;
+}
+
+.brand h1{
+    font-size:19px;
+}
+
+.brand span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.nav-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin:20px 10px 8px;
+}
+
+.nav-btn{
+    width:100%;
+    padding:12px 14px;
+    background:transparent;
+    color:var(--muted);
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:5px;
+    text-align:left;
+    transition:.2s;
+}
+
+.nav-btn:hover{
+    background:var(--surface2);
+    color:var(--text);
+}
+
+.nav-btn.active{
+    background:rgba(108,92,231,.12);
+    color:var(--primary);
+    font-weight:700;
+}
+
+.nav-icon{
+    width:24px;
+    text-align:center;
+}
+
+.main{
+    width:calc(100% - 260px);
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+body.dark .topbar{
+    background:rgba(24,26,33,.85);
+}
+
+.search{
+    flex:1;
+    max-width:480px;
+    position:relative;
+}
+
+.search input{
+    width:100%;
+    height:43px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:var(--surface2);
+    color:var(--text);
+    outline:none;
+    padding:0 15px 0 42px;
+}
+
+.search-icon{
+    position:absolute;
+    left:14px;
+    top:12px;
+    color:var(--muted);
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:var(--surface2);
+    color:var(--text);
+    display:grid;
+    place-items:center;
+}
+
+.content{
+    padding:28px;
+    max-width:1600px;
+    margin:auto;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    font-size:28px;
+    margin-bottom:6px;
+}
+
+.page-subtitle{
+    color:var(--muted);
+    margin-bottom:24px;
+}
+
+.hero{
+    background:linear-gradient(135deg,#6c5ce7,#8b7cf6);
+    border-radius:26px;
+    padding:34px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:24px;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    right:-60px;
+    top:-90px;
+}
+
+.hero h2{
+    font-size:32px;
+    margin-bottom:10px;
+    position:relative;
+    z-index:2;
+}
+
+.hero p{
+    opacity:.9;
+    max-width:650px;
+    position:relative;
+    z-index:2;
+}
+
+.grid{
+    display:grid;
+    gap:16px;
+}
+
+.grid-2{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.grid-3{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.grid-4{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.card h3{
+    margin-bottom:7px;
+}
+
+.muted{
+    color:var(--muted);
+}
+
+.stat{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.stat-icon{
+    width:45px;
+    height:45px;
+    border-radius:14px;
+    background:rgba(108,92,231,.12);
+    display:grid;
+    place-items:center;
+    font-size:21px;
+}
+
+.big-number{
+    font-size:25px;
+    font-weight:800;
+    margin-top:10px;
+}
+
+.quick-card{
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick-card:hover{
+    transform:translateY(-3px);
+}
+
+.btn{
+    padding:10px 15px;
+    border-radius:12px;
+    background:var(--surface2);
+    color:var(--text);
+    border:1px solid var(--border);
+}
+
+.btn.primary{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+.btn.success{
+    background:var(--success);
+    color:white;
+}
+
+.btn.danger{
+    background:var(--danger);
+    color:white;
+}
+
+.btn.small{
+    padding:7px 10px;
+    font-size:13px;
+}
+
+.input,
 textarea,
-select {
-    color: var(--text);
+select{
+    width:100%;
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:11px 13px;
+    color:var(--text);
+    outline:none;
 }
 
-/* =========================================================
-   LAYOUT
-========================================================= */
-
-.app {
-    min-height: 100vh;
+textarea{
+    resize:vertical;
+    min-height:180px;
 }
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.sidebar {
-    position: fixed;
-
-    left: 0;
-    top: 0;
-    bottom: 0;
-
-    width: var(--sidebar-width);
-
-    background: var(--card);
-
-    border-right:
-        1px solid var(--border);
-
-    padding: 20px 14px;
-
-    z-index: 100;
-
-    overflow-y: auto;
+.form-group{
+    margin-bottom:16px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 5px 10px 28px;
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    font-size:13px;
+    font-weight:700;
 }
 
-.logo-icon {
-    width: 44px;
-    height: 44px;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 14px;
-
-    color: white;
-
-    font-size: 21px;
-    font-weight: 900;
-
-    background:
-        linear-gradient(
-            135deg,
-            #6c4df6,
-            #9b83ff
-        );
-
-    box-shadow:
-        0 8px 20px
-        rgba(108, 77, 246, .25);
+.row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
 }
 
-.logo-text {
-    min-width: 0;
+.divider{
+    height:1px;
+    background:var(--border);
+    margin:18px 0;
 }
 
-.logo-title {
-    font-size: 17px;
-    font-weight: 850;
+/* AI */
+
+.ai-layout{
+    display:grid;
+    grid-template-columns:230px minmax(0,1fr);
+    gap:16px;
+    min-height:650px;
 }
 
-.logo-subtitle {
-    margin-top: 2px;
-
-    color: var(--text-secondary);
-
-    font-size: 11px;
+.ai-history{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:14px;
 }
 
-.menu-label {
-    padding: 10px;
-
-    color: var(--text-light);
-
-    font-size: 10px;
-    font-weight: 800;
-
-    letter-spacing: .08em;
+.history-item{
+    width:100%;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
+    padding:10px;
+    border-radius:10px;
+    margin-top:5px;
 }
 
-.nav-button {
-    width: 100%;
-
-    border: 0;
-
-    background: transparent;
-
-    color: var(--text-secondary);
-
-    border-radius: 12px;
-
-    padding: 13px 14px;
-
-    margin: 3px 0;
-
-    display: flex;
-    align-items: center;
-
-    gap: 13px;
-
-    text-align: left;
-
-    transition:
-        background .18s,
-        color .18s,
-        transform .18s;
+.history-item:hover{
+    background:var(--surface2);
 }
 
-.nav-button:hover {
-    background: var(--primary-light);
-    color: var(--primary);
+.ai-box{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    min-height:650px;
+    overflow:hidden;
 }
 
-.nav-button.active {
-    background: var(--primary-light);
-    color: var(--primary);
-
-    font-weight: 750;
+.ai-header{
+    padding:15px 18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.nav-icon {
-    width: 22px;
-
-    text-align: center;
-
-    font-size: 18px;
+.ai-header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main {
-    margin-left: var(--sidebar-width);
-
-    width:
-        calc(100% - var(--sidebar-width));
-
-    min-height: 100vh;
-
-    padding: 24px;
+.ai-avatar{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    display:grid;
+    place-items:center;
+    color:white;
 }
 
-/* =========================================================
-   TOPBAR
-========================================================= */
-
-.topbar {
-    min-height: 48px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 25px;
+.ai-status{
+    font-size:12px;
+    color:var(--success);
 }
 
-.search-wrapper {
-    position: relative;
-
-    width: min(390px, 100%);
+.chat{
+    flex:1;
+    padding:20px;
+    overflow-y:auto;
 }
 
-.search-icon {
-    position: absolute;
-
-    left: 14px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: var(--text-light);
+.message{
+    display:flex;
+    margin-bottom:16px;
 }
 
-.search {
-    width: 100%;
-
-    padding:
-        12px
-        15px
-        12px
-        40px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 13px;
-
-    outline: none;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    transition:
-        border .18s,
-        box-shadow .18s;
+.message.user{
+    justify-content:flex-end;
 }
 
-.search:focus {
-    border-color: var(--primary);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(108, 77, 246, .1);
+.bubble{
+    max-width:78%;
+    padding:13px 16px;
+    border-radius:16px;
+    line-height:1.55;
+    white-space:pre-wrap;
+    color:var(--text);
+    overflow-wrap:anywhere;
 }
 
-.top-actions {
-    display: flex;
-
-    gap: 8px;
+.message.ai .bubble{
+    background:var(--surface2);
+    color:var(--text);
 }
 
-.icon-button {
-    width: 42px;
-    height: 42px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 12px;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    display: grid;
-    place-items: center;
-
-    transition: .18s;
+.message.user .bubble{
+    background:var(--primary);
+    color:#fff;
 }
 
-.icon-button:hover {
-    border-color: var(--primary);
-
-    color: var(--primary);
-
-    transform: translateY(-1px);
+.message-actions{
+    margin-top:7px;
+    display:flex;
+    gap:5px;
 }
 
-/* =========================================================
-   PAGES
-========================================================= */
-
-.page {
-    display: none;
+.copy-btn{
+    font-size:11px;
+    background:transparent;
+    color:var(--muted);
 }
 
-.page.active {
-    display: block;
-
-    animation:
-        pageIn .18s ease;
+.ai-input{
+    border-top:1px solid var(--border);
+    padding:14px;
 }
 
-@keyframes pageIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
+.ai-input textarea{
+    min-height:70px;
+    max-height:180px;
+    margin-bottom:9px;
+}
+
+.fullscreen-exit{
+    display:none;
+}
+
+body.ai-fullscreen .sidebar,
+body.ai-fullscreen .topbar{
+    display:none !important;
+}
+
+body.ai-fullscreen .main{
+    width:100%;
+    margin:0;
+}
+
+body.ai-fullscreen .content{
+    padding:10px;
+}
+
+body.ai-fullscreen .ai-layout{
+    min-height:calc(100vh - 20px);
+}
+
+body.ai-fullscreen .fullscreen-exit{
+    display:inline-flex;
+}
+
+/* Sports */
+
+.sports-toolbar{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:5px;
+    margin-bottom:16px;
+}
+
+.sports-toolbar button{
+    white-space:nowrap;
+}
+
+.live-banner{
+    padding:12px 15px;
+    background:rgba(231,76,60,.1);
+    border:1px solid rgba(231,76,60,.25);
+    color:var(--danger);
+    border-radius:14px;
+    margin-bottom:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.match{
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.match:last-child{
+    border-bottom:0;
+}
+
+.match-head{
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:12px;
+}
+
+.teams{
+    display:grid;
+    grid-template-columns:1fr 65px 1fr;
+    align-items:center;
+    gap:10px;
+    text-align:center;
+}
+
+.team{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-weight:700;
+}
+
+.team img{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+}
+
+.score{
+    font-size:22px;
+    font-weight:900;
+}
+
+.status-live{
+    color:var(--danger);
+    font-size:11px;
+    font-weight:800;
+}
+
+.news-item{
+    padding:15px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.news-item:last-child{
+    border-bottom:0;
+}
+
+.news-item a{
+    color:var(--text);
+    text-decoration:none;
+    font-weight:700;
+}
+
+.news-meta{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.table-wrap{
+    overflow:auto;
+}
+
+.standings{
+    width:100%;
+    border-collapse:collapse;
+    min-width:550px;
+}
+
+.standings th,
+.standings td{
+    padding:10px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+}
+
+.standings th{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* Calculator */
+
+.calculator{
+    max-width:400px;
+}
+
+.calc-display{
+    background:#171923;
+    color:white;
+    border-radius:16px;
+    padding:20px;
+    text-align:right;
+    min-height:100px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    margin-bottom:12px;
+}
+
+.calc-expression{
+    color:#aaa;
+    font-size:13px;
+    min-height:20px;
+}
+
+.calc-value{
+    font-size:32px;
+    font-weight:800;
+    overflow:hidden;
+}
+
+.calc-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+}
+
+.calc-grid button{
+    height:58px;
+    border-radius:13px;
+    background:var(--surface2);
+    color:var(--text);
+    font-size:17px;
+}
+
+.calc-grid button:hover{
+    filter:brightness(.95);
+}
+
+.calc-grid .operator{
+    background:rgba(108,92,231,.15);
+    color:var(--primary);
+}
+
+.calc-grid .equal{
+    background:var(--primary);
+    color:white;
+}
+
+/* Stopwatch */
+
+.clock{
+    font-size:48px;
+    font-weight:900;
+    text-align:center;
+    padding:30px;
+    letter-spacing:2px;
+}
+
+/* Games */
+
+.game-card{
+    min-height:250px;
+}
+
+.game-result{
+    margin-top:12px;
+    padding:12px;
+    background:var(--surface2);
+    border-radius:12px;
+    min-height:44px;
+}
+
+.rps-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.rps-buttons button{
+    flex:1;
+    padding:15px;
+    background:var(--surface2);
+    border-radius:14px;
+    font-size:24px;
+}
+
+.memory-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-top:15px;
+}
+
+.memory-card{
+    aspect-ratio:1;
+    border-radius:12px;
+    background:var(--primary);
+    color:transparent;
+    font-size:24px;
+}
+
+.memory-card.open,
+.memory-card.matched{
+    background:var(--surface2);
+    color:var(--text);
+}
+
+.reaction-area{
+    height:180px;
+    background:var(--surface2);
+    border-radius:16px;
+    display:grid;
+    place-items:center;
+    margin-top:15px;
+    font-weight:800;
+    user-select:none;
+}
+
+/* Code */
+
+.code-layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.code-editor{
+    min-height:600px;
+    resize:vertical;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:13px;
+    line-height:1.5;
+    white-space:pre;
+    tab-size:2;
+}
+
+.preview{
+    width:100%;
+    min-height:600px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:white;
+}
+
+.console{
+    margin-top:12px;
+    background:#11131a;
+    color:#d7dae3;
+    border-radius:14px;
+    min-height:120px;
+    padding:12px;
+    font-family:monospace;
+    font-size:12px;
+    white-space:pre-wrap;
+    overflow:auto;
+}
+
+.code-tabs{
+    display:flex;
+    gap:7px;
+    margin-bottom:10px;
+}
+
+.code-tab.active{
+    background:var(--primary);
+    color:white;
+}
+
+/* Settings */
+
+.setting-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:16px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.setting-row:last-child{
+    border-bottom:0;
+}
+
+/* Toast */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#171923;
+    color:white;
+    padding:13px 16px;
+    border-radius:13px;
+    transform:translateY(100px);
+    opacity:0;
+    transition:.25s;
+    z-index:999;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* Mobile */
+
+@media(max-width:1000px){
+    .sidebar{
+        width:220px;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.page-heading {
-    margin-bottom: 22px;
-}
-
-.page-title {
-    margin: 0 0 6px;
-
-    font-size: 28px;
-    font-weight: 850;
-}
-
-.page-description {
-    margin: 0;
-
-    color: var(--text-secondary);
-}
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-.card {
-    background: var(--card);
-
-    border:
-        1px solid var(--border);
-
-    border-radius: var(--radius);
-
-    box-shadow: var(--shadow);
-
-    padding: 20px;
-}
-
-.clickable {
-    cursor: pointer;
-
-    transition:
-        transform .18s,
-        box-shadow .18s,
-        border .18s;
-}
-
-.clickable:hover {
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 13px 35px
-        rgba(32, 25, 80, .11);
-
-    border-color:
-        rgba(108, 77, 246, .25);
-}
-
-.section-heading {
-    margin: 30px 0 14px;
-
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.card-icon {
-    width: 46px;
-    height: 46px;
-
-    display: grid;
-    place-items: center;
-
-    margin-bottom: 14px;
-
-    border-radius: 13px;
-
-    background: var(--primary-light);
-
-    color: var(--primary);
-
-    font-size: 21px;
-}
-
-.card h3 {
-    margin: 0 0 7px;
-
-    font-size: 16px;
-}
-
-.card p {
-    margin: 0;
-
-    color: var(--text-secondary);
-
-    line-height: 1.55;
-
-    font-size: 14px;
-}
-
-/* =========================================================
-   HOME
-========================================================= */
-
-.hero {
-    position: relative;
-
-    overflow: hidden;
-
-    min-height: 235px;
-
-    padding: 34px;
-
-    border-radius: 25px;
-
-    color: white;
-
-    background:
-        linear-gradient(
-            135deg,
-            #6041ee,
-            #987dff
-        );
-
-    box-shadow:
-        0 16px 40px
-        rgba(108, 77, 246, .2);
-}
-
-.hero::before {
-    content: "";
-
-    position: absolute;
-
-    width: 260px;
-    height: 260px;
-
-    right: -70px;
-    top: -90px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,.08);
-}
-
-.hero::after {
-    content: "";
-
-    position: absolute;
-
-    width: 150px;
-    height: 150px;
-
-    right: 150px;
-    bottom: -100px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,.05);
-}
-
-.hero-content {
-    position: relative;
-
-    z-index: 2;
-
-    max-width: 700px;
-}
-
-.hero h1 {
-    margin: 0 0 10px;
-
-    font-size: 33px;
-}
-
-.hero p {
-    margin: 0 0 22px;
-
-    max-width: 650px;
-
-    line-height: 1.65;
-
-    opacity: .9;
-}
-
-.hero-button {
-    border: 0;
-
-    padding: 12px 18px;
-
-    border-radius: 11px;
-
-    background: white;
-
-    color: var(--primary);
-
-    font-weight: 800;
-}
-
-/* =========================================================
-   GRIDS
-========================================================= */
-
-.grid-3 {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 16px;
-}
-
-.grid-4 {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 16px;
-}
-
-.grid-2 {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 16px;
-}
-
-/* =========================================================
-   BADGES
-========================================================= */
-
-.badge {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-    padding:
-        5px
-        9px;
-
-    border-radius: 99px;
-
-    font-size: 11px;
-
-    font-weight: 750;
-}
-
-.badge.success {
-    background:
-        rgba(44,173,114,.11);
-
-    color: var(--success);
-}
-
-.badge.primary {
-    background:
-        var(--primary-light);
-
-    color: var(--primary);
-}
-
-.badge.danger {
-    background:
-        rgba(224,82,82,.1);
-
-    color: var(--danger);
-}
-
-/* =========================================================
-   AI LAYOUT
-========================================================= */
-
-.ai-container {
-    height:
-        calc(100vh - 105px);
-
-    min-height: 570px;
-
-    display: grid;
-
-    grid-template-columns:
-        225px minmax(0, 1fr);
-
-    gap: 16px;
-}
-
-.chat-history-panel {
-    min-height: 0;
-
-    background: var(--card);
-
-    border:
-        1px solid var(--border);
-
-    border-radius: var(--radius);
-
-    padding: 13px;
-
-    overflow-y: auto;
-}
-
-.new-chat-button {
-    width: 100%;
-
-    border: 0;
-
-    padding: 12px;
-
-    border-radius: 11px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-weight: 800;
-
-    margin-bottom: 13px;
-}
-
-.new-chat-button:hover {
-    background: var(--primary-dark);
-}
-
-.history-title {
-    color: var(--text-light);
-
-    font-size: 10px;
-
-    font-weight: 800;
-
-    text-transform: uppercase;
-
-    padding: 8px;
-}
-
-.history-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-}
-
-.history-item {
-    width: 100%;
-
-    border: 0;
-
-    background: transparent;
-
-    color: var(--text-secondary);
-
-    text-align: left;
-
-    padding: 10px;
-
-    border-radius: 9px;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-}
-
-.history-item:hover {
-    background: var(--bg-secondary);
-
-    color: var(--text);
-}
-
-/* =========================================================
-   CHAT
-========================================================= */
-
-.chat-panel {
-    min-width: 0;
-    min-height: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    overflow: hidden;
-
-    background: var(--card);
-
-    border:
-        1px solid var(--border);
-
-    border-radius: var(--radius);
-
-    box-shadow: var(--shadow);
-}
-
-.chat-header {
-    min-height: 66px;
-
-    padding:
-        12px
-        17px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 10px;
-
-    border-bottom:
-        1px solid var(--border);
-}
-
-.ai-profile {
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
-
-    min-width: 0;
-}
-
-.ai-avatar {
-    width: 40px;
-    height: 40px;
-
-    flex-shrink: 0;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 12px;
-
-    color: white;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            #9b82ff
-        );
-}
-
-.ai-name {
-    font-weight: 850;
-}
-
-.ai-model {
-    margin-top: 2px;
-
-    color: var(--text-secondary);
-
-    font-size: 10px;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    max-width: 300px;
-}
-
-.chat-actions {
-    display: flex;
-
-    gap: 6px;
-}
-
-.small-button {
-    border:
-        1px solid var(--border);
-
-    background: var(--card);
-
-    color: var(--text);
-
-    border-radius: 9px;
-
-    padding:
-        8px
-        10px;
-}
-
-.small-button:hover {
-    border-color: var(--primary);
-
-    color: var(--primary);
-}
-
-/* =========================================================
-   MESSAGES
-========================================================= */
-
-.messages {
-    flex: 1;
-
-    min-height: 0;
-
-    overflow-y: auto;
-
-    padding: 22px;
-
-    scroll-behavior: smooth;
-}
-
-.message {
-    display: flex;
-
-    width: 100%;
-
-    margin-bottom: 17px;
-}
-
-.message.user {
-    justify-content: flex-end;
-}
-
-.message.ai {
-    justify-content: flex-start;
-}
-
-.message-bubble {
-    max-width: min(780px, 82%);
-
-    padding:
-        13px
-        16px;
-
-    border-radius: 17px;
-
-    line-height: 1.62;
-
-    font-size: 14.5px;
-
-    white-space: pre-wrap;
-
-    overflow-wrap: anywhere;
-
-    word-break: normal;
-
-    user-select: text;
-}
-
-.message.ai .message-bubble {
-    background:
-        var(--bg-secondary);
-
-    color:
-        var(--text);
-
-    border-bottom-left-radius: 5px;
-}
-
-.message.user .message-bubble {
-    background:
-        var(--primary);
-
-    color:
-        white;
-
-    border-bottom-right-radius: 5px;
-}
-
-.message-time {
-    margin-top: 4px;
-
-    font-size: 9px;
-
-    color: var(--text-light);
-}
-
-.typing {
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-    min-height: 44px;
-}
-
-.typing-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: var(--text-secondary);
-
-    animation:
-        typingAnimation 1s infinite;
-}
-
-.typing-dot:nth-child(2) {
-    animation-delay: .15s;
-}
-
-.typing-dot:nth-child(3) {
-    animation-delay: .3s;
-}
-
-@keyframes typingAnimation {
-    0%, 80%, 100% {
-        opacity: .25;
-        transform: translateY(0);
+    .main{
+        width:calc(100% - 220px);
+        margin-left:220px;
     }
 
-    40% {
-        opacity: 1;
-        transform: translateY(-3px);
+    .grid-4{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .code-layout{
+        grid-template-columns:1fr;
     }
 }
 
+@media(max-width:760px){
+    .sidebar{
+        position:relative;
+        width:100%;
+        min-height:auto;
+        border-right:0;
+        border-bottom:1px solid var(--border);
+    }
+
+    .app{
+        display:block;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .sidebar .nav{
+        display:flex;
+        overflow-x:auto;
+        gap:5px;
+    }
+
+    .nav-title{
+        display:none;
+    }
+
+    .nav-btn{
+        min-width:max-content;
+        width:auto;
+    }
+
+    .brand{
+        margin-bottom:10px;
+    }
+
+    .topbar{
+        padding:0 12px;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4{
+        grid-template-columns:1fr;
+    }
+
+    .ai-layout{
+        grid-template-columns:1fr;
+    }
+
+    .ai-history{
+        display:none;
+    }
+
+    .bubble{
+        max-width:90%;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .hero h2{
+        font-size:25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">AI</div>
+        <div>
+            <h1>My AI HUB</h1>
+            <span>Smart dashboard</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Ana Menü</div>
+
+    <div class="nav">
+
+        <button class="nav-btn active" data-page="home">
+            <span class="nav-icon">🏠</span>
+            Ana Sayfa
+        </button>
+
+        <button class="nav-btn" data-page="ai">
+            <span class="nav-icon">🤖</span>
+            AI Asistan
+        </button>
+
+        <button class="nav-btn" data-page="sports">
+            <span class="nav-icon">⚽</span>
+            Spor Merkezi
+        </button>
+
+        <button class="nav-btn" data-page="games">
+            <span class="nav-icon">🎮</span>
+            Oyunlar
+        </button>
+
+        <button class="nav-btn" data-page="tools">
+            <span class="nav-icon">🛠️</span>
+            Araçlar
+        </button>
+
+        <button class="nav-btn" data-page="code">
+            <span class="nav-icon">💻</span>
+            Kod Merkezi
+        </button>
+
+        <button class="nav-btn" data-page="notes">
+            <span class="nav-icon">📝</span>
+            Notlar
+        </button>
+
+    </div>
+
+    <div class="nav-title">Sistem</div>
+
+    <div class="nav">
+
+        <button class="nav-btn" data-page="settings">
+            <span class="nav-icon">⚙️</span>
+            Ayarlar
+        </button>
+
+    </div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="search">
+        <span class="search-icon">🔎</span>
+        <input id="globalSearch" placeholder="My AI HUB'da ara...">
+    </div>
+
+    <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" title="Tema">🌙</button>
+        <button class="icon-btn" id="quickAi" title="AI">🤖</button>
+    </div>
+
+</header>
+
+<div class="content">
+
+<!-- HOME -->
+
+<section class="page active" id="page-home">
+
+    <div class="hero">
+        <h2>My AI HUB'a hoş geldin 👋</h2>
+        <p>
+            AI, canlı spor, oyunlar, araçlar, notlar ve kendi kodlarını
+            çalıştırabileceğin Kod Merkezi tek yerde.
+        </p>
+    </div>
+
+    <div class="grid grid-4">
+
+        <div class="card stat">
+            <div>
+                <div class="muted">AI Modeli</div>
+                <div class="big-number" id="homeModel">GPT-OSS</div>
+            </div>
+            <div class="stat-icon">🤖</div>
+        </div>
+
+        <div class="card stat">
+            <div>
+                <div class="muted">Spor</div>
+                <div class="big-number" id="homeLive">Hazır</div>
+            </div>
+            <div class="stat-icon">⚽</div>
+        </div>
+
+        <div class="card stat">
+            <div>
+                <div class="muted">Notlar</div>
+                <div class="big-number" id="homeNotes">0</div>
+            </div>
+            <div class="stat-icon">📝</div>
+        </div>
+
+        <div class="card stat">
+            <div>
+                <div class="muted">Kod</div>
+                <div class="big-number">Hazır</div>
+            </div>
+            <div class="stat-icon">💻</div>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="grid grid-3">
+
+        <div class="card quick-card" data-go="ai">
+            <h3>🤖 AI Asistan</h3>
+            <p class="muted">Groq üzerinden AI ile konuş.</p>
+        </div>
+
+        <div class="card quick-card" data-go="sports">
+            <h3>⚽ Spor Merkezi</h3>
+            <p class="muted">Canlı skorları ve haberleri takip et.</p>
+        </div>
+
+        <div class="card quick-card" data-go="code">
+            <h3>💻 Kod Merkezi</h3>
+            <p class="muted">HTML, CSS ve JavaScript kodlarını çalıştır.</p>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+        <h3>📡 Sistem Durumu</h3>
+        <div class="divider"></div>
+
+        <div class="setting-row">
+            <span>My AI HUB</span>
+            <span class="muted">● Çalışıyor</span>
+        </div>
+
+        <div class="setting-row">
+            <span>Yerel depolama</span>
+            <span class="muted" id="storageStatus">Kontrol ediliyor...</span>
+        </div>
+
+        <div class="setting-row">
+            <span>Spor API</span>
+            <span class="muted" id="homeSportsStatus">API anahtarı bekleniyor</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- AI -->
+
+<section class="page" id="page-ai">
+
+    <h1 class="page-title">🤖 AI Asistan</h1>
+    <p class="page-subtitle">Groq üzerinden yapay zekâ ile konuş.</p>
+
+    <div class="ai-layout">
+
+        <aside class="ai-history">
+
+            <button class="btn primary" id="newChat" style="width:100%">
+                ＋ Yeni Sohbet
+            </button>
+
+            <div class="divider"></div>
+
+            <div class="muted" style="font-size:12px">
+                Sohbet geçmişi
+            </div>
+
+            <div id="historyList"></div>
+
+        </aside>
+
+        <div class="ai-box">
+
+            <div class="ai-header">
+
+                <div class="ai-header-left">
+                    <div class="ai-avatar">AI</div>
+
+                    <div>
+                        <strong>My AI</strong>
+                        <div class="ai-status">● Hazır</div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <select id="aiModel" style="width:auto">
+                        <option value="openai/gpt-oss-20b">
+                            GPT-OSS 20B
+                        </option>
+                        <option value="openai/gpt-oss-120b">
+                            GPT-OSS 120B
+                        </option>
+                    </select>
+
+                    <button class="btn small" id="fullscreenAi">
+                        ⛶ Tam ekran
+                    </button>
+
+                    <button class="btn small fullscreen-exit" id="exitFullscreen">
+                        ✕ Çık
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="chat" id="chat"></div>
+
+            <div class="ai-input">
+
+                <textarea
+                    id="aiInput"
+                    placeholder="AI'ya bir şey sor..."></textarea>
+
+                <div class="row" style="justify-content:space-between">
+
+                    <span class="muted" style="font-size:12px">
+                        Enter = gönder · Shift + Enter = yeni satır
+                    </span>
+
+                    <button class="btn primary" id="sendAi">
+                        Gönder ➤
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SPORTS -->
+
+<section class="page" id="page-sports">
+
+    <h1 class="page-title">⚽ Spor Merkezi</h1>
+    <p class="page-subtitle">
+        Canlı skorlar, maçlar, puan durumları, transferler ve spor haberleri.
+    </p>
+
+    <div class="sports-toolbar">
+
+        <button class="btn primary sports-tab" data-sport-tab="live">
+            🔴 Canlı
+        </button>
+
+        <button class="btn sports-tab" data-sport-tab="today">
+            📅 Bugün
+        </button>
+
+        <button class="btn sports-tab" data-sport-tab="standings">
+            🏆 Puan Durumu
+        </button>
+
+        <button class="btn sports-tab" data-sport-tab="transfers">
+            🔄 Transferler
+        </button>
+
+        <button class="btn sports-tab" data-sport-tab="news">
+            📰 Haberler
+        </button>
+
+        <button class="btn" id="refreshSports">
+            ↻ Yenile
+        </button>
+
+    </div>
+
+    <div id="sportsConfigNotice" class="card" style="margin-bottom:16px;display:none">
+        <h3>🔑 Spor API anahtarı gerekli</h3>
+        <p class="muted">
+            Gerçek canlı maç verilerini almak için Ayarlar bölümünden
+            API-Football anahtarını ekle.
+        </p>
+        <br>
+        <button class="btn primary" data-go="settings">
+            Ayarlara git
+        </button>
+    </div>
+
+    <div id="sportsLiveArea">
+
+        <div class="live-banner">
+            <span>🔴 CANLI MAÇLAR</span>
+            <span id="sportsUpdated">Henüz güncellenmedi</span>
+        </div>
+
+        <div class="card">
+            <div id="liveMatches">
+                <p class="muted">Maçlar yükleniyor...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="sportsTodayArea" style="display:none">
+
+        <div class="card">
+            <h3>📅 Bugünün Maçları</h3>
+            <div class="divider"></div>
+            <div id="todayMatches">
+                <p class="muted">Maçlar yükleniyor...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="sportsStandingsArea" style="display:none">
+
+        <div class="card">
+
+            <div class="row">
+                <select id="leagueSelect">
+                    <option value="203">Süper Lig</option>
+                    <option value="39">Premier League</option>
+                    <option value="140">La Liga</option>
+                    <option value="78">Bundesliga</option>
+                    <option value="135">Serie A</option>
+                    <option value="2">Şampiyonlar Ligi</option>
+                </select>
+
+                <button class="btn primary" id="loadStandings">
+                    Yükle
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="table-wrap">
+                <div id="standingsResult">
+                    <p class="muted">Lig seçip Yükle'ye bas.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="sportsTransfersArea" style="display:none">
+
+        <div class="card">
+
+            <h3>🔄 Transferler</h3>
+
+            <div class="row" style="margin-top:12px">
+                <input
+                    class="input"
+                    id="transferTeamId"
+                    placeholder="Takım ID'si örn. 645">
+                    <button class="btn primary" id="loadTransfers">
+                        Getir
+                    </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="transfersResult">
+                <p class="muted">
+                    Bir takım ID'si gir.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="sportsNewsArea" style="display:none">
+
+        <div class="card">
+
+            <div class="row" style="justify-content:space-between">
+                <div>
+                    <h3>📰 Spor Haberleri</h3>
+                    <p class="muted">Güncel spor haberleri</p>
+                </div>
+
+                <button class="btn" id="refreshNews">
+                    ↻ Yenile
+                </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="newsResult">
+                <p class="muted">
+                    Haberleri görmek için GNews API anahtarı ekle.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- GAMES -->
+
+<section class="page" id="page-games">
+
+    <h1 class="page-title">🎮 Oyunlar</h1>
+    <p class="page-subtitle">Küçük oyunlar, tamamen uygulamanın içinde.</p>
+
+    <div class="grid grid-2">
+
+        <div class="card game-card">
+
+            <h3>🔢 Sayı Tahmin</h3>
+            <p class="muted">1–100 arasında sayıyı bul.</p>
+
+            <br>
+
+            <div class="row">
+                <input class="input" id="guessInput" type="number" min="1" max="100">
+                <button class="btn primary" id="guessBtn">Tahmin</button>
+            </div>
+
+            <div class="game-result" id="guessResult">
+                Oyun hazır.
+            </div>
+
+        </div>
+
+
+        <div class="card game-card">
+
+            <h3>✂️ Taş Kağıt Makas</h3>
+            <p class="muted">Bilgisayara karşı oyna.</p>
+
+            <div class="rps-buttons">
+                <button data-rps="taş">✊</button>
+                <button data-rps="kağıt">✋</button>
+                <button data-rps="makas">✌️</button>
+            </div>
+
+            <div class="game-result" id="rpsResult">
+                Seçimini yap.
+            </div>
+
+        </div>
+
+
+        <div class="card game-card">
+
+            <h3>🧠 Hafıza</h3>
+            <p class="muted">Aynı emojileri eşleştir.</p>
+
+            <button class="btn primary" id="memoryStart">
+                Yeni Oyun
+            </button>
+
+            <div class="memory-grid" id="memoryGrid"></div>
+
+        </div>
+
+
+        <div class="card game-card">
+
+            <h3>⚡ Tepki Testi</h3>
+            <p class="muted">Alan yeşile dönünce dokun.</p>
+
+            <button class="btn primary" id="reactionStart">
+                Başlat
+            </button>
+
+            <div class="reaction-area" id="reactionArea">
+                Hazır
+            </div>
+
+            <div class="game-result" id="reactionResult">
+                —
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TOOLS -->
+
+<section class="page" id="page-tools">
+
+    <h1 class="page-title">🛠️ Araçlar</h1>
+    <p class="page-subtitle">Günlük kullanabileceğin küçük araçlar.</p>
+
+    <div class="grid grid-2">
+
+        <div class="card calculator">
+
+            <h3>🧮 Hesap Makinesi</h3>
+
+            <div class="calc-display">
+                <div class="calc-expression" id="calcExpression"></div>
+                <div class="calc-value" id="calcValue">0</div>
+            </div>
+
+            <div class="calc-grid">
+
+                <button data-calc="clear">C</button>
+                <button data-calc="back">⌫</button>
+                <button data-calc="percent">%</button>
+                <button class="operator" data-calc-op="/">÷</button>
+
+                <button data-calc-num="7">7</button>
+                <button data-calc-num="8">8</button>
+                <button data-calc-num="9">9</button>
+                <button class="operator" data-calc-op="*">×</button>
+
+                <button data-calc-num="4">4</button>
+                <button data-calc-num="5">5</button>
+                <button data-calc-num="6">6</button>
+                <button class="operator" data-calc-op="-">−</button>
+
+                <button data-calc-num="1">1</button>
+                <button data-calc-num="2">2</button>
+                <button data-calc-num="3">3</button>
+                <button class="operator" data-calc-op="+">+</button>
+
+                <button data-calc-num="0">0</button>
+                <button data-calc-num=".">.</button>
+                <button class="equal" data-calc="equal">=</button>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>🔄 Birim Dönüştürücü</h3>
+
+            <div class="form-group">
+                <label>Kategori</label>
+
+                <select id="convertCategory">
+                    <option value="length">Uzunluk</option>
+                    <option value="weight">Ağırlık</option>
+                    <option value="temperature">Sıcaklık</option>
+                </select>
+
+            </div>
+
+            <div class="grid grid-2">
+
+                <div>
+                    <label>Değer</label>
+                    <input class="input" id="convertInput" type="number" value="1">
+                </div>
+
+                <div>
+                    <label>Sonuç</label>
+                    <input class="input" id="convertResult" readonly>
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="grid grid-2">
+
+                <select id="convertFrom"></select>
+                <select id="convertTo"></select>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>⏱️ Kronometre</h3>
+
+            <div class="clock" id="stopwatch">
+                00:00:00
+            </div>
+
+            <div class="row" style="justify-content:center">
+                <button class="btn primary" id="swStart">Başlat</button>
+                <button class="btn" id="swPause">Duraklat</button>
+                <button class="btn danger" id="swReset">Sıfırla</button>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>⏳ Geri Sayım</h3>
+
+            <div class="grid grid-2">
+
+                <input
+                    class="input"
+                    id="timerMinutes"
+                    type="number"
+                    min="0"
+                    value="1"
+                    placeholder="Dakika">
+
+                <input
+                    class="input"
+                    id="timerSeconds"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="0"
+                    placeholder="Saniye">
+
+            </div>
+
+            <div class="clock" id="timerDisplay">
+                01:00
+            </div>
+
+            <div class="row" style="justify-content:center">
+                <button class="btn primary" id="timerStart">Başlat</button>
+                <button class="btn" id="timerPause">Duraklat</button>
+                <button class="btn danger" id="timerReset">Sıfırla</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CODE -->
+
+<section class="page" id="page-code">
+
+    <h1 class="page-title">💻 Kod Merkezi</h1>
+    <p class="page-subtitle">
+        HTML, CSS ve JavaScript kodunu burada düzenle ve anında önizle.
+    </p>
+
+    <div class="card">
+
+        <div class="code-tabs">
+
+            <button class="btn code-tab active" data-code-tab="html">
+                HTML
+            </button>
+
+            <button class="btn code-tab" data-code-tab="css">
+                CSS
+            </button>
+
+            <button class="btn code-tab" data-code-tab="js">
+                JavaScript
+            </button>
+
+        </div>
+
+        <div class="code-layout">
+
+            <div>
+
+                <textarea
+                    id="codeEditor"
+                    class="code-editor"
+                    spellcheck="false"></textarea>
+
+                <div class="row" style="margin-top:10px">
+
+                    <button class="btn primary" id="runCode">
+                        ▶ Çalıştır
+                    </button>
+
+                    <button class="btn" id="saveCode">
+                        💾 Kaydet
+                    </button>
+
+                    <button class="btn" id="resetCode">
+                        ↩ Varsayılana dön
+                    </button>
+
+                    <button class="btn" id="clearConsole">
+                        🧹 Konsolu temizle
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <iframe
+                    id="codePreview"
+                    class="preview"
+                    sandbox="allow-scripts"></iframe>
+
+                <div class="console" id="codeConsole">
+                    Kod konsolu hazır.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- NOTES -->
+
+<section class="page" id="page-notes">
+
+    <h1 class="page-title">📝 Notlar</h1>
+    <p class="page-subtitle">Notlarını cihazında sakla.</p>
+
+    <div class="card">
+
+        <textarea
+            id="notesArea"
+            placeholder="Notlarını buraya yaz..."></textarea>
+
+        <br><br>
+
+        <div class="row">
+
+            <button class="btn primary" id="saveNotes">
+                💾 Kaydet
+            </button>
+
+            <button class="btn" id="clearNotes">
+                🗑 Temizle
+            </button>
+
+        </div>
+
+        <br>
+
+        <span class="muted" id="notesSaved">
+            Henüz kaydedilmedi.
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section class="page" id="page-settings">
+
+    <h1 class="page-title">⚙️ Ayarlar</h1>
+    <p class="page-subtitle">My AI HUB bağlantılarını ve görünümünü ayarla.</p>
+
+
+    <div class="card">
+
+        <h3>🤖 Groq AI</h3>
+
+        <p class="muted" style="margin:7px 0 18px">
+            AI Asistanı kullanmak için Groq API anahtarını gir.
+        </p>
+
+        <div class="form-group">
+
+            <label>Groq API Key</label>
+
+            <input
+                class="input"
+                id="groqKey"
+                type="password"
+                placeholder="BURAYA APİ KEY YAZILACAK">
+
+        </div>
+
+        <div class="row">
+
+            <button class="btn primary" id="saveGroq">
+                💾 API Key Kaydet
+            </button>
+
+            <button class="btn" id="clearGroq">
+                Sil
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h3>⚽ Spor API</h3>
+
+        <p class="muted" style="margin:7px 0 18px">
+            Gerçek canlı futbol verileri için API-Football anahtarını ekle.
+        </p>
+
+        <div class="form-group">
+
+            <label>API-Football Key</label>
+
+            <input
+                class="input"
+                id="footballKey"
+                type="password"
+                placeholder="BURAYA API-FOOTBALL KEY YAZILACAK">
+
+        </div>
+
+        <button class="btn primary" id="saveFootball">
+            💾 Kaydet
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h3>📰 Haber API</h3>
+
+        <p class="muted" style="margin:7px 0 18px">
+            Spor haberleri için GNews API anahtarı.
+        </p>
+
+        <div class="form-group">
+
+            <label>GNews Key</label>
+
+            <input
+                class="input"
+                id="newsKey"
+                type="password"
+                placeholder="BURAYA GNEWS KEY YAZILACAK">
+
+        </div>
+
+        <button class="btn primary" id="saveNews">
+            💾 Kaydet
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h3>🎨 Görünüm</h3>
+
+        <div class="setting-row">
+
+            <span>
+                <strong>Koyu tema</strong><br>
+                <span class="muted">Arayüz temasını değiştir.</span>
+            </span>
+
+            <button class="btn" id="settingsTheme">
+                🌙 Değiştir
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+        <h3>🗑️ Veri</h3>
+
+        <p class="muted">
+            Sohbetler, notlar ve kaydedilmiş kodlar tarayıcının
+            localStorage alanında tutulur.
+        </p>
+
+        <br>
+
+        <button class="btn danger" id="clearAllData">
+            Tüm yerel verileri sil
+        </button>
+
+    </div>
+
+</section>
+
+</div>
+</main>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function(){
+
 /* =========================================================
-   CHAT INPUT
+   STORAGE
 ========================================================= */
 
-.chat-input-area {
-    padding: 11px;
-
-    display: flex;
-
-    gap: 8px;
-
-    align-items: flex-end;
-
-    border-top:
-        1px solid var(--border);
-}
-
-.chat-input {
-    flex: 1;
-
-    min-width: 0;
-
-    min-height: 48px;
-
-    max-height: 150px;
-
-    resize: none;
-
-    padding:
-        13px
-        14px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 13px;
-
-    outline: none;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    line-height: 1.4;
-}
-
-.chat-input:focus {
-    border-color: var(--primary);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(108,77,246,.08);
-}
-
-.send-button {
-    width: 50px;
-    height: 48px;
-
-    border: 0;
-
-    border-radius: 12px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-size: 18px;
-
-    flex-shrink: 0;
-}
-
-.send-button:hover {
-    background: var(--primary-dark);
-}
-
-/* =========================================================
-   AI FULLSCREEN
-========================================================= */
-
-.ai-fullscreen {
-    position: fixed !important;
-
-    inset: 0 !important;
-
-    z-index: 1000 !important;
-
-    width: 100vw !important;
-
-    height: 100vh !important;
-
-    padding: 0 !important;
-
-    background: var(--bg);
-}
-
-.ai-fullscreen .ai-container {
-    height: 100vh;
-
-    min-height: 0;
-
-    grid-template-columns:
-        225px minmax(0,1fr);
-}
-
-.ai-fullscreen .chat-panel {
-    border-radius: 0;
-}
-
-.ai-fullscreen .chat-history-panel {
-    border-radius: 0;
-}
-
-body.ai-mode {
-    overflow: hidden;
-}
-
-/* =========================================================
-   TOOLS
-========================================================= */
-
-.tool-view {
-    display: none;
-
-    margin-top: 18px;
-}
-
-.tool-view.active {
-    display: block;
-
-    animation:
-        pageIn .18s ease;
-}
-
-.tool-card {
-    min-height: 150px;
-}
-
-.tool-title {
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-}
-
-.tool-title-icon {
-    width: 40px;
-    height: 40px;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 11px;
-
-    background: var(--primary-light);
-
-    color: var(--primary);
-}
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.input {
-    width: 100%;
-
-    padding: 12px 13px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 11px;
-
-    outline: none;
-
-    background: var(--card);
-
-    color: var(--text);
-}
-
-.input:focus {
-    border-color: var(--primary);
-}
-
-.select {
-    width: 100%;
-
-    padding: 12px 13px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 11px;
-
-    outline: none;
-
-    background: var(--card);
-
-    color: var(--text);
-}
-
-.form-group {
-    margin-bottom: 14px;
-}
-
-.form-label {
-    display: block;
-
-    margin-bottom: 7px;
-
-    color: var(--text-secondary);
-
-    font-size: 12px;
-
-    font-weight: 700;
-}
-
-.row {
-    display: flex;
-
-    gap: 10px;
-
-    align-items: center;
-}
-
-.row > * {
-    min-width: 0;
-}
-
-/* =========================================================
-   PRIMARY BUTTON
-========================================================= */
-
-.primary-button {
-    border: 0;
-
-    padding:
-        11px
-        16px;
-
-    border-radius: 11px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-weight: 750;
-
-    transition: .18s;
-}
-
-.primary-button:hover {
-    background: var(--primary-dark);
-
-    transform: translateY(-1px);
-}
-
-/* =========================================================
-   CALCULATOR
-========================================================= */
-
-.calculator {
-    width: min(400px, 100%);
-}
-
-.calculator-display {
-    width: 100%;
-
-    min-height: 85px;
-
-    display: flex;
-
-    align-items: flex-end;
-    justify-content: flex-end;
-
-    padding: 16px;
-
-    margin-bottom: 10px;
-
-    border-radius: 15px;
-
-    background: #171820;
-
-    color: white;
-
-    font-size: 31px;
-
-    font-weight: 700;
-
-    overflow-x: auto;
-
-    white-space: nowrap;
-}
-
-.calculator-expression {
-    color: #aaa;
-
-    font-size: 11px;
-
-    min-height: 16px;
-
-    text-align: right;
-
-    margin-bottom: 3px;
-}
-
-.calculator-keys {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
-
-    gap: 8px;
-}
-
-.calc-key {
-    min-height: 57px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 12px;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    font-size: 17px;
-
-    font-weight: 700;
-}
-
-.calc-key:hover {
-    background: var(--bg-secondary);
-}
-
-.calc-key.operator {
-    background: var(--primary-light);
-
-    color: var(--primary);
-
-    border-color:
-        transparent;
-}
-
-.calc-key.equals {
-    background: var(--primary);
-
-    color: white;
-
-    border-color:
-        transparent;
+const STORE = {
+    groq:"my_ai_hub_groq_key",
+    football:"my_ai_hub_football_key",
+    news:"my_ai_hub_news_key",
+    theme:"my_ai_hub_theme",
+    notes:"my_ai_hub_notes",
+    chat:"my_ai_hub_chat",
+    code:"my_ai_hub_code"
+};
+
+function getStore(key){
+    try{
+        return localStorage.getItem(key) || "";
+    }catch(e){
+        return "";
+    }
+}
+
+function setStore(key,value){
+    try{
+        localStorage.setItem(key,value);
+    }catch(e){}
+}
+
+function removeStore(key){
+    try{
+        localStorage.removeItem(key);
+    }catch(e){}
 }
 
-/* =========================================================
-   TIMER
-========================================================= */
-
-.timer-panel {
-    width: min(600px, 100%);
-
-    text-align: center;
-}
-
-.timer-display {
-    margin: 25px 0;
-
-    font-size: 57px;
-
-    font-weight: 850;
-
-    letter-spacing: .04em;
-}
-
-.timer-buttons {
-    display: flex;
-
-    justify-content: center;
-
-    flex-wrap: wrap;
-
-    gap: 9px;
-}
-
-/* =========================================================
-   CONVERTER
-========================================================= */
-
-.converter-result {
-    margin-top: 18px;
-
-    padding: 18px;
-
-    border-radius: 13px;
-
-    background: var(--bg-secondary);
-
-    color: var(--text);
-
-    font-size: 22px;
-
-    font-weight: 800;
-}
-
-/* =========================================================
-   GAMES
-========================================================= */
-
-.game-panel {
-    margin-top: 18px;
-}
-
-.game-status {
-    margin:
-        18px
-        0;
-
-    font-size: 18px;
-
-    font-weight: 800;
-}
-
-.game-buttons {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 8px;
-}
-
-/* =========================================================
-   MEMORY
-========================================================= */
-
-.memory-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(55px, 90px));
-
-    gap: 9px;
-
-    margin-top: 20px;
-}
-
-.memory-card {
-    aspect-ratio: 1;
-
-    border: 0;
-
-    border-radius: 12px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-size: 25px;
-
-    transition: transform .15s;
-}
-
-.memory-card:hover {
-    transform: scale(1.03);
-}
-
-.memory-card.matched {
-    background:
-        var(--success);
-}
-
-/* =========================================================
-   REACTION GAME
-========================================================= */
-
-.reaction-box {
-    width: min(600px, 100%);
-
-    min-height: 230px;
-
-    display: grid;
-
-    place-items: center;
-
-    border-radius: 17px;
-
-    background: var(--bg-secondary);
-
-    margin-top: 20px;
-
-    padding: 25px;
-
-    text-align: center;
-}
-
-.reaction-box.waiting {
-    background: var(--danger);
-
-    color: white;
-}
-
-.reaction-box.ready {
-    background: var(--success);
-
-    color: white;
-}
-
-.reaction-text {
-    font-size: 25px;
-
-    font-weight: 850;
-}
-
-/* =========================================================
-   NOTES
-========================================================= */
-
-.notes-editor {
-    width: 100%;
-
-    min-height: 500px;
-
-    resize: vertical;
-
-    padding: 17px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 15px;
-
-    outline: none;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    line-height: 1.65;
-}
-
-.notes-editor:focus {
-    border-color: var(--primary);
-}
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-.settings-list {
-    max-width: 800px;
-}
-
-.setting-card {
-    margin-bottom: 14px;
-}
-
-.setting-header {
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 12px;
-
-    align-items: flex-start;
-}
-
-.setting-name {
-    font-weight: 850;
-}
-
-.setting-description {
-    margin-top: 4px;
-
-    color: var(--text-secondary);
-
-    font-size: 13px;
-
-    line-height: 1.5;
-}
-
-.setting-content {
-    margin-top: 15px;
-}
-
-/* =========================================================
-   TOGGLE
-========================================================= */
-
-.toggle {
-    position: relative;
-
-    width: 48px;
-    height: 27px;
-
-    flex-shrink: 0;
-}
-
-.toggle input {
-    opacity: 0;
-
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-
-    inset: 0;
-
-    border-radius: 99px;
-
-    background: var(--border);
-
-    transition: .2s;
-}
-
-.toggle-slider::before {
-    content: "";
-
-    position: absolute;
-
-    width: 21px;
-    height: 21px;
-
-    left: 3px;
-    top: 3px;
-
-    border-radius: 50%;
-
-    background: white;
-
-    transition: .2s;
-
-    box-shadow:
-        0 2px 5px
-        rgba(0,0,0,.15);
-}
-
-.toggle input:checked +
-.toggle-slider {
-    background: var(--primary);
-}
-
-.toggle input:checked +
-.toggle-slider::before {
-    transform:
-        translateX(21px);
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal-background {
-    position: fixed;
-
-    inset: 0;
-
-    display: none;
-
-    place-items: center;
-
-    padding: 20px;
-
-    background:
-        rgba(0,0,0,.45);
-
-    z-index: 2000;
-}
-
-.modal-background.show {
-    display: grid;
-}
-
-.modal {
-    width: min(520px, 100%);
-
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    padding: 23px;
-
-    border-radius: 20px;
-
-    background: var(--card);
-
-    color: var(--text);
-
-    box-shadow:
-        0 25px 80px
-        rgba(0,0,0,.25);
-}
-
-.modal h2 {
-    margin-top: 0;
-}
-
-.modal-footer {
-    display: flex;
-
-    justify-content: flex-end;
-
-    gap: 8px;
-
-    margin-top: 20px;
-}
 
 /* =========================================================
    TOAST
 ========================================================= */
 
-.toast {
-    position: fixed;
+function toast(message){
+    const el=document.getElementById("toast");
+    if(!el) return;
 
-    right: 22px;
-    bottom: 22px;
+    el.textContent=message;
+    el.classList.add("show");
 
-    z-index: 3000;
+    clearTimeout(window.__toastTimer);
 
-    max-width:
-        min(400px, calc(100vw - 40px));
-
-    padding:
-        13px
-        17px;
-
-    border-radius: 11px;
-
-    background: #171820;
-
-    color: white;
-
-    box-shadow:
-        0 10px 35px
-        rgba(0,0,0,.2);
-
-    opacity: 0;
-
-    transform:
-        translateY(15px);
-
-    pointer-events: none;
-
-    transition: .2s;
-}
-
-.toast.show {
-    opacity: 1;
-
-    transform:
-        translateY(0);
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 1100px) {
-
-    .grid-4 {
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-
-}
-
-@media (max-width: 850px) {
-
-    :root {
-        --sidebar-width: 72px;
-    }
-
-    .sidebar {
-        padding:
-            18px
-            8px;
-    }
-
-    .logo {
-        justify-content: center;
-
-        padding:
-            4px 0 25px;
-    }
-
-    .logo-text,
-    .menu-label,
-    .nav-text {
-        display: none;
-    }
-
-    .nav-button {
-        justify-content: center;
-
-        padding:
-            13px 5px;
-    }
-
-    .main {
-        padding: 15px;
-    }
-
-    .grid-3,
-    .grid-2 {
-        grid-template-columns:
-            1fr;
-    }
-
-    .ai-container {
-        grid-template-columns: 1fr;
-
-        min-height: 0;
-
-        height:
-            calc(100vh - 85px);
-    }
-
-    .chat-history-panel {
-        display: none;
-    }
-
-    .message-bubble {
-        max-width: 90%;
-    }
-
-}
-
-@media (max-width: 600px) {
-
-    .topbar {
-        align-items:
-            flex-start;
-    }
-
-    .search-wrapper {
-        flex: 1;
-    }
-
-    .hero {
-        padding: 25px;
-    }
-
-    .hero h1 {
-        font-size: 27px;
-    }
-
-    .grid-4 {
-        grid-template-columns:
-            1fr;
-    }
-
-    .timer-display {
-        font-size: 42px;
-    }
-
-    .chat-header {
-        padding:
-            10px;
-    }
-
-    .messages {
-        padding: 14px;
-    }
-
-    .ai-model {
-        max-width: 150px;
-    }
-
-    .fullscreen-ai .ai-container {
-        grid-template-columns: 1fr;
-    }
-
-    .fullscreen-ai .chat-history-panel {
-        display: none;
-    }
-
-}
-
-</style>
-</head>
-
-
-<body>
-
-<!-- ========================================================
-     UYGULAMA
-======================================================== -->
-
-<div class="app">
-
-
-<!-- ========================================================
-     SIDEBAR
-======================================================== -->
-
-<aside class="sidebar">
-
-    <div class="logo">
-
-        <div class="logo-icon">
-            ✦
-        </div>
-
-        <div class="logo-text">
-
-            <div class="logo-title">
-                My AI HUB
-            </div>
-
-            <div class="logo-subtitle">
-                Personal AI Center
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="menu-label">
-        MENÜ
-    </div>
-
-
-    <button
-        class="nav-button active"
-        data-page="home"
-    >
-
-        <span class="nav-icon">
-            ⌂
-        </span>
-
-        <span class="nav-text">
-            Ana Sayfa
-        </span>
-
-    </button>
-
-
-    <button
-        class="nav-button"
-        data-page="ai"
-    >
-
-        <span class="nav-icon">
-            ✦
-        </span>
-
-        <span class="nav-text">
-            AI Asistan
-        </span>
-
-    </button>
-
-
-    <button
-        class="nav-button"
-        data-page="games"
-    >
-
-        <span class="nav-icon">
-            🎮
-        </span>
-
-        <span class="nav-text">
-            Oyunlar
-        </span>
-
-    </button>
-
-
-    <button
-        class="nav-button"
-        data-page="tools"
-    >
-
-        <span class="nav-icon">
-            🛠
-        </span>
-
-        <span class="nav-text">
-            Araçlar
-        </span>
-
-    </button>
-
-
-    <button
-        class="nav-button"
-        data-page="notes"
-    >
-
-        <span class="nav-icon">
-            📝
-        </span>
-
-        <span class="nav-text">
-            Notlar
-        </span>
-
-    </button>
-
-
-    <button
-        class="nav-button"
-        data-page="settings"
-    >
-
-        <span class="nav-icon">
-            ⚙
-        </span>
-
-        <span class="nav-text">
-            Ayarlar
-        </span>
-
-    </button>
-
-</aside>
-
-
-<!-- ========================================================
-     MAIN
-======================================================== -->
-
-<main class="main">
-
-
-<!-- ========================================================
-     TOPBAR
-======================================================== -->
-
-<header class="topbar">
-
-    <div class="search-wrapper">
-
-        <span class="search-icon">
-            🔎
-        </span>
-
-        <input
-            id="globalSearch"
-            class="search"
-            type="text"
-            placeholder="My AI HUB'da ara..."
-        >
-
-    </div>
-
-
-    <div class="top-actions">
-
-        <button
-            class="icon-button"
-            id="themeButton"
-            title="Tema"
-        >
-            ☾
-        </button>
-
-
-        <button
-            class="icon-button"
-            id="aboutButton"
-            title="Hakkında"
-        >
-            ?
-        </button>
-
-    </div>
-
-</header>
-
-
-<!-- ========================================================
-     HOME
-======================================================== -->
-
-<section
-    class="page active"
-    id="page-home"
->
-
-
-    <div class="hero">
-
-        <div class="hero-content">
-
-            <h1>
-                My AI HUB'a hoş geldin 👋
-            </h1>
-
-            <p>
-                Yapay zekâ, oyunlar, araçlar ve
-                notlar artık tek bir yerde.
-            </p>
-
-            <button
-                class="hero-button"
-                id="heroAiButton"
-            >
-                ✦ AI Asistanı Aç
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <h2 class="section-heading">
-        Hızlı Erişim
-    </h2>
-
-
-    <div class="grid-3">
-
-
-        <div
-            class="card clickable"
-            data-open-page="ai"
-        >
-
-            <div class="card-icon">
-                ✦
-            </div>
-
-            <h3>
-                AI Asistan
-            </h3>
-
-            <p>
-                Groq üzerinden yapay zekâ ile
-                sohbet et.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-open-page="games"
-        >
-
-            <div class="card-icon">
-                🎮
-            </div>
-
-            <h3>
-                Oyunlar
-            </h3>
-
-            <p>
-                Mini oyunlarla biraz eğlen.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-open-page="tools"
-        >
-
-            <div class="card-icon">
-                🛠
-            </div>
-
-            <h3>
-                Araçlar
-            </h3>
-
-            <p>
-                Hesap makinesi, kronometre,
-                dönüştürücü ve daha fazlası.
-            </p>
-
-        </div>
-
-
-    </div>
-
-
-    <h2 class="section-heading">
-        Sistem
-    </h2>
-
-
-    <div class="grid-3">
-
-
-        <div class="card">
-
-            <div class="card-icon">
-                ⚡
-            </div>
-
-            <h3>
-                Groq AI
-            </h3>
-
-            <p id="homeApiStatus">
-                API anahtarı kontrol ediliyor...
-            </p>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="card-icon">
-                💾
-            </div>
-
-            <h3>
-                Yerel kayıt
-            </h3>
-
-            <p>
-                Notlar, ayarlar ve sohbet geçmişi
-                cihazında saklanabilir.
-            </p>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="card-icon">
-                📱
-            </div>
-
-            <h3>
-                Mobil uyumlu
-            </h3>
-
-            <p>
-                Telefon ve tablet ekranları için
-                tasarlandı.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- ========================================================
-     AI
-======================================================== -->
-
-<section
-    class="page"
-    id="page-ai"
->
-
-
-    <div
-        class="ai-container"
-        id="aiContainer"
-    >
-
-
-        <!-- CHAT HISTORY -->
-
-        <aside class="chat-history-panel">
-
-            <button
-                class="new-chat-button"
-                id="newChatButton"
-            >
-                ＋ Yeni Sohbet
-            </button>
-
-
-            <div class="history-title">
-                SOHBET
-            </div>
-
-
-            <div
-                class="history-list"
-                id="historyList"
-            >
-            </div>
-
-        </aside>
-
-
-        <!-- CHAT -->
-
-        <div class="chat-panel">
-
-
-            <div class="chat-header">
-
-
-                <div class="ai-profile">
-
-                    <div class="ai-avatar">
-                        ✦
-                    </div>
-
-                    <div>
-
-                        <div class="ai-name">
-                            My AI
-                        </div>
-
-                        <div
-                            class="ai-model"
-                            id="currentModelLabel"
-                        >
-                            openai/gpt-oss-20b
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="chat-actions">
-
-
-                    <button
-                        class="small-button"
-                        id="clearChatButton"
-                        title="Sohbeti temizle"
-                    >
-                        🗑
-                    </button>
-
-
-                    <button
-                        class="small-button"
-                        id="fullscreenButton"
-                        title="Tam ekran"
-                    >
-                        ⛶
-                    </button>
-
-
-                </div>
-
-
-            </div>
-
-
-            <div
-                class="messages"
-                id="messages"
-            >
-            </div>
-
-
-            <div class="chat-input-area">
-
-
-                <textarea
-                    id="chatInput"
-                    class="chat-input"
-                    rows="1"
-                    placeholder="My AI'ya bir şey sor..."
-                ></textarea>
-
-
-                <button
-                    class="send-button"
-                    id="sendButton"
-                    title="Gönder"
-                >
-                    ➤
-                </button>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- ========================================================
-     GAMES
-======================================================== -->
-
-<section
-    class="page"
-    id="page-games"
->
-
-
-    <div class="page-heading">
-
-        <h1 class="page-title">
-            Oyunlar 🎮
-        </h1>
-
-        <p class="page-description">
-            My AI HUB içindeki mini oyunlar.
-        </p>
-
-    </div>
-
-
-    <div
-        class="grid-2"
-        id="gameMenu"
-    >
-
-
-        <div
-            class="card clickable"
-            data-game="number"
-        >
-
-            <div class="card-icon">
-                🔢
-            </div>
-
-            <h3>
-                Sayı Tahmin
-            </h3>
-
-            <p>
-                1 ile 100 arasındaki sayıyı bul.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-game="rps"
-        >
-
-            <div class="card-icon">
-                ✊
-            </div>
-
-            <h3>
-                Taş Kağıt Makas
-            </h3>
-
-            <p>
-                Bilgisayara karşı oyna.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-game="memory"
-        >
-
-            <div class="card-icon">
-                🧠
-            </div>
-
-            <h3>
-                Hafıza
-            </h3>
-
-            <p>
-                Aynı kartların eşlerini bul.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-game="reaction"
-        >
-
-            <div class="card-icon">
-                ⚡
-            </div>
-
-            <h3>
-                Refleks
-            </h3>
-
-            <p>
-                Doğru anda bas ve süreni ölç.
-            </p>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- SAYI -->
-
-    <div
-        class="tool-view card game-panel"
-        id="game-number"
-    >
-
-        <h2>
-            🔢 Sayı Tahmin
-        </h2>
-
-        <p>
-            1 ile 100 arasında bir sayı tuttum.
-        </p>
-
-
-        <div
-            class="row"
-            style="margin-top:18px"
-        >
-
-            <input
-                class="input"
-                id="guessInput"
-                type="number"
-                min="1"
-                max="100"
-                placeholder="Tahminin"
-            >
-
-            <button
-                class="primary-button"
-                id="guessButton"
-            >
-                Tahmin Et
-            </button>
-
-        </div>
-
-
-        <div
-            class="game-status"
-            id="guessStatus"
-        >
-            Oyun hazır.
-        </div>
-
-
-        <button
-            class="small-button"
-            id="resetGuessButton"
-        >
-            Yeni Sayı
-        </button>
-
-    </div>
-
-
-    <!-- RPS -->
-
-    <div
-        class="tool-view card game-panel"
-        id="game-rps"
-    >
-
-        <h2>
-            ✊ Taş Kağıt Makas
-        </h2>
-
-        <div class="game-buttons">
-
-            <button
-                class="primary-button"
-                data-rps="Taş"
-            >
-                ✊ Taş
-            </button>
-
-            <button
-                class="primary-button"
-                data-rps="Kağıt"
-            >
-                ✋ Kağıt
-            </button>
-
-            <button
-                class="primary-button"
-                data-rps="Makas"
-            >
-                ✌️ Makas
-            </button>
-
-        </div>
-
-
-        <div
-            class="game-status"
-            id="rpsStatus"
-        >
-            Seçimini yap.
-        </div>
-
-    </div>
-
-
-    <!-- MEMORY -->
-
-    <div
-        class="tool-view card game-panel"
-        id="game-memory"
-    >
-
-        <h2>
-            🧠 Hafıza
-        </h2>
-
-        <p>
-            Aynı emojilerin eşlerini bul.
-        </p>
-
-
-        <div
-            class="memory-grid"
-            id="memoryGrid"
-        >
-        </div>
-
-
-        <div
-            class="game-status"
-            id="memoryStatus"
-        >
-            0 / 4 eşleşme
-        </div>
-
-
-        <button
-            class="small-button"
-            id="resetMemoryButton"
-        >
-            Yeniden Başlat
-        </button>
-
-    </div>
-
-
-    <!-- REACTION -->
-
-    <div
-        class="tool-view card game-panel"
-        id="game-reaction"
-    >
-
-        <h2>
-            ⚡ Refleks
-        </h2>
-
-        <p>
-            Yeşil olduğunda mümkün olduğunca
-            hızlı bas.
-        </p>
-
-
-        <div
-            class="reaction-box"
-            id="reactionBox"
-        >
-
-            <div>
-
-                <div
-                    class="reaction-text"
-                    id="reactionText"
-                >
-                    Başlamak için bas
-                </div>
-
-                <br>
-
-                <button
-                    class="primary-button"
-                    id="reactionButton"
-                >
-                    Başlat
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ========================================================
-     TOOLS
-======================================================== -->
-
-<section
-    class="page"
-    id="page-tools"
->
-
-
-    <div class="page-heading">
-
-        <h1 class="page-title">
-            Araçlar 🛠
-        </h1>
-
-        <p class="page-description">
-            Kullanışlı küçük araçlar.
-        </p>
-
-    </div>
-
-
-    <div class="grid-4">
-
-
-        <div
-            class="card clickable"
-            data-tool="calculator"
-        >
-
-            <div class="card-icon">
-                🧮
-            </div>
-
-            <h3>
-                Hesap Makinesi
-            </h3>
-
-            <p>
-                Dört işlem ve daha fazlası.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-tool="converter"
-        >
-
-            <div class="card-icon">
-                ↔
-            </div>
-
-            <h3>
-                Dönüştürücü
-            </h3>
-
-            <p>
-                Uzunluk ve ağırlık dönüştür.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-tool="stopwatch"
-        >
-
-            <div class="card-icon">
-                ⏱
-            </div>
-
-            <h3>
-                Kronometre
-            </h3>
-
-            <p>
-                Zamanını ölç.
-            </p>
-
-        </div>
-
-
-        <div
-            class="card clickable"
-            data-tool="countdown"
-        >
-
-            <div class="card-icon">
-                ⏳
-            </div>
-
-            <h3>
-                Geri Sayım
-            </h3>
-
-            <p>
-                Belirlediğin süreyi say.
-            </p>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- CALCULATOR -->
-
-    <div
-        class="tool-view card"
-        id="tool-calculator"
-    >
-
-        <h2>
-            🧮 Hesap Makinesi
-        </h2>
-
-
-        <div
-            class="calculator"
-            style="margin-top:20px"
-        >
-
-            <div
-                class="calculator-display"
-                id="calculatorDisplay"
-            >
-                0
-            </div>
-
-
-            <div
-                class="calculator-keys"
-            >
-
-                <button
-                    class="calc-key operator"
-                    data-calc="clear"
-                >
-                    AC
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="backspace"
-                >
-                    ⌫
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="%"
-                >
-                    %
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="/"
-                >
-                    ÷
-                </button>
-
-
-                <button
-                    class="calc-key"
-                    data-calc="7"
-                >
-                    7
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="8"
-                >
-                    8
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="9"
-                >
-                    9
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="*"
-                >
-                    ×
-                </button>
-
-
-                <button
-                    class="calc-key"
-                    data-calc="4"
-                >
-                    4
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="5"
-                >
-                    5
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="6"
-                >
-                    6
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="-"
-                >
-                    −
-                </button>
-
-
-                <button
-                    class="calc-key"
-                    data-calc="1"
-                >
-                    1
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="2"
-                >
-                    2
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="3"
-                >
-                    3
-                </button>
-
-                <button
-                    class="calc-key operator"
-                    data-calc="+"
-                >
-                    +
-                </button>
-
-
-                <button
-                    class="calc-key"
-                    data-calc="0"
-                >
-                    0
-                </button>
-
-                <button
-                    class="calc-key"
-                    data-calc="."
-                >
-                    .
-                </button>
-
-                <button
-                    class="calc-key equals"
-                    data-calc="="
-                    style="grid-column: span 2"
-                >
-                    =
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- CONVERTER -->
-
-    <div
-        class="tool-view card"
-        id="tool-converter"
-    >
-
-        <h2>
-            ↔ Birim Dönüştürücü
-        </h2>
-
-
-        <div
-            class="grid-2"
-            style="margin-top:20px"
-        >
-
-            <div class="form-group">
-
-                <label class="form-label">
-                    Değer
-                </label>
-
-                <input
-                    class="input"
-                    id="convertValue"
-                    type="number"
-                    placeholder="Örn. 10"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label class="form-label">
-                    Dönüşüm
-                </label>
-
-                <select
-                    class="select"
-                    id="convertType"
-                >
-
-                    <option value="m-cm">
-                        Metre → Santimetre
-                    </option>
-
-                    <option value="cm-m">
-                        Santimetre → Metre
-                    </option>
-
-                    <option value="km-m">
-                        Kilometre → Metre
-                    </option>
-
-                    <option value="m-km">
-                        Metre → Kilometre
-                    </option>
-
-                    <option value="kg-g">
-                        Kilogram → Gram
-                    </option>
-
-                    <option value="g-kg">
-                        Gram → Kilogram
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <button
-            class="primary-button"
-            id="convertButton"
-        >
-            Dönüştür
-        </button>
-
-
-        <div
-            class="converter-result"
-            id="convertResult"
-        >
-            Sonuç burada görünecek.
-        </div>
-
-    </div>
-
-
-    <!-- STOPWATCH -->
-
-    <div
-        class="tool-view card timer-panel"
-        id="tool-stopwatch"
-    >
-
-        <h2>
-            ⏱ Kronometre
-        </h2>
-
-
-        <div
-            class="timer-display"
-            id="stopwatchDisplay"
-        >
-            00:00:00
-        </div>
-
-
-        <div class="timer-buttons">
-
-            <button
-                class="primary-button"
-                id="stopwatchStart"
-            >
-                Başlat
-            </button>
-
-            <button
-                class="small-button"
-                id="stopwatchPause"
-            >
-                Duraklat
-            </button>
-
-            <button
-                class="small-button"
-                id="stopwatchReset"
-            >
-                Sıfırla
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- COUNTDOWN -->
-
-    <div
-        class="tool-view card timer-panel"
-        id="tool-countdown"
-    >
-
-        <h2>
-            ⏳ Geri Sayım
-        </h2>
-
-
-        <div
-            class="form-group"
-            style="margin-top:20px"
-        >
-
-            <label class="form-label">
-                Süre (saniye)
-            </label>
-
-            <input
-                class="input"
-                id="countdownInput"
-                type="number"
-                min="1"
-                placeholder="60"
-            >
-
-        </div>
-
-
-        <div
-            class="timer-display"
-            id="countdownDisplay"
-        >
-            00:00
-        </div>
-
-
-        <div class="timer-buttons">
-
-            <button
-                class="primary-button"
-                id="countdownStart"
-            >
-                Başlat
-            </button>
-
-            <button
-                class="small-button"
-                id="countdownStop"
-            >
-                Durdur
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ========================================================
-     NOTES
-======================================================== -->
-
-<section
-    class="page"
-    id="page-notes"
->
-
-
-    <div class="page-heading">
-
-        <h1 class="page-title">
-            Notlar 📝
-        </h1>
-
-        <p class="page-description">
-            Notlarını burada saklayabilirsin.
-        </p>
-
-    </div>
-
-
-    <div class="card">
-
-        <textarea
-            class="notes-editor"
-            id="notesEditor"
-            placeholder="Notlarını buraya yaz..."
-        ></textarea>
-
-
-        <div
-            class="row"
-            style="margin-top:12px"
-        >
-
-            <button
-                class="primary-button"
-                id="saveNotesButton"
-            >
-                💾 Kaydet
-            </button>
-
-            <button
-                class="small-button"
-                id="clearNotesButton"
-            >
-                Temizle
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ========================================================
-     SETTINGS
-======================================================== -->
-
-<section
-    class="page"
-    id="page-settings"
->
-
-
-    <div class="page-heading">
-
-        <h1 class="page-title">
-            Ayarlar ⚙
-        </h1>
-
-        <p class="page-description">
-            My AI HUB ayarlarını buradan yönet.
-        </p>
-
-    </div>
-
-
-    <div class="settings-list">
-
-
-        <!-- API KEY -->
-
-        <div class="card setting-card">
-
-            <div class="setting-header">
-
-                <div>
-
-                    <div class="setting-name">
-                        Groq API Key
-                    </div>
-
-                    <div class="setting-description">
-                        AI asistanını kullanmak için
-                        Groq API anahtarını gir.
-                    </div>
-
-                </div>
-
-                <span
-                    class="badge primary"
-                    id="apiBadge"
-                >
-                    Ayarlanmadı
-                </span>
-
-            </div>
-
-
-            <div class="setting-content">
-
-                <input
-                    class="input"
-                    id="apiKeyInput"
-                    type="password"
-                    placeholder="BURAYA APİ KEY YAZILACAK"
-                >
-
-
-                <div
-                    style="margin-top:10px"
-                >
-
-                    <button
-                        class="primary-button"
-                        id="saveApiButton"
-                    >
-                        API Key'i Kaydet
-                    </button>
-
-                    <button
-                        class="small-button"
-                        id="removeApiButton"
-                    >
-                        Sil
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- MODEL -->
-
-        <div class="card setting-card">
-
-            <div class="setting-header">
-
-                <div>
-
-                    <div class="setting-name">
-                        AI Modeli
-                    </div>
-
-                    <div class="setting-description">
-                        Groq üzerinde kullanılacak model.
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="setting-content">
-
-                <select
-                    class="select"
-                    id="modelSelect"
-                >
-
-                    <option value="openai/gpt-oss-20b">
-                        GPT-OSS 20B
-                    </option>
-
-                    <option value="openai/gpt-oss-120b">
-                        GPT-OSS 120B
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <!-- THEME -->
-
-        <div class="card setting-card">
-
-            <div class="setting-header">
-
-                <div>
-
-                    <div class="setting-name">
-                        Koyu Tema
-                    </div>
-
-                    <div class="setting-description">
-                        My AI HUB'ı koyu görünümde kullan.
-                    </div>
-
-                </div>
-
-
-                <label class="toggle">
-
-                    <input
-                        type="checkbox"
-                        id="darkModeToggle"
-                    >
-
-                    <span class="toggle-slider">
-                    </span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- ABOUT -->
-
-        <div class="card setting-card">
-
-            <div class="setting-header">
-
-                <div>
-
-                    <div class="setting-name">
-                        My AI HUB
-                    </div>
-
-                    <div class="setting-description">
-                        Kişisel AI ve araç merkezi.
-                        Tek HTML dosyası olarak çalışır.
-                    </div>
-
-                </div>
-
-                <span class="badge success">
-                    v2.0
-                </span>
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-</main>
-
-</div>
-
-
-<!-- ========================================================
-     MODAL
-======================================================== -->
-
-<div
-    class="modal-background"
-    id="modalBackground"
->
-
-
-    <div class="modal">
-
-        <h2 id="modalTitle">
-            Bilgi
-        </h2>
-
-
-        <div id="modalContent">
-        </div>
-
-
-        <div class="modal-footer">
-
-            <button
-                class="small-button"
-                id="modalClose"
-            >
-                Kapat
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ========================================================
-     TOAST
-======================================================== -->
-
-<div
-    class="toast"
-    id="toast"
->
-</div>
-
-
-<!-- ========================================================
-     JAVASCRIPT
-======================================================== -->
-
-<script>
-
-/* =========================================================
-   SABİTLER
-========================================================= */
-
-const GROQ_ENDPOINT =
-    "https://api.groq.com/openai/v1/chat/completions";
-
-
-/*
-   Kullanıcının istediği placeholder.
-   Gerçek API anahtarını GitHub'a koymuyoruz.
-*/
-
-const API_PLACEHOLDER =
-    "BURAYA APİ KEY YAZILACAK";
-
-
-/* =========================================================
-   GLOBAL STATE
-========================================================= */
-
-let currentModel =
-    localStorage.getItem("myai_model") ||
-    "openai/gpt-oss-20b";
-
-
-let conversation = [];
-
-
-let isSending = false;
-
-
-/* =========================================================
-   YARDIMCI FONKSİYONLAR
-========================================================= */
-
-function $(id) {
-    return document.getElementById(id);
-}
-
-
-function showToast(message) {
-
-    const toast = $("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    clearTimeout(
-        showToast.timeout
-    );
-
-    showToast.timeout =
-        setTimeout(
-            () => {
-                toast.classList.remove("show");
-            },
-            2500
-        );
-}
-
-
-function escapeHTML(text) {
-
-    const div =
-        document.createElement("div");
-
-    div.textContent = text;
-
-    return div.innerHTML;
+    window.__toastTimer=setTimeout(function(){
+        el.classList.remove("show");
+    },2500);
 }
 
 
 /* =========================================================
-   SAYFA DEĞİŞTİRME
+   NAVIGATION
 ========================================================= */
 
-const pageNames = [
-    "home",
-    "ai",
-    "games",
-    "tools",
-    "notes",
-    "settings"
-];
+function openPage(page){
 
+    document.querySelectorAll(".page").forEach(function(el){
+        el.classList.remove("active");
+    });
 
-function openPage(pageName) {
+    const target=document.getElementById("page-"+page);
 
-    if (
-        !pageNames.includes(pageName)
-    ) {
-        return;
+    if(target){
+        target.classList.add("active");
     }
 
-
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            page => {
-                page.classList.remove(
-                    "active"
-                );
-            }
+    document.querySelectorAll(".nav-btn").forEach(function(btn){
+        btn.classList.toggle(
+            "active",
+            btn.dataset.page===page
         );
+    });
 
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
-    document
-        .querySelectorAll(".nav-button")
-        .forEach(
-            button => {
-                button.classList.remove(
-                    "active"
-                );
-            }
-        );
-
-
-    const page =
-        $("page-" + pageName);
-
-
-    if (page) {
-
-        page.classList.add(
-            "active"
-        );
-
+    if(page==="sports"){
+        updateSportsConfiguration();
     }
 
-
-    const nav =
-        document.querySelector(
-            `.nav-button[data-page="${pageName}"]`
-        );
-
-
-    if (nav) {
-
-        nav.classList.add(
-            "active"
-        );
-
+    if(page==="notes"){
+        loadNotes();
     }
+}
+
+document.querySelectorAll(".nav-btn").forEach(function(btn){
+    btn.addEventListener("click",function(){
+        openPage(btn.dataset.page);
+    });
+});
+
+document.querySelectorAll("[data-go]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+        openPage(btn.dataset.go);
+    });
+});
 
 
-    window.scrollTo(
-        {
-            top: 0,
-            behavior: "smooth"
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document.getElementById("globalSearch").addEventListener(
+"input",
+function(){
+
+    const q=this.value.toLowerCase().trim();
+
+    document.querySelectorAll(".nav-btn").forEach(function(btn){
+
+        const text=btn.textContent.toLowerCase();
+
+        if(!q){
+            btn.style.display="";
+            return;
         }
-    );
 
-}
+        btn.style.display=text.includes(q) ? "" : "none";
 
+    });
 
-document
-    .querySelectorAll(".nav-button")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-                    openPage(
-                        button.dataset.page
-                    );
-                }
-            );
-
-        }
-    );
-
-
-document
-    .querySelectorAll("[data-open-page]")
-    .forEach(
-        element => {
-
-            element.addEventListener(
-                "click",
-                () => {
-
-                    openPage(
-                        element.dataset.openPage
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-$("heroAiButton")
-    .addEventListener(
-        "click",
-        () => {
-            openPage("ai");
-        }
-    );
+});
 
 
 /* =========================================================
    THEME
 ========================================================= */
 
-function loadTheme() {
+function applyTheme(){
 
-    const dark =
-        localStorage.getItem(
-            "myai_dark"
-        ) === "true";
+    const theme=getStore(STORE.theme);
 
-
-    document.body.classList.toggle(
-        "dark",
-        dark
-    );
-
-
-    $("darkModeToggle").checked =
-        dark;
-
-}
-
-
-function toggleTheme() {
-
-    const dark =
-        $("darkModeToggle").checked;
-
-
-    document.body.classList.toggle(
-        "dark",
-        dark
-    );
-
-
-    localStorage.setItem(
-        "myai_dark",
-        dark
-    );
-
-}
-
-
-$("themeButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            $("darkModeToggle").checked =
-                !document.body.classList.contains(
-                    "dark"
-                );
-
-            toggleTheme();
-
-        }
-    );
-
-
-$("darkModeToggle")
-    .addEventListener(
-        "change",
-        toggleTheme
-    );
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function openModal(
-    title,
-    html
-) {
-
-    $("modalTitle")
-        .textContent = title;
-
-    $("modalContent")
-        .innerHTML = html;
-
-    $("modalBackground")
-        .classList.add("show");
-
-}
-
-
-function closeModal() {
-
-    $("modalBackground")
-        .classList.remove("show");
-
-}
-
-
-$("modalClose")
-    .addEventListener(
-        "click",
-        closeModal
-    );
-
-
-$("modalBackground")
-    .addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target ===
-                $("modalBackground")
-            ) {
-                closeModal();
-            }
-
-        }
-    );
-
-
-$("aboutButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            openModal(
-                "My AI HUB",
-                `
-                    <p>
-                        Kişisel AI, oyun ve araç merkezi.
-                    </p>
-
-                    <p>
-                        <b>AI:</b>
-                        Groq API
-                    </p>
-
-                    <p>
-                        <b>Arayüz:</b>
-                        Tek HTML dosyası
-                    </p>
-
-                    <p>
-                        <b>Sürüm:</b>
-                        2.0
-                    </p>
-                `
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   API KEY
-========================================================= */
-
-function getAPIKey() {
-
-    const saved =
-        localStorage.getItem(
-            "myai_api_key"
-        );
-
-
-    if (
-        saved &&
-        saved.trim()
-    ) {
-        return saved.trim();
+    if(theme==="dark"){
+        document.body.classList.add("dark");
+        document.getElementById("themeBtn").textContent="☀️";
+    }else{
+        document.body.classList.remove("dark");
+        document.getElementById("themeBtn").textContent="🌙";
     }
-
-
-    return "";
 }
 
+function toggleTheme(){
 
-function updateAPIStatus() {
+    const dark=document.body.classList.toggle("dark");
 
-    const key =
-        getAPIKey();
+    setStore(
+        STORE.theme,
+        dark ? "dark" : "light"
+    );
 
-
-    const badge =
-        $("apiBadge");
-
-
-    const home =
-        $("homeApiStatus");
-
-
-    if (key) {
-
-        badge.textContent =
-            "Hazır";
-
-        badge.className =
-            "badge success";
-
-
-        home.textContent =
-            "Groq API anahtarı ayarlanmış.";
-
-    }
-    else {
-
-        badge.textContent =
-            "Ayarlanmadı";
-
-        badge.className =
-            "badge danger";
-
-
-        home.textContent =
-            "API anahtarı Ayarlar bölümünden eklenebilir.";
-
-    }
-
+    document.getElementById("themeBtn").textContent=
+        dark ? "☀️" : "🌙";
 }
 
+document.getElementById("themeBtn")
+    .addEventListener("click",toggleTheme);
 
-$("saveApiButton")
-    .addEventListener(
-        "click",
-        () => {
+document.getElementById("settingsTheme")
+    .addEventListener("click",toggleTheme);
 
-            const input =
-                $("apiKeyInput");
-
-            const value =
-                input.value.trim();
-
-
-            if (
-                !value ||
-                value === API_PLACEHOLDER
-            ) {
-
-                showToast(
-                    "Geçerli bir API Key gir."
-                );
-
-                return;
-            }
-
-
-            localStorage.setItem(
-                "myai_api_key",
-                value
-            );
-
-
-            input.value = "";
-
-            updateAPIStatus();
-
-            showToast(
-                "API Key kaydedildi."
-            );
-
-        }
-    );
-
-
-$("removeApiButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            localStorage.removeItem(
-                "myai_api_key"
-            );
-
-            updateAPIStatus();
-
-            showToast(
-                "API Key silindi."
-            );
-
-        }
-    );
+applyTheme();
 
 
 /* =========================================================
-   MODEL
+   AI
 ========================================================= */
 
-function loadModel() {
+const GROQ_URL=
+    "https://api.groq.com/openai/v1/chat/completions";
 
-    $("modelSelect").value =
-        currentModel;
+const DEFAULT_MODEL=
+    "openai/gpt-oss-20b";
 
+let aiMessages=[];
 
-    $("currentModelLabel")
-        .textContent =
-            currentModel;
+function escapeHTML(text){
 
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
+function renderAIText(text){
 
-$("modelSelect")
-    .addEventListener(
-        "change",
-        event => {
+    let safe=escapeHTML(text);
 
-            currentModel =
-                event.target.value;
-
-
-            localStorage.setItem(
-                "myai_model",
-                currentModel
-            );
-
-
-            $("currentModelLabel")
-                .textContent =
-                    currentModel;
-
-
-            showToast(
-                "AI modeli değiştirildi."
-            );
-
-        }
+    safe=safe.replace(
+        /```([\s\S]*?)```/g,
+        "<pre style='background:#11131a;color:#fff;padding:12px;border-radius:10px;overflow:auto'>$1</pre>"
     );
 
-
-/* =========================================================
-   AI MESAJLARI
-========================================================= */
-
-function addMessage(
-    content,
-    role
-) {
-
-    const container =
-        $("messages");
-
-
-    const wrapper =
-        document.createElement("div");
-
-
-    wrapper.className =
-        "message " + role;
-
-
-    const bubble =
-        document.createElement(
-            "div"
-        );
-
-
-    bubble.className =
-        "message-bubble";
-
-
-    /*
-       textContent kullanıyoruz.
-       Böylece AI cevabı HTML olarak
-       çalıştırılamaz.
-    */
-
-    bubble.textContent =
-        content;
-
-
-    wrapper.appendChild(
-        bubble
+    safe=safe.replace(
+        /\*\*(.*?)\*\*/g,
+        "<strong>$1</strong>"
     );
 
+    safe=safe.replace(/\n/g,"<br>");
 
-    container.appendChild(
-        wrapper
-    );
-
-
-    container.scrollTop =
-        container.scrollHeight;
-
-
-    return wrapper;
-
+    return safe;
 }
 
+function renderChat(){
 
-function addTyping() {
+    const chat=document.getElementById("chat");
 
-    const container =
-        $("messages");
+    if(aiMessages.length===0){
 
-
-    const wrapper =
-        document.createElement("div");
-
-
-    wrapper.className =
-        "message ai";
-
-
-    const bubble =
-        document.createElement("div");
-
-
-    bubble.className =
-        "message-bubble typing";
-
-
-    bubble.innerHTML =
-        `
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
+        chat.innerHTML=`
+            <div class="message ai">
+                <div class="bubble">
+                    Merhaba! 👋<br><br>
+                    Ben My AI. Bana soru sorabilir,
+                    kod yazdırabilir veya fikir isteyebilirsin.
+                </div>
+            </div>
         `;
 
-
-    wrapper.appendChild(
-        bubble
-    );
-
-
-    container.appendChild(
-        wrapper
-    );
-
-
-    container.scrollTop =
-        container.scrollHeight;
-
-
-    return wrapper;
-
-}
-
-
-/* =========================================================
-   YENİ SOHBET
-========================================================= */
-
-function startNewChat() {
-
-    conversation = [];
-
-
-    $("messages")
-        .innerHTML = "";
-
-
-    addMessage(
-        "Merhaba! 👋 Ben My AI. Sana nasıl yardımcı olabilirim?",
-        "ai"
-    );
-
-
-    saveConversation();
-
-
-    showToast(
-        "Yeni sohbet başladı."
-    );
-
-}
-
-
-$("newChatButton")
-    .addEventListener(
-        "click",
-        startNewChat
-    );
-
-
-$("clearChatButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            openModal(
-                "Sohbeti temizle",
-                `
-                    <p>
-                        Mevcut sohbeti silmek istiyor musun?
-                    </p>
-
-                    <div
-                        style="
-                            display:flex;
-                            gap:8px;
-                            margin-top:18px;
-                        "
-                    >
-
-                        <button
-                            class="primary-button"
-                            id="confirmClear"
-                        >
-                            Temizle
-                        </button>
-
-                        <button
-                            class="small-button"
-                            id="cancelClear"
-                        >
-                            Vazgeç
-                        </button>
-
-                    </div>
-                `
-            );
-
-
-            setTimeout(
-                () => {
-
-                    const confirm =
-                        $("confirmClear");
-
-                    const cancel =
-                        $("cancelClear");
-
-
-                    if (confirm) {
-
-                        confirm.onclick =
-                            () => {
-
-                                closeModal();
-
-                                startNewChat();
-
-                            };
-
-                    }
-
-
-                    if (cancel) {
-
-                        cancel.onclick =
-                            closeModal;
-
-                    }
-
-                },
-                0
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   SOHBET KAYDET
-========================================================= */
-
-function saveConversation() {
-
-    try {
-
-        localStorage.setItem(
-            "myai_conversation",
-            JSON.stringify(
-                conversation
-            )
-        );
-
-    }
-    catch (error) {
-
-        console.warn(
-            "Sohbet kaydedilemedi:",
-            error
-        );
-
-    }
-
-}
-
-
-function loadConversation() {
-
-    const saved =
-        localStorage.getItem(
-            "myai_conversation"
-        );
-
-
-    if (!saved) {
-
-        addMessage(
-            "Merhaba! 👋 Ben My AI. Bana istediğin şeyi sorabilirsin.",
-            "ai"
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        const data =
-            JSON.parse(saved);
-
-
-        if (
-            !Array.isArray(data) ||
-            data.length === 0
-        ) {
-
-            throw new Error();
-
-        }
-
-
-        conversation =
-            data;
-
-
-        $("messages")
-            .innerHTML = "";
-
-
-        data.forEach(
-            message => {
-
-                if (
-                    message.role === "user" ||
-                    message.role === "assistant"
-                ) {
-
-                    addMessage(
-                        message.content,
-                        message.role ===
-                        "user"
-                            ? "user"
-                            : "ai"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-    catch {
-
-        conversation = [];
-
-        addMessage(
-            "Merhaba! 👋 Ben My AI. Bana istediğin şeyi sorabilirsin.",
-            "ai"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CHAT GEÇMİŞİ
-========================================================= */
-
-function updateHistory() {
-
-    const list =
-        $("historyList");
-
-
-    list.innerHTML = "";
-
-
-    const userMessages =
-        conversation.filter(
-            message =>
-                message.role === "user"
-        );
-
-
-    userMessages
-        .slice(-10)
-        .reverse()
-        .forEach(
-            message => {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-
-                button.className =
-                    "history-item";
-
-
-                button.textContent =
-                    message.content;
-
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        $("chatInput")
-                            .value =
-                            message.content;
-
-                        $("chatInput")
-                            .focus();
-
-                    }
-                );
-
-
-                list.appendChild(
-                    button
-                );
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   AI GÖNDER
-========================================================= */
-
-async function sendAIMessage() {
-
-    if (isSending) {
         return;
     }
 
+    chat.innerHTML="";
 
-    const input =
-        $("chatInput");
+    aiMessages.forEach(function(msg,index){
 
+        const wrapper=document.createElement("div");
 
-    const text =
-        input.value.trim();
+        wrapper.className=
+            "message "+
+            (msg.role==="user" ? "user" : "ai");
 
+        const bubble=document.createElement("div");
 
-    if (!text) {
+        bubble.className="bubble";
+
+        bubble.innerHTML=renderAIText(msg.content);
+
+        wrapper.appendChild(bubble);
+
+        if(msg.role==="assistant"){
+
+            const actions=document.createElement("div");
+
+            actions.className="message-actions";
+
+            const copy=document.createElement("button");
+
+            copy.className="copy-btn";
+
+            copy.textContent="📋 Kopyala";
+
+            copy.addEventListener("click",function(){
+
+                navigator.clipboard
+                    .writeText(msg.content)
+                    .then(function(){
+                        toast("AI cevabı kopyalandı.");
+                    })
+                    .catch(function(){
+                        toast("Kopyalama başarısız.");
+                    });
+
+            });
+
+            actions.appendChild(copy);
+            bubble.appendChild(actions);
+        }
+
+        chat.appendChild(wrapper);
+
+    });
+
+    chat.scrollTop=chat.scrollHeight;
+
+    setStore(STORE.chat,JSON.stringify(aiMessages));
+
+    renderHistory();
+}
+
+function renderHistory(){
+
+    const list=document.getElementById("historyList");
+
+    if(aiMessages.length===0){
+        list.innerHTML="";
         return;
     }
 
+    const userMessages=
+        aiMessages.filter(function(x){
+            return x.role==="user";
+        });
 
-    const apiKey =
-        getAPIKey();
+    list.innerHTML="";
 
+    userMessages.slice(-8).reverse().forEach(function(msg){
 
-    if (!apiKey) {
+        const button=document.createElement("button");
 
-        showToast(
-            "Önce Ayarlar bölümünden Groq API Key ekle."
-        );
+        button.className="history-item";
 
+        button.textContent=
+            msg.content.slice(0,35)+
+            (msg.content.length>35 ? "..." : "");
 
-        openPage(
-            "settings"
-        );
+        list.appendChild(button);
+    });
+}
 
+function loadChat(){
 
-        return;
+    try{
 
+        const saved=getStore(STORE.chat);
+
+        if(saved){
+            aiMessages=JSON.parse(saved);
+        }
+
+    }catch(e){
+
+        aiMessages=[];
     }
 
+    renderChat();
+}
 
-    isSending = true;
+async function sendAI(){
 
+    const input=document.getElementById("aiInput");
 
-    addMessage(
-        text,
-        "user"
-    );
+    const text=input.value.trim();
 
+    if(!text) return;
 
-    input.value = "";
+    const key=getStore(STORE.groq);
 
-    input.style.height =
-        "auto";
+    if(!key){
 
+        toast("Önce Ayarlar bölümüne Groq API Key gir.");
 
-    conversation.push(
-        {
-            role: "user",
-            content: text
-        }
-    );
+        openPage("settings");
 
+        return;
+    }
 
-    updateHistory();
+    const model=
+        document.getElementById("aiModel").value ||
+        DEFAULT_MODEL;
 
+    aiMessages.push({
+        role:"user",
+        content:text
+    });
 
-    const typing =
-        addTyping();
+    input.value="";
 
+    renderChat();
 
-    try {
+    const chat=document.getElementById("chat");
 
-        const response =
-            await fetch(
-                GROQ_ENDPOINT,
-                {
-                    method: "POST",
+    const loading=document.createElement("div");
 
-                    headers: {
-                        "Content-Type":
-                            "application/json",
+    loading.className="message ai";
 
-                        "Authorization":
-                            "Bearer " +
-                            apiKey
-                    },
+    loading.innerHTML=`
+        <div class="bubble">
+            ⏳ AI düşünüyor...
+        </div>
+    `;
 
-                    body:
-                        JSON.stringify(
-                            {
-                                model:
-                                    currentModel,
+    chat.appendChild(loading);
 
-                                messages: [
-                                    {
-                                        role:
-                                            "system",
+    chat.scrollTop=chat.scrollHeight;
 
-                                        content:
-                                            "Sen My AI adlı yardımcı asistansın. Kullanıcıyla Türkçe konuş. Cevapların doğal, açık ve faydalı olsun."
-                                    },
+    try{
 
-                                    ...conversation
-                                ],
-
-                                temperature:
-                                    0.7,
-
-                                max_completion_tokens:
-                                    2048
-                            }
-                        )
-                }
-            );
-
-
-        let data = {};
-
-
-        try {
-
-            data =
-                await response.json();
-
-        }
-        catch {
-
-            data = {};
-
-        }
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data?.error?.message ||
-                `Groq API hatası: ${response.status}`
-            );
-
-        }
-
-
-        const answer =
-            data?.choices?.[0]?.message?.content;
-
-
-        if (!answer) {
-
-            throw new Error(
-                "AI cevap göndermedi."
-            );
-
-        }
-
-
-        typing.remove();
-
-
-        addMessage(
-            answer,
-            "ai"
-        );
-
-
-        conversation.push(
+        const response=await fetch(
+            GROQ_URL,
             {
-                role:
-                    "assistant",
-
-                content:
-                    answer
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":"Bearer "+key
+                },
+                body:JSON.stringify({
+                    model:model,
+                    messages:aiMessages,
+                    temperature:.7
+                })
             }
         );
 
+        let data=null;
 
-        saveConversation();
-
-        updateHistory();
-
-    }
-    catch (error) {
-
-        typing.remove();
-
-
-        addMessage(
-            "AI bağlantı hatası:\n" +
-            error.message,
-            "ai"
-        );
-
-    }
-    finally {
-
-        isSending = false;
-
-    }
-
-}
-
-
-$("sendButton")
-    .addEventListener(
-        "click",
-        sendAIMessage
-    );
-
-
-$("chatInput")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                sendAIMessage();
-
-            }
-
+        try{
+            data=await response.json();
+        }catch(e){
+            throw new Error("API geçerli JSON döndürmedi.");
         }
-    );
 
+        if(!response.ok){
 
-$("chatInput")
-    .addEventListener(
-        "input",
-        event => {
-
-            event.target.style.height =
-                "auto";
-
-
-            event.target.style.height =
-                Math.min(
-                    event.target.scrollHeight,
-                    150
-                ) + "px";
-
-        }
-    );
-
-
-/* =========================================================
-   AI TAM EKRAN
-========================================================= */
-
-let aiFullscreen = false;
-
-
-$("fullscreenButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            aiFullscreen =
-                !aiFullscreen;
-
-
-            $("page-ai")
-                .classList.toggle(
-                    "ai-fullscreen",
-                    aiFullscreen
-                );
-
-
-            document.body
-                .classList.toggle(
-                    "ai-mode",
-                    aiFullscreen
-                );
-
-
-            $("fullscreenButton")
-                .textContent =
-                    aiFullscreen
-                        ? "✕"
-                        : "⛶";
-
-        }
-    );
-
-
-/* =========================================================
-   OYUNLAR
-========================================================= */
-
-document
-    .querySelectorAll("[data-game]")
-    .forEach(
-        card => {
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    openGame(
-                        card.dataset.game
-                    );
-
-                }
+            throw new Error(
+                data &&
+                data.error &&
+                data.error.message
+                ? data.error.message
+                : "Groq API hatası: "+response.status
             );
-
         }
-    );
 
+        const answer=
+            data &&
+            data.choices &&
+            data.choices[0] &&
+            data.choices[0].message &&
+            data.choices[0].message.content
+            ? data.choices[0].message.content
+            : "AI cevap vermedi.";
 
-function openGame(name) {
+        aiMessages.push({
+            role:"assistant",
+            content:answer
+        });
 
-    document
-        .querySelectorAll(".game-panel")
-        .forEach(
-            panel => {
+        renderChat();
 
-                panel.classList.remove(
-                    "active"
-                );
+    }catch(error){
 
-            }
-        );
+        aiMessages.pop();
 
+        renderChat();
 
-    const panel =
-        $("game-" + name);
+        const errorMessage=
+            "❌ AI bağlantısı başarısız.\n\n"+
+            error.message;
 
+        aiMessages.push({
+            role:"assistant",
+            content:errorMessage
+        });
 
-    if (!panel) {
-        return;
+        renderChat();
+
     }
 
+}
 
-    panel.classList.add(
-        "active"
-    );
+document.getElementById("sendAi")
+    .addEventListener("click",sendAI);
+
+document.getElementById("aiInput")
+    .addEventListener("keydown",function(e){
+
+        if(e.key==="Enter" && !e.shiftKey){
+
+            e.preventDefault();
+
+            sendAI();
+        }
+
+    });
+
+document.getElementById("newChat")
+    .addEventListener("click",function(){
+
+        aiMessages=[];
+
+        removeStore(STORE.chat);
+
+        renderChat();
+
+        toast("Yeni sohbet oluşturuldu.");
+
+    });
+
+document.getElementById("quickAi")
+    .addEventListener("click",function(){
+        openPage("ai");
+    });
+
+document.getElementById("fullscreenAi")
+    .addEventListener("click",function(){
+
+        document.body.classList.add("ai-fullscreen");
+
+    });
+
+document.getElementById("exitFullscreen")
+    .addEventListener("click",function(){
+
+        document.body.classList.remove("ai-fullscreen");
+
+    });
 
 
-    panel.scrollIntoView(
+/* =========================================================
+   AI SETTINGS
+========================================================= */
+
+document.getElementById("groqKey").value=
+    getStore(STORE.groq);
+
+document.getElementById("saveGroq")
+    .addEventListener("click",function(){
+
+        const key=document.getElementById("groqKey").value.trim();
+
+        if(!key){
+            toast("API Key boş.");
+            return;
+        }
+
+        setStore(STORE.groq,key);
+
+        toast("Groq API Key kaydedildi.");
+
+    });
+
+document.getElementById("clearGroq")
+    .addEventListener("click",function(){
+
+        removeStore(STORE.groq);
+
+        document.getElementById("groqKey").value="";
+
+        toast("Groq API Key silindi.");
+
+    });
+
+
+/* =========================================================
+   SPORTS
+========================================================= */
+
+const FOOTBALL_BASE=
+    "https://v3.football.api-sports.io";
+
+let sportsInterval=null;
+
+function footballHeaders(){
+
+    const key=getStore(STORE.football);
+
+    return {
+        "x-apisports-key":key
+    };
+}
+
+function updateSportsConfiguration(){
+
+    const key=getStore(STORE.football);
+
+    document.getElementById("sportsConfigNotice")
+        .style.display=key ? "none" : "block";
+
+    document.getElementById("homeSportsStatus")
+        .textContent=
+        key ? "● Bağlı" : "API anahtarı bekleniyor";
+
+    if(key){
+        loadLiveMatches();
+    }
+}
+
+async function footballFetch(endpoint){
+
+    const key=getStore(STORE.football);
+
+    if(!key){
+        throw new Error("API-Football API Key bulunamadı.");
+    }
+
+    const response=await fetch(
+        FOOTBALL_BASE+endpoint,
         {
-            behavior: "smooth",
-            block: "start"
+            headers:footballHeaders()
         }
     );
 
+    const data=await response.json();
 
-    if (
-        name === "memory"
-    ) {
-
-        startMemoryGame();
-
+    if(!response.ok){
+        throw new Error(
+            data &&
+            data.errors
+            ? JSON.stringify(data.errors)
+            : "Spor API hatası: "+response.status
+        );
     }
 
+    if(data.errors && Object.keys(data.errors).length){
+        throw new Error(JSON.stringify(data.errors));
+    }
+
+    return data;
 }
 
+function teamHTML(team){
 
-/* =========================================================
-   SAYI TAHMİN
-========================================================= */
+    const logo=
+        team.logo
+        ? `<img src="${team.logo}" alt="">`
+        : "";
 
-let guessNumber =
-    Math.floor(
-        Math.random() * 100
-    ) + 1;
-
-
-let guessAttempts = 0;
-
-
-function resetGuessGame() {
-
-    guessNumber =
-        Math.floor(
-            Math.random() * 100
-        ) + 1;
-
-
-    guessAttempts = 0;
-
-
-    $("guessInput")
-        .value = "";
-
-
-    $("guessStatus")
-        .textContent =
-            "Yeni sayı hazır.";
-
+    return `
+        <div class="team">
+            ${logo}
+            <span>${escapeHTML(team.name || "?")}</span>
+        </div>
+    `;
 }
 
+function matchHTML(item){
 
-$("guessButton")
-    .addEventListener(
-        "click",
-        () => {
+    const fixture=item.fixture || {};
+    const teams=item.teams || {};
+    const goals=item.goals || {};
+    const status=fixture.status || {};
 
-            const value =
-                Number(
-                    $("guessInput").value
-                );
+    const live=[
+        "1H",
+        "HT",
+        "2H",
+        "ET",
+        "BT",
+        "P"
+    ].includes(status.short);
 
+    let score="–";
 
-            if (
-                !Number.isInteger(value) ||
-                value < 1 ||
-                value > 100
-            ) {
+    if(goals.home!==null && goals.home!==undefined){
+        score=
+            String(goals.home)+
+            " - "+
+            String(goals.away);
+    }
 
-                showToast(
-                    "1 ile 100 arasında bir sayı gir."
-                );
+    return `
+        <div class="match">
 
-                return;
-
-            }
-
-
-            guessAttempts++;
-
-
-            if (
-                value === guessNumber
-            ) {
-
-                $("guessStatus")
-                    .textContent =
-                        `🎉 Bildin! ${guessAttempts} denemede buldun.`;
-
-            }
-            else if (
-                value < guessNumber
-            ) {
-
-                $("guessStatus")
-                    .textContent =
-                        "⬆️ Daha büyük bir sayı.";
-
-            }
-            else {
-
-                $("guessStatus")
-                    .textContent =
-                        "⬇️ Daha küçük bir sayı.";
-
-            }
-
-        }
-    );
-
-
-$("resetGuessButton")
-    .addEventListener(
-        "click",
-        resetGuessGame
-    );
-
-
-/* =========================================================
-   TAŞ KAĞIT MAKAS
-========================================================= */
-
-const rpsChoices = [
-    "Taş",
-    "Kağıt",
-    "Makas"
-];
-
-
-document
-    .querySelectorAll("[data-rps]")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const player =
-                        button.dataset.rps;
-
-
-                    const computer =
-                        rpsChoices[
-                            Math.floor(
-                                Math.random() *
-                                rpsChoices.length
-                            )
-                        ];
-
-
-                    let result;
-
-
-                    if (
-                        player === computer
-                    ) {
-
-                        result =
-                            "Berabere.";
-
-                    }
-                    else if (
-                        (
-                            player === "Taş" &&
-                            computer === "Makas"
-                        ) ||
-                        (
-                            player === "Kağıt" &&
-                            computer === "Taş"
-                        ) ||
-                        (
-                            player === "Makas" &&
-                            computer === "Kağıt"
+            <div class="match-head">
+                <span>
+                    ${escapeHTML(
+                        fixture.date
+                        ? new Date(fixture.date).toLocaleTimeString(
+                            "tr-TR",
+                            {hour:"2-digit",minute:"2-digit"}
                         )
-                    ) {
+                        : ""
+                    )}
+                </span>
 
-                        result =
-                            "Kazandın! 🎉";
+                <span class="${live ? "status-live":""}">
+                    ${escapeHTML(status.long || "")}
+                    ${live && status.elapsed ? " "+status.elapsed+"'" : ""}
+                </span>
+            </div>
 
-                    }
-                    else {
+            <div class="teams">
 
-                        result =
-                            "Bilgisayar kazandı.";
+                ${teamHTML(teams.home || {})}
 
-                    }
+                <div class="score">
+                    ${escapeHTML(score)}
+                </div>
 
+                ${teamHTML(teams.away || {})}
 
-                    $("rpsStatus")
-                        .textContent =
-                            `Sen: ${player} | Bilgisayar: ${computer} — ${result}`;
+            </div>
 
-                }
-            );
+        </div>
+    `;
+}
+
+async function loadLiveMatches(){
+
+    const target=document.getElementById("liveMatches");
+
+    target.innerHTML=
+        `<p class="muted">🔄 Canlı maçlar getiriliyor...</p>`;
+
+    try{
+
+        const data=await footballFetch(
+            "/fixtures?live=all"
+        );
+
+        const matches=data.response || [];
+
+        if(matches.length===0){
+
+            target.innerHTML=
+                `<p class="muted">
+                    Şu anda API'ye göre canlı maç bulunamadı.
+                </p>`;
+
+        }else{
+
+            target.innerHTML=
+                matches.map(matchHTML).join("");
 
         }
-    );
+
+        document.getElementById("sportsUpdated")
+            .textContent=
+            "Son güncelleme: "+
+            new Date().toLocaleTimeString("tr-TR");
+
+        document.getElementById("homeLive")
+            .textContent=
+            matches.length+" canlı";
+
+    }catch(error){
+
+        target.innerHTML=
+            `<p style="color:var(--danger)">
+                ❌ ${escapeHTML(error.message)}
+            </p>`;
+
+    }
+
+}
+
+async function loadTodayMatches(){
+
+    const target=document.getElementById("todayMatches");
+
+    target.innerHTML=
+        `<p class="muted">🔄 Maçlar getiriliyor...</p>`;
+
+    const today=
+        new Date().toISOString().slice(0,10);
+
+    try{
+
+        const data=await footballFetch(
+            "/fixtures?date="+today
+        );
+
+        const matches=data.response || [];
+
+        if(matches.length===0){
+
+            target.innerHTML=
+                `<p class="muted">
+                    Bugün maç bulunamadı.
+                </p>`;
+
+        }else{
+
+            target.innerHTML=
+                matches.map(matchHTML).join("");
+
+        }
+
+    }catch(error){
+
+        target.innerHTML=
+            `<p style="color:var(--danger)">
+                ❌ ${escapeHTML(error.message)}
+            </p>`;
+
+    }
+
+}
+
+async function loadStandings(){
+
+    const target=
+        document.getElementById("standingsResult");
+
+    const league=
+        document.getElementById("leagueSelect").value;
+
+    target.innerHTML=
+        `<p class="muted">🔄 Puan durumu getiriliyor...</p>`;
+
+    const season=
+        new Date().getFullYear();
+
+    try{
+
+        const data=await footballFetch(
+            "/standings?league="+
+            league+
+            "&season="+
+            season
+        );
+
+        const groups=
+            data.response &&
+            data.response[0] &&
+            data.response[0].league &&
+            data.response[0].league.standings;
+
+        if(!groups || !groups[0]){
+
+            target.innerHTML=
+                `<p class="muted">
+                    Bu sezon için puan durumu bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        const rows=groups[0];
+
+        let html=`
+            <table class="standings">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Takım</th>
+                        <th>O</th>
+                        <th>G</th>
+                        <th>B</th>
+                        <th>M</th>
+                        <th>P</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        rows.forEach(function(row){
+
+            html+=`
+                <tr>
+                    <td>${row.rank}</td>
+                    <td>${escapeHTML(row.team.name)}</td>
+                    <td>${row.all.played}</td>
+                    <td>${row.all.win}</td>
+                    <td>${row.all.draw}</td>
+                    <td>${row.all.lose}</td>
+                    <td><strong>${row.points}</strong></td>
+                </tr>
+            `;
+
+        });
+
+        html+=`
+                </tbody>
+            </table>
+        `;
+
+        target.innerHTML=html;
+
+    }catch(error){
+
+        target.innerHTML=
+            `<p style="color:var(--danger)">
+                ❌ ${escapeHTML(error.message)}
+            </p>`;
+
+    }
+
+}
+
+async function loadTransfers(){
+
+    const target=
+        document.getElementById("transfersResult");
+
+    const team=
+        document.getElementById("transferTeamId").value.trim();
+
+    if(!team){
+
+        target.innerHTML=
+            `<p class="muted">
+                Takım ID'si gir.
+            </p>`;
+
+        return;
+    }
+
+    target.innerHTML=
+        `<p class="muted">
+            🔄 Transferler getiriliyor...
+        </p>`;
+
+    try{
+
+        const data=await footballFetch(
+            "/transfers?team="+team
+        );
+
+        const list=data.response || [];
+
+        if(!list.length){
+
+            target.innerHTML=
+                `<p class="muted">
+                    Transfer bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        let html="";
+
+        list.forEach(function(player){
+
+            const transfers=
+                player.transfers || [];
+
+            html+=`
+                <div class="news-item">
+                    <strong>
+                        ${escapeHTML(player.player.name)}
+                    </strong>
+            `;
+
+            transfers.forEach(function(t){
+
+                html+=`
+                    <div class="news-meta">
+                        ${escapeHTML(
+                            t.teams &&
+                            t.teams.out &&
+                            t.teams.out.name
+                            ? t.teams.out.name
+                            : "?"
+                        )}
+                        →
+                        ${escapeHTML(
+                            t.teams &&
+                            t.teams.in &&
+                            t.teams.in.name
+                            ? t.teams.in.name
+                            : "?"
+                        )}
+                        ·
+                        ${escapeHTML(t.date || "")}
+                    </div>
+                `;
+
+            });
+
+            html+=`</div>`;
+
+        });
+
+        target.innerHTML=html;
+
+    }catch(error){
+
+        target.innerHTML=
+            `<p style="color:var(--danger)">
+                ❌ ${escapeHTML(error.message)}
+            </p>`;
+
+    }
+
+}
+
+
+/* Sports tabs */
+
+document.querySelectorAll(".sports-tab")
+.forEach(function(button){
+
+    button.addEventListener("click",function(){
+
+        document.querySelectorAll(".sports-tab")
+            .forEach(function(b){
+                b.classList.remove("primary");
+            });
+
+        button.classList.add("primary");
+
+        const tab=button.dataset.sportTab;
+
+        const areas=[
+            "live",
+            "today",
+            "standings",
+            "transfers",
+            "news"
+        ];
+
+        areas.forEach(function(name){
+
+            const area=
+                document.getElementById(
+                    "sports"+
+                    name.charAt(0).toUpperCase()+
+                    name.slice(1)+
+                    "Area"
+                );
+
+            if(area){
+                area.style.display=
+                    name===tab ? "block" : "none";
+            }
+
+        });
+
+        if(tab==="live"){
+            loadLiveMatches();
+        }
+
+        if(tab==="today"){
+            loadTodayMatches();
+        }
+
+    });
+
+});
+
+document.getElementById("refreshSports")
+    .addEventListener("click",function(){
+
+        loadLiveMatches();
+
+        toast("Spor verileri yenileniyor...");
+
+    });
+
+document.getElementById("loadStandings")
+    .addEventListener("click",loadStandings);
+
+document.getElementById("loadTransfers")
+    .addEventListener("click",loadTransfers);
+
+
+/* Auto refresh live matches */
+
+function startSportsAutoRefresh(){
+
+    clearInterval(sportsInterval);
+
+    sportsInterval=setInterval(function(){
+
+        const sportsPage=
+            document.getElementById("page-sports");
+
+        if(
+            sportsPage &&
+            sportsPage.classList.contains("active") &&
+            getStore(STORE.football)
+        ){
+            loadLiveMatches();
+        }
+
+    },30000);
+
+}
+
+startSportsAutoRefresh();
 
 
 /* =========================================================
-   MEMORY GAME
+   SPORTS API SETTINGS
 ========================================================= */
 
-let memoryValues = [];
+document.getElementById("footballKey").value=
+    getStore(STORE.football);
 
-let memoryOpenCards = [];
+document.getElementById("saveFootball")
+    .addEventListener("click",function(){
 
-let memoryLocked = false;
+        const key=
+            document.getElementById("footballKey")
+            .value.trim();
 
-let memoryPairs = 0;
+        if(!key){
+            toast("API Key boş.");
+            return;
+        }
+
+        setStore(STORE.football,key);
+
+        toast("API-Football Key kaydedildi.");
+
+        updateSportsConfiguration();
+
+    });
 
 
-function startMemoryGame() {
+/* =========================================================
+   NEWS
+========================================================= */
 
-    const symbols = [
-        "🍎",
+const GNEWS_BASE=
+    "https://gnews.io/api/v4/search";
+
+async function loadNews(){
+
+    const target=document.getElementById("newsResult");
+
+    const key=getStore(STORE.news);
+
+    if(!key){
+
+        target.innerHTML=`
+            <p class="muted">
+                Haberleri kullanmak için Ayarlar bölümüne
+                GNews API Key gir.
+            </p>
+        `;
+
+        return;
+    }
+
+    target.innerHTML=
+        `<p class="muted">📰 Haberler getiriliyor...</p>`;
+
+    try{
+
+        const url=
+            GNEWS_BASE+
+            "?q=football%20OR%20soccer"+
+            "&lang=tr"+
+            "&max=20"+
+            "&apikey="+
+            encodeURIComponent(key);
+
+        const response=await fetch(url);
+
+        const data=await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Haber API hatası."
+            );
+        }
+
+        const articles=data.articles || [];
+
+        if(!articles.length){
+
+            target.innerHTML=
+                `<p class="muted">
+                    Haber bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        let html="";
+
+        articles.forEach(function(article){
+
+            html+=`
+                <div class="news-item">
+
+                    <a
+                        href="${escapeHTML(article.url || "#")}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        ${escapeHTML(article.title || "Haber")}
+
+                    </a>
+
+                    <div class="news-meta">
+                        ${escapeHTML(
+                            article.source &&
+                            article.source.name
+                            ? article.source.name
+                            : ""
+                        )}
+                        ·
+                        ${article.publishedAt
+                            ? new Date(article.publishedAt)
+                                .toLocaleString("tr-TR")
+                            : ""}
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+        target.innerHTML=html;
+
+    }catch(error){
+
+        target.innerHTML=
+            `<p style="color:var(--danger)">
+                ❌ ${escapeHTML(error.message)}
+            </p>`;
+
+    }
+
+}
+
+document.getElementById("refreshNews")
+    .addEventListener("click",loadNews);
+
+document.getElementById("saveNews")
+    .addEventListener("click",function(){
+
+        const key=
+            document.getElementById("newsKey")
+            .value.trim();
+
+        if(!key){
+            toast("GNews API Key boş.");
+            return;
+        }
+
+        setStore(STORE.news,key);
+
+        toast("GNews API Key kaydedildi.");
+
+        loadNews();
+
+    });
+
+document.getElementById("newsKey").value=
+    getStore(STORE.news);
+
+
+/* =========================================================
+   GAMES - NUMBER GUESS
+========================================================= */
+
+let secretNumber=
+    Math.floor(Math.random()*100)+1;
+
+let guessCount=0;
+
+document.getElementById("guessBtn")
+    .addEventListener("click",function(){
+
+        const value=
+            Number(document.getElementById("guessInput").value);
+
+        const result=
+            document.getElementById("guessResult");
+
+        if(!value || value<1 || value>100){
+
+            result.textContent=
+                "1 ile 100 arasında bir sayı gir.";
+
+            return;
+        }
+
+        guessCount++;
+
+        if(value===secretNumber){
+
+            result.textContent=
+                "🎉 Bildin! "+guessCount+" denemede.";
+
+            secretNumber=
+                Math.floor(Math.random()*100)+1;
+
+            guessCount=0;
+
+        }else if(value<secretNumber){
+
+            result.textContent="⬆️ Daha büyük.";
+
+        }else{
+
+            result.textContent="⬇️ Daha küçük.";
+
+        }
+
+    });
+
+
+/* =========================================================
+   GAMES - RPS
+========================================================= */
+
+document.querySelectorAll("[data-rps]")
+.forEach(function(button){
+
+    button.addEventListener("click",function(){
+
+        const choices=[
+            "taş",
+            "kağıt",
+            "makas"
+        ];
+
+        const user=this.dataset.rps;
+
+        const computer=
+            choices[Math.floor(Math.random()*3)];
+
+        let result="";
+
+        if(user===computer){
+
+            result="Berabere!";
+
+        }else if(
+            (user==="taş" && computer==="makas") ||
+            (user==="kağıt" && computer==="taş") ||
+            (user==="makas" && computer==="kağıt")
+        ){
+
+            result="🎉 Kazandın!";
+
+        }else{
+
+            result="Bilgisayar kazandı.";
+
+        }
+
+        document.getElementById("rpsResult")
+            .textContent=
+            "Sen: "+user+
+            " · Bilgisayar: "+computer+
+            " · "+result;
+
+    });
+
+});
+
+
+/* =========================================================
+   GAMES - MEMORY
+========================================================= */
+
+let memoryState={
+    cards:[],
+    opened:[],
+    matched:0,
+    locked:false
+};
+
+function shuffle(array){
+
+    for(let i=array.length-1;i>0;i--){
+
+        const j=Math.floor(Math.random()*(i+1));
+
+        [array[i],array[j]]=
+        [array[j],array[i]];
+
+    }
+
+    return array;
+}
+
+function startMemory(){
+
+    const emojis=[
         "🚀",
-        "⭐",
-        "🎮"
+        "⚽",
+        "🎮",
+        "🤖",
+        "🔥",
+        "🌟",
+        "🎯",
+        "🧠"
     ];
 
+    memoryState={
+        cards:shuffle(
+            emojis.concat(emojis)
+        ),
+        opened:[],
+        matched:0,
+        locked:false
+    };
 
-    memoryValues = [
-        ...symbols,
-        ...symbols
-    ];
+    const grid=
+        document.getElementById("memoryGrid");
 
+    grid.innerHTML="";
 
-    memoryValues.sort(
-        () => Math.random() - .5
-    );
+    memoryState.cards.forEach(function(value,index){
 
+        const button=document.createElement("button");
 
-    memoryOpenCards = [];
+        button.className="memory-card";
 
-    memoryLocked = false;
+        button.dataset.index=index;
 
-    memoryPairs = 0;
+        button.textContent="❓";
 
+        button.addEventListener(
+            "click",
+            function(){
+                memoryClick(index,button);
+            }
+        );
 
-    const grid =
-        $("memoryGrid");
+        grid.appendChild(button);
 
-
-    grid.innerHTML = "";
-
-
-    memoryValues.forEach(
-        (symbol, index) => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.className =
-                "memory-card";
-
-
-            button.textContent =
-                "❓";
-
-
-            button.dataset.index =
-                index;
-
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    openMemoryCard(
-                        index,
-                        button
-                    );
-
-                }
-            );
-
-
-            grid.appendChild(
-                button
-            );
-
-        }
-    );
-
-
-    $("memoryStatus")
-        .textContent =
-            "0 / 4 eşleşme";
+    });
 
 }
 
+function memoryClick(index,button){
 
-function openMemoryCard(
-    index,
-    button
-) {
-
-    if (
-        memoryLocked ||
-        button.classList.contains(
-            "matched"
-        ) ||
-        memoryOpenCards.some(
-            card =>
-                card.index === index
-        )
-    ) {
+    if(
+        memoryState.locked ||
+        memoryState.opened.includes(index)
+    ){
         return;
     }
 
+    button.classList.add("open");
 
-    button.textContent =
-        memoryValues[index];
+    button.textContent=
+        memoryState.cards[index];
 
+    memoryState.opened.push(index);
 
-    memoryOpenCards.push(
-        {
-            index,
-            button
-        }
-    );
+    if(memoryState.opened.length===2){
 
+        const a=memoryState.opened[0];
 
-    if (
-        memoryOpenCards.length !== 2
-    ) {
-        return;
-    }
+        const b=memoryState.opened[1];
 
+        const buttons=
+            document.querySelectorAll(".memory-card");
 
-    memoryLocked = true;
+        if(memoryState.cards[a]===memoryState.cards[b]){
 
+            buttons[a].classList.add("matched");
+            buttons[b].classList.add("matched");
 
-    const first =
-        memoryOpenCards[0];
+            memoryState.matched+=2;
 
+            memoryState.opened=[];
 
-    const second =
-        memoryOpenCards[1];
+            if(memoryState.matched===memoryState.cards.length){
 
+                toast("🧠 Hafıza oyununu tamamladın!");
 
-    if (
-        memoryValues[first.index] ===
-        memoryValues[second.index]
-    ) {
+            }
 
-        first.button.classList.add(
-            "matched"
-        );
+        }else{
 
+            memoryState.locked=true;
 
-        second.button.classList.add(
-            "matched"
-        );
+            setTimeout(function(){
 
+                buttons[a].classList.remove("open");
+                buttons[b].classList.remove("open");
 
-        memoryPairs++;
+                buttons[a].textContent="❓";
+                buttons[b].textContent="❓";
 
+                memoryState.opened=[];
+                memoryState.locked=false;
 
-        $("memoryStatus")
-            .textContent =
-                `${memoryPairs} / 4 eşleşme`;
-
-
-        memoryOpenCards = [];
-
-        memoryLocked = false;
-
-
-        if (
-            memoryPairs === 4
-        ) {
-
-            showToast(
-                "🎉 Tüm kartları buldun!"
-            );
+            },700);
 
         }
-
-    }
-    else {
-
-        setTimeout(
-            () => {
-
-                first.button.textContent =
-                    "❓";
-
-                second.button.textContent =
-                    "❓";
-
-                memoryOpenCards = [];
-
-                memoryLocked = false;
-
-            },
-            650
-        );
 
     }
 
 }
 
+document.getElementById("memoryStart")
+    .addEventListener("click",startMemory);
 
-$("resetMemoryButton")
-    .addEventListener(
-        "click",
-        startMemoryGame
-    );
+startMemory();
 
 
 /* =========================================================
-   REFLEKS
+   GAMES - REACTION
 ========================================================= */
 
-let reactionState =
-    "idle";
+let reactionTimer=null;
+let reactionStarted=false;
+let reactionStartTime=0;
 
+document.getElementById("reactionStart")
+    .addEventListener("click",function(){
 
-let reactionStartTime = 0;
+        clearTimeout(reactionTimer);
 
-let reactionTimer = null;
+        const area=
+            document.getElementById("reactionArea");
 
+        reactionStarted=false;
 
-function resetReaction() {
+        area.textContent="Bekle...";
 
-    clearTimeout(
-        reactionTimer
-    );
+        reactionTimer=setTimeout(function(){
 
+            reactionStarted=true;
 
-    reactionState =
-        "idle";
+            reactionStartTime=performance.now();
 
+            area.textContent="🟢 ŞİMDİ!";
 
-    $("reactionBox")
-        .className =
-            "reaction-box";
+        },1000+Math.random()*3000);
 
+    });
 
-    $("reactionText")
-        .textContent =
-            "Başlamak için bas";
+document.getElementById("reactionArea")
+    .addEventListener("click",function(){
 
+        const area=this;
 
-    $("reactionButton")
-        .textContent =
-            "Başlat";
+        const result=
+            document.getElementById("reactionResult");
 
-}
+        if(!reactionStarted){
 
+            if(area.textContent==="Bekle..."){
 
-$("reactionButton")
-    .addEventListener(
-        "click",
-        () => {
+                clearTimeout(reactionTimer);
 
-            if (
-                reactionState ===
-                "idle"
-            ) {
+                area.textContent="❌ Çok erken!";
 
-                reactionState =
-                    "waiting";
-
-
-                $("reactionBox")
-                    .className =
-                        "reaction-box waiting";
-
-
-                $("reactionText")
-                    .textContent =
-                        "Bekle...";
-
-
-                $("reactionButton")
-                    .textContent =
-                        "Bekle";
-
-
-                const delay =
-                    1200 +
-                    Math.random() * 3000;
-
-
-                reactionTimer =
-                    setTimeout(
-                        () => {
-
-                            reactionState =
-                                "ready";
-
-
-                            reactionStartTime =
-                                performance.now();
-
-
-                            $("reactionBox")
-                                .className =
-                                    "reaction-box ready";
-
-
-                            $("reactionText")
-                                .textContent =
-                                    "ŞİMDİ BAS!";
-
-
-                            $("reactionButton")
-                                .textContent =
-                                    "BAS!";
-
-                        },
-                        delay
-                    );
-
-
-            }
-            else if (
-                reactionState ===
-                "waiting"
-            ) {
-
-                clearTimeout(
-                    reactionTimer
-                );
-
-
-                reactionState =
-                    "idle";
-
-
-                $("reactionBox")
-                    .className =
-                        "reaction-box";
-
-
-                $("reactionText")
-                    .textContent =
-                        "Çok erken! 😄";
-
-
-                $("reactionButton")
-                    .textContent =
-                        "Tekrar";
-
-
-            }
-            else if (
-                reactionState ===
-                "ready"
-            ) {
-
-                const reactionTime =
-                    Math.round(
-                        performance.now() -
-                        reactionStartTime
-                    );
-
-
-                reactionState =
-                    "idle";
-
-
-                $("reactionBox")
-                    .className =
-                        "reaction-box";
-
-
-                $("reactionText")
-                    .textContent =
-                        `${reactionTime} ms ⚡`;
-
-
-                $("reactionButton")
-                    .textContent =
-                        "Tekrar Oyna";
+                result.textContent=
+                    "Yeşili bekle.";
 
             }
 
+            return;
         }
-    );
 
-
-/* =========================================================
-   ARAÇLAR MENÜSÜ
-========================================================= */
-
-document
-    .querySelectorAll("[data-tool]")
-    .forEach(
-        card => {
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    openTool(
-                        card.dataset.tool
-                    );
-
-                }
+        const time=
+            Math.round(
+                performance.now()-reactionStartTime
             );
 
-        }
-    );
+        area.textContent="Tekrar deneyebilirsin.";
 
+        result.textContent=
+            "⚡ Tepki süren: "+time+" ms";
 
-function openTool(name) {
+        reactionStarted=false;
 
-    document
-        .querySelectorAll(".tool-view")
-        .forEach(
-            view => {
-
-                view.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-
-    const target =
-        $("tool-" + name);
-
-
-    if (!target) {
-        return;
-    }
-
-
-    target.classList.add(
-        "active"
-    );
-
-
-    target.scrollIntoView(
-        {
-            behavior: "smooth",
-            block: "start"
-        }
-    );
-
-}
+    });
 
 
 /* =========================================================
    CALCULATOR
 ========================================================= */
 
-let calculatorExpression = "";
+let calcCurrent="0";
+let calcPrevious=null;
+let calcOperator=null;
+let calcWaiting=false;
 
+function updateCalc(){
 
-function updateCalculator() {
-
-    const display =
-        $("calculatorDisplay");
-
-
-    display.textContent =
-        calculatorExpression ||
-        "0";
+    document.getElementById("calcValue")
+        .textContent=calcCurrent;
 
 }
 
+function calculate(a,b,operator){
 
-function calculatorInput(
-    value
-) {
+    a=Number(a);
+    b=Number(b);
 
-    if (
-        calculatorExpression.length >=
-        40
-    ) {
-        return;
-    }
+    if(operator==="+") return a+b;
+    if(operator==="-") return a-b;
+    if(operator==="*") return a*b;
+    if(operator==="/") return b===0 ? NaN : a/b;
 
-
-    calculatorExpression +=
-        value;
-
-
-    updateCalculator();
-
+    return b;
 }
 
+document.querySelectorAll("[data-calc-num]")
+.forEach(function(button){
 
-function calculatorClear() {
+    button.addEventListener("click",function(){
 
-    calculatorExpression = "";
+        const num=this.dataset.calcNum;
 
-    updateCalculator();
+        if(calcWaiting){
 
-}
+            calcCurrent="0";
+            calcWaiting=false;
 
-
-function calculatorBackspace() {
-
-    calculatorExpression =
-        calculatorExpression.slice(
-            0,
-            -1
-        );
-
-
-    updateCalculator();
-
-}
-
-
-function calculatorEquals() {
-
-    if (
-        !calculatorExpression
-    ) {
-        return;
-    }
-
-
-    /*
-       Sadece hesap makinesinin oluşturabileceği
-       karakterlere izin veriyoruz.
-    */
-
-    if (
-        !/^[0-9+\-*/%.() ]+$/
-            .test(
-                calculatorExpression
-            )
-    ) {
-
-        calculatorClear();
-
-        showToast(
-            "Geçersiz işlem."
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        const result =
-            Function(
-                `"use strict"; return (${calculatorExpression})`
-            )();
-
-
-        if (
-            !Number.isFinite(result)
-        ) {
-            throw new Error();
         }
 
-
-        calculatorExpression =
-            String(result);
-
-
-        updateCalculator();
-
-    }
-    catch {
-
-        calculatorExpression = "";
-
-        updateCalculator();
-
-        showToast(
-            "Hesaplama yapılamadı."
-        );
-
-    }
-
-}
-
-
-document
-    .querySelectorAll("[data-calc]")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const value =
-                        button.dataset.calc;
-
-
-                    if (
-                        value === "clear"
-                    ) {
-
-                        calculatorClear();
-
-                    }
-                    else if (
-                        value === "backspace"
-                    ) {
-
-                        calculatorBackspace();
-
-                    }
-                    else if (
-                        value === "="
-                    ) {
-
-                        calculatorEquals();
-
-                    }
-                    else {
-
-                        calculatorInput(
-                            value
-                        );
-
-                    }
-
-                }
-            );
-
+        if(num==="." && calcCurrent.includes(".")){
+            return;
         }
-    );
 
+        if(calcCurrent==="0" && num!=="."){
+            calcCurrent=num;
+        }else{
+            calcCurrent+=num;
+        }
 
-/* =========================================================
-   CALCULATOR KLAVYE
-========================================================= */
+        updateCalc();
 
-document
-    .addEventListener(
-        "keydown",
-        event => {
+    });
 
-            if (
-                !$("page-tools")
-                    .classList.contains(
-                        "active"
-                    )
-            ) {
-                return;
-            }
+});
 
+document.querySelectorAll("[data-calc-op]")
+.forEach(function(button){
 
-            const allowed =
-                "0123456789+-*/.%";
+    button.addEventListener("click",function(){
 
+        const op=this.dataset.calcOp;
 
-            if (
-                allowed.includes(
-                    event.key
-                )
-            ) {
+        if(calcOperator && calcWaiting){
+            calcOperator=op;
+            return;
+        }
 
-                calculatorInput(
-                    event.key
+        if(calcPrevious!==null && calcOperator){
+
+            const result=
+                calculate(
+                    calcPrevious,
+                    calcCurrent,
+                    calcOperator
                 );
 
-            }
-
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                calculatorEquals();
-
-            }
-
-
-            if (
-                event.key === "Backspace"
-            ) {
-
-                calculatorBackspace();
-
-            }
-
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                calculatorClear();
-
-            }
+            calcCurrent=
+                Number.isFinite(result)
+                ? String(result)
+                : "Error";
 
         }
-    );
+
+        calcPrevious=calcCurrent;
+        calcOperator=op;
+        calcWaiting=true;
+
+        document.getElementById("calcExpression")
+            .textContent=
+            calcPrevious+" "+op;
+
+        updateCalc();
+
+    });
+
+});
+
+document.querySelector('[data-calc="equal"]')
+.addEventListener("click",function(){
+
+    if(
+        calcPrevious===null ||
+        calcOperator===null
+    ){
+        return;
+    }
+
+    const result=
+        calculate(
+            calcPrevious,
+            calcCurrent,
+            calcOperator
+        );
+
+    calcCurrent=
+        Number.isFinite(result)
+        ? String(result)
+        : "Error";
+
+    calcPrevious=null;
+    calcOperator=null;
+    calcWaiting=true;
+
+    document.getElementById("calcExpression")
+        .textContent="";
+
+    updateCalc();
+
+});
+
+document.querySelector('[data-calc="clear"]')
+.addEventListener("click",function(){
+
+    calcCurrent="0";
+    calcPrevious=null;
+    calcOperator=null;
+    calcWaiting=false;
+
+    document.getElementById("calcExpression")
+        .textContent="";
+
+    updateCalc();
+
+});
+
+document.querySelector('[data-calc="back"]')
+.addEventListener("click",function(){
+
+    if(
+        calcCurrent.length>1 &&
+        calcCurrent!=="Error"
+    ){
+
+        calcCurrent=
+            calcCurrent.slice(0,-1);
+
+    }else{
+
+        calcCurrent="0";
+
+    }
+
+    updateCalc();
+
+});
+
+document.querySelector('[data-calc="percent"]')
+.addEventListener("click",function(){
+
+    const value=Number(calcCurrent);
+
+    calcCurrent=String(value/100);
+
+    updateCalc();
+
+});
 
 
 /* =========================================================
    CONVERTER
 ========================================================= */
 
-$("convertButton")
-    .addEventListener(
-        "click",
-        () => {
+const convertUnits={
 
-            const value =
-                Number(
-                    $("convertValue").value
-                );
+    length:{
+        mm:1,
+        cm:100,
+        m:1000,
+        km:1000000,
+        inch:25.4,
+        ft:304.8
+    },
 
+    weight:{
+        mg:1,
+        g:1000,
+        kg:1000000,
+        ton:1000000000,
+        oz:28349.5,
+        lb:453592
+    },
 
-            if (
-                !Number.isFinite(value)
-            ) {
+    temperature:{
+        C:"C",
+        F:"F",
+        K:"K"
+    }
 
-                showToast(
-                    "Bir değer gir."
-                );
+};
 
-                return;
+function populateUnits(){
 
-            }
+    const category=
+        document.getElementById("convertCategory").value;
 
+    const from=
+        document.getElementById("convertFrom");
 
-            const type =
-                $("convertType").value;
+    const to=
+        document.getElementById("convertTo");
 
+    from.innerHTML="";
+    to.innerHTML="";
 
-            let result = 0;
+    Object.keys(convertUnits[category])
+        .forEach(function(unit){
 
-            let unit = "";
+            from.innerHTML+=
+                `<option value="${unit}">
+                    ${unit}
+                </option>`;
 
+            to.innerHTML+=
+                `<option value="${unit}">
+                    ${unit}
+                </option>`;
 
-            switch(type) {
+        });
 
-                case "m-cm":
-                    result =
-                        value * 100;
-                    unit =
-                        "cm";
-                    break;
+    if(to.options.length>1){
+        to.selectedIndex=1;
+    }
 
-                case "cm-m":
-                    result =
-                        value / 100;
-                    unit =
-                        "m";
-                    break;
+    updateConversion();
 
-                case "km-m":
-                    result =
-                        value * 1000;
-                    unit =
-                        "m";
-                    break;
+}
 
-                case "m-km":
-                    result =
-                        value / 1000;
-                    unit =
-                        "km";
-                    break;
+function updateConversion(){
 
-                case "kg-g":
-                    result =
-                        value * 1000;
-                    unit =
-                        "g";
-                    break;
+    const category=
+        document.getElementById("convertCategory").value;
 
-                case "g-kg":
-                    result =
-                        value / 1000;
-                    unit =
-                        "kg";
-                    break;
+    const value=
+        Number(
+            document.getElementById("convertInput").value
+        );
 
-            }
+    const from=
+        document.getElementById("convertFrom").value;
 
+    const to=
+        document.getElementById("convertTo").value;
 
-            $("convertResult")
-                .textContent =
-                    `${result} ${unit}`;
+    if(Number.isNaN(value)){
+        document.getElementById("convertResult").value="";
+        return;
+    }
 
+    let result=value;
+
+    if(category==="temperature"){
+
+        let celsius=value;
+
+        if(from==="F"){
+            celsius=(value-32)*5/9;
         }
-    );
+
+        if(from==="K"){
+            celsius=value-273.15;
+        }
+
+        if(to==="C"){
+            result=celsius;
+        }
+
+        if(to==="F"){
+            result=celsius*9/5+32;
+        }
+
+        if(to==="K"){
+            result=celsius+273.15;
+        }
+
+    }else{
+
+        const base=
+            value*convertUnits[category][from];
+
+        result=
+            base/convertUnits[category][to];
+
+    }
+
+    document.getElementById("convertResult")
+        .value=
+        Number(result.toFixed(6));
+
+}
+
+document.getElementById("convertCategory")
+    .addEventListener("change",populateUnits);
+
+document.getElementById("convertInput")
+    .addEventListener("input",updateConversion);
+
+document.getElementById("convertFrom")
+    .addEventListener("change",updateConversion);
+
+document.getElementById("convertTo")
+    .addEventListener("change",updateConversion);
+
+populateUnits();
 
 
 /* =========================================================
    STOPWATCH
 ========================================================= */
 
-let stopwatchRunning =
-    false;
+let stopwatchInterval=null;
+let stopwatchStart=0;
+let stopwatchElapsed=0;
 
+function formatTime(ms){
 
-let stopwatchStartTime =
-    0;
+    const totalSeconds=
+        Math.floor(ms/1000);
 
+    const hours=
+        Math.floor(totalSeconds/3600);
 
-let stopwatchElapsed =
-    0;
-
-
-let stopwatchInterval =
-    null;
-
-
-function formatStopwatch(
-    milliseconds
-) {
-
-    const totalSeconds =
+    const minutes=
         Math.floor(
-            milliseconds / 1000
+            (totalSeconds%3600)/60
         );
 
+    const seconds=
+        totalSeconds%60;
 
-    const hours =
-        Math.floor(
-            totalSeconds / 3600
-        );
-
-
-    const minutes =
-        Math.floor(
-            (totalSeconds % 3600) /
-            60
-        );
-
-
-    const seconds =
-        totalSeconds % 60;
-
-
-    return (
-        String(hours).padStart(2,"0") +
-        ":" +
-        String(minutes).padStart(2,"0") +
-        ":" +
+    return [
+        String(hours).padStart(2,"0"),
+        String(minutes).padStart(2,"0"),
         String(seconds).padStart(2,"0")
-    );
+    ].join(":");
 
 }
 
+function updateStopwatch(){
 
-function updateStopwatch() {
+    let elapsed=stopwatchElapsed;
 
-    let elapsed =
-        stopwatchElapsed;
-
-
-    if (
-        stopwatchRunning
-    ) {
-
-        elapsed +=
-            performance.now() -
-            stopwatchStartTime;
-
+    if(stopwatchInterval){
+        elapsed=
+            Date.now()-stopwatchStart+
+            stopwatchElapsed;
     }
 
-
-    $("stopwatchDisplay")
-        .textContent =
-            formatStopwatch(
-                elapsed
-            );
+    document.getElementById("stopwatch")
+        .textContent=formatTime(elapsed);
 
 }
 
+document.getElementById("swStart")
+    .addEventListener("click",function(){
 
-$("stopwatchStart")
-    .addEventListener(
-        "click",
-        () => {
+        if(stopwatchInterval) return;
 
-            if (
-                stopwatchRunning
-            ) {
-                return;
-            }
+        stopwatchStart=Date.now();
 
+        stopwatchInterval=
+            setInterval(updateStopwatch,100);
 
-            stopwatchRunning =
-                true;
+    });
 
+document.getElementById("swPause")
+    .addEventListener("click",function(){
 
-            stopwatchStartTime =
-                performance.now();
+        if(!stopwatchInterval) return;
 
+        stopwatchElapsed+=
+            Date.now()-stopwatchStart;
 
-            stopwatchInterval =
-                setInterval(
-                    updateStopwatch,
-                    100
-                );
+        clearInterval(stopwatchInterval);
 
-        }
-    );
+        stopwatchInterval=null;
 
+        updateStopwatch();
 
-$("stopwatchPause")
-    .addEventListener(
-        "click",
-        () => {
+    });
 
-            if (
-                !stopwatchRunning
-            ) {
-                return;
-            }
+document.getElementById("swReset")
+    .addEventListener("click",function(){
 
+        clearInterval(stopwatchInterval);
 
-            stopwatchElapsed +=
-                performance.now() -
-                stopwatchStartTime;
+        stopwatchInterval=null;
+        stopwatchStart=0;
+        stopwatchElapsed=0;
 
+        updateStopwatch();
 
-            stopwatchRunning =
-                false;
-
-
-            clearInterval(
-                stopwatchInterval
-            );
-
-
-            stopwatchInterval =
-                null;
-
-
-            updateStopwatch();
-
-        }
-    );
-
-
-$("stopwatchReset")
-    .addEventListener(
-        "click",
-        () => {
-
-            stopwatchRunning =
-                false;
-
-
-            stopwatchElapsed =
-                0;
-
-
-            stopwatchStartTime =
-                0;
-
-
-            clearInterval(
-                stopwatchInterval
-            );
-
-
-            stopwatchInterval =
-                null;
-
-
-            updateStopwatch();
-
-        }
-    );
+    });
 
 
 /* =========================================================
-   COUNTDOWN
+   TIMER
 ========================================================= */
 
-let countdownRemaining =
-    0;
+let timerInterval=null;
+let timerRemaining=60000;
 
+function updateTimerDisplay(){
 
-let countdownInterval =
-    null;
-
-
-function formatCountdown(
-    seconds
-) {
-
-    const minutes =
-        Math.floor(
-            seconds / 60
+    const totalSeconds=
+        Math.max(
+            0,
+            Math.ceil(timerRemaining/1000)
         );
 
+    const minutes=
+        Math.floor(totalSeconds/60);
 
-    const remainingSeconds =
-        seconds % 60;
+    const seconds=
+        totalSeconds%60;
 
-
-    return (
-        String(minutes).padStart(2,"0") +
-        ":" +
-        String(
-            remainingSeconds
-        ).padStart(2,"0")
-    );
-
-}
-
-
-function updateCountdown() {
-
-    $("countdownDisplay")
-        .textContent =
-            formatCountdown(
-                countdownRemaining
-            );
+    document.getElementById("timerDisplay")
+        .textContent=
+        String(minutes).padStart(2,"0")+
+        ":"+
+        String(seconds).padStart(2,"0");
 
 }
 
+document.getElementById("timerStart")
+    .addEventListener("click",function(){
 
-$("countdownStart")
-    .addEventListener(
-        "click",
-        () => {
+        if(timerInterval) return;
 
-            clearInterval(
-                countdownInterval
-            );
+        if(timerRemaining<=0){
 
+            timerRemaining=
+                (
+                    Number(
+                        document.getElementById("timerMinutes").value
+                    )*60+
+                    Number(
+                        document.getElementById("timerSeconds").value
+                    )
+                )*1000;
 
-            const input =
-                Number(
-                    $("countdownInput").value
-                );
+        }
 
+        let last=Date.now();
 
-            if (
-                !Number.isInteger(input) ||
-                input <= 0
-            ) {
+        timerInterval=setInterval(function(){
 
-                showToast(
-                    "Geçerli bir süre gir."
-                );
+            const now=Date.now();
 
-                return;
+            timerRemaining-=now-last;
+
+            last=now;
+
+            if(timerRemaining<=0){
+
+                timerRemaining=0;
+
+                clearInterval(timerInterval);
+
+                timerInterval=null;
+
+                toast("⏰ Süre doldu!");
 
             }
 
+            updateTimerDisplay();
 
-            countdownRemaining =
-                input;
+        },100);
+
+    });
+
+document.getElementById("timerPause")
+    .addEventListener("click",function(){
+
+        clearInterval(timerInterval);
+
+        timerInterval=null;
+
+    });
+
+document.getElementById("timerReset")
+    .addEventListener("click",function(){
+
+        clearInterval(timerInterval);
+
+        timerInterval=null;
+
+        timerRemaining=
+            (
+                Number(
+                    document.getElementById("timerMinutes").value
+                )*60+
+                Number(
+                    document.getElementById("timerSeconds").value
+                )
+            )*1000;
+
+        updateTimerDisplay();
+
+    });
+
+updateTimerDisplay();
 
 
-            updateCountdown();
+/* =========================================================
+   CODE CENTER
+========================================================= */
 
+const defaultCode={
 
-            countdownInterval =
-                setInterval(
-                    () => {
+    html:
+`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Project</title>
+</head>
+<body>
 
-                        countdownRemaining--;
+<div class="box">
+    <h1>Merhaba My AI HUB!</h1>
+    <p>Bu kodu uygulamanın içinden değiştirebilirsin.</p>
+    <button onclick="sayHello()">Tıkla</button>
+</div>
 
+</body>
+</html>`,
 
-                        updateCountdown();
+    css:
+`.box{
+    width:80%;
+    max-width:500px;
+    margin:100px auto;
+    padding:30px;
+    text-align:center;
+    background:#6c5ce7;
+    color:white;
+    border-radius:20px;
+    font-family:Arial;
+}
 
+button{
+    padding:12px 20px;
+    border:0;
+    border-radius:10px;
+    cursor:pointer;
+}`,
 
-                        if (
-                            countdownRemaining <= 0
-                        ) {
+    js:
+`function sayHello(){
+    console.log("Butona basıldı!");
+    alert("Kod çalışıyor!");
+}`
+};
 
-                            clearInterval(
-                                countdownInterval
-                            );
+let codeState={
+    html:defaultCode.html,
+    css:defaultCode.css,
+    js:defaultCode.js
+};
 
+let activeCodeTab="html";
 
-                            countdownInterval =
-                                null;
+function loadSavedCode(){
 
+    try{
 
-                            showToast(
-                                "⏰ Süre doldu!"
-                            );
+        const saved=getStore(STORE.code);
 
-                        }
+        if(saved){
 
-                    },
-                    1000
-                );
+            const parsed=JSON.parse(saved);
+
+            if(parsed.html) codeState.html=parsed.html;
+            if(parsed.css) codeState.css=parsed.css;
+            if(parsed.js) codeState.js=parsed.js;
 
         }
-    );
 
+    }catch(e){}
 
-$("countdownStop")
-    .addEventListener(
-        "click",
-        () => {
+}
 
-            clearInterval(
-                countdownInterval
+function updateCodeEditor(){
+
+    document.getElementById("codeEditor")
+        .value=codeState[activeCodeTab];
+
+    document.querySelectorAll(".code-tab")
+        .forEach(function(btn){
+
+            btn.classList.toggle(
+                "active",
+                btn.dataset.codeTab===activeCodeTab
             );
 
+        });
 
-            countdownInterval =
-                null;
+}
 
-        }
+document.querySelectorAll(".code-tab")
+.forEach(function(button){
+
+    button.addEventListener("click",function(){
+
+        codeState[activeCodeTab]=
+            document.getElementById("codeEditor").value;
+
+        activeCodeTab=
+            button.dataset.codeTab;
+
+        updateCodeEditor();
+
+    });
+
+});
+
+function saveCurrentCode(){
+
+    codeState[activeCodeTab]=
+        document.getElementById("codeEditor").value;
+
+    setStore(
+        STORE.code,
+        JSON.stringify(codeState)
     );
+
+    toast("Kod kaydedildi.");
+
+}
+
+function runCode(){
+
+    codeState[activeCodeTab]=
+        document.getElementById("codeEditor").value;
+
+    const html=codeState.html;
+
+    const css=codeState.css;
+
+    const js=codeState.js;
+
+    const combined=
+`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+${css}
+</style>
+</head>
+<body>
+
+${html}
+
+<script>
+
+(function(){
+
+const originalLog=console.log;
+
+console.log=function(){
+
+    originalLog.apply(console,arguments);
+
+    try{
+
+        parent.postMessage({
+            type:"code-console",
+            message:Array.from(arguments)
+                .map(function(x){
+                    return typeof x==="object"
+                        ? JSON.stringify(x)
+                        : String(x);
+                })
+                .join(" ")
+        },"*");
+
+    }catch(e){}
+
+};
+
+window.onerror=function(
+    message,
+    source,
+    lineno,
+    colno
+){
+
+    parent.postMessage({
+        type:"code-error",
+        message:String(message)+
+        " | Satır: "+lineno
+    },"*");
+
+};
+
+${js}
+
+})();
+
+<\/script>
+
+</body>
+</html>`;
+
+    document.getElementById("codePreview")
+        .srcdoc=combined;
+
+    document.getElementById("codeConsole")
+        .textContent="▶ Kod çalıştırıldı.";
+
+}
+
+document.getElementById("codeEditor")
+    .addEventListener("input",function(){
+
+        codeState[activeCodeTab]=this.value;
+
+    });
+
+document.getElementById("runCode")
+    .addEventListener("click",runCode);
+
+document.getElementById("saveCode")
+    .addEventListener("click",saveCurrentCode);
+
+document.getElementById("resetCode")
+    .addEventListener("click",function(){
+
+        codeState={
+            html:defaultCode.html,
+            css:defaultCode.css,
+            js:defaultCode.js
+        };
+
+        updateCodeEditor();
+
+        toast("Varsayılan kod yüklendi.");
+
+    });
+
+document.getElementById("clearConsole")
+    .addEventListener("click",function(){
+
+        document.getElementById("codeConsole")
+            .textContent="Konsol temizlendi.";
+
+    });
+
+window.addEventListener("message",function(event){
+
+    if(!event.data) return;
+
+    if(event.data.type==="code-console"){
+
+        document.getElementById("codeConsole")
+            .textContent+=
+            "\n"+event.data.message;
+
+    }
+
+    if(event.data.type==="code-error"){
+
+        document.getElementById("codeConsole")
+            .textContent+=
+            "\n❌ "+event.data.message;
+
+    }
+
+});
+
+loadSavedCode();
+
+updateCodeEditor();
+
+runCode();
 
 
 /* =========================================================
    NOTES
 ========================================================= */
 
-function loadNotes() {
+function loadNotes(){
 
-    $("notesEditor")
-        .value =
-            localStorage.getItem(
-                "myai_notes"
-            ) || "";
+    const saved=getStore(STORE.notes);
 
-}
+    document.getElementById("notesArea").value=saved;
 
-
-$("saveNotesButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            localStorage.setItem(
-                "myai_notes",
-                $("notesEditor").value
-            );
-
-
-            showToast(
-                "Notlar kaydedildi."
-            );
-
-        }
-    );
-
-
-$("clearNotesButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            $("notesEditor")
-                .value = "";
-
-
-            localStorage.removeItem(
-                "myai_notes"
-            );
-
-
-            showToast(
-                "Notlar temizlendi."
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   GLOBAL SEARCH
-========================================================= */
-
-$("globalSearch")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key !== "Enter"
-            ) {
-                return;
-            }
-
-
-            const query =
-                event.target.value
-                    .trim()
-                    .toLowerCase();
-
-
-            if (!query) {
-                return;
-            }
-
-
-            if (
-                query.includes("ai") ||
-                query.includes("yapay")
-            ) {
-
-                openPage("ai");
-
-            }
-            else if (
-                query.includes("oyun")
-            ) {
-
-                openPage("games");
-
-            }
-            else if (
-                query.includes("araç") ||
-                query.includes("hesap") ||
-                query.includes("kronometre")
-            ) {
-
-                openPage("tools");
-
-            }
-            else if (
-                query.includes("not")
-            ) {
-
-                openPage("notes");
-
-            }
-            else if (
-                query.includes("ayar")
-            ) {
-
-                openPage("settings");
-
-            }
-            else {
-
-                showToast(
-                    "Sonuç bulunamadı."
-                );
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   BAŞLANGIÇ
-========================================================= */
-
-function initialize() {
-
-    loadTheme();
-
-    loadModel();
-
-    updateAPIStatus();
-
-    loadNotes();
-
-    loadConversation();
-
-    updateHistory();
-
-    updateCalculator();
-
-    updateStopwatch();
-
-    updateCountdown();
+    document.getElementById("homeNotes")
+        .textContent=
+        saved ? saved.length+" karakter" : "0";
 
 }
 
+document.getElementById("saveNotes")
+    .addEventListener("click",function(){
 
-initialize();
+        const value=
+            document.getElementById("notesArea").value;
 
+        setStore(STORE.notes,value);
+
+        document.getElementById("notesSaved")
+            .textContent=
+            "Kaydedildi: "+
+            new Date().toLocaleString("tr-TR");
+
+        document.getElementById("homeNotes")
+            .textContent=
+            value ? value.length+" karakter" : "0";
+
+        toast("Not kaydedildi.");
+
+    });
+
+document.getElementById("clearNotes")
+    .addEventListener("click",function(){
+
+        if(!confirm("Notları silmek istediğine emin misin?")){
+            return;
+        }
+
+        removeStore(STORE.notes);
+
+        document.getElementById("notesArea").value="";
+
+        document.getElementById("notesSaved")
+            .textContent="Notlar temizlendi.";
+
+        document.getElementById("homeNotes")
+            .textContent="0";
+
+    });
+
+loadNotes();
+
+
+/* =========================================================
+   DELETE ALL DATA
+========================================================= */
+
+document.getElementById("clearAllData")
+    .addEventListener("click",function(){
+
+        const ok=
+            confirm(
+                "My AI HUB içindeki yerel verilerin tamamı silinsin mi?"
+            );
+
+        if(!ok) return;
+
+        Object.keys(STORE).forEach(function(key){
+            removeStore(STORE[key]);
+        });
+
+        aiMessages=[];
+
+        document.getElementById("groqKey").value="";
+        document.getElementById("footballKey").value="";
+        document.getElementById("newsKey").value="";
+        document.getElementById("notesArea").value="";
+
+        renderChat();
+        updateSportsConfiguration();
+
+        toast("Yerel veriler silindi.");
+
+    });
+
+
+/* =========================================================
+   INITIAL STATUS
+========================================================= */
+
+try{
+
+    document.getElementById("storageStatus")
+        .textContent=
+        "● Aktif";
+
+}catch(e){}
+
+document.getElementById("aiModel").value=
+    getStore("my_ai_hub_model") ||
+    DEFAULT_MODEL;
+
+document.getElementById("aiModel")
+    .addEventListener("change",function(){
+
+        setStore(
+            "my_ai_hub_model",
+            this.value
+        );
+
+    });
+
+loadChat();
+
+updateSportsConfiguration();
+
+});
 </script>
 
 </body>
-  </html>
+   </html>
