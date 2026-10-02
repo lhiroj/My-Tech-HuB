@@ -3,239 +3,6277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6c4df6">
+
 <title>My AI HUB</title>
 
 <style>
-:root{
-  --bg:#f5f6fa;
-  --surface:#fff;
-  --surface2:#f0f1f7;
-  --text:#171827;
-  --muted:#777b8d;
-  --primary:#6c4df6;
-  --primary2:#9278ff;
-  --border:#e5e6ee;
-  --success:#28a56b;
-  --danger:#e05252;
-  --shadow:0 10px 30px rgba(30,25,70,.08);
+
+/* =========================================================
+   MY AI HUB
+   Tek dosyalık web uygulaması
+   ========================================================= */
+
+/* -------------------------
+   DEĞİŞKENLER
+------------------------- */
+
+:root {
+    --bg: #f5f6fb;
+    --bg-secondary: #eef0f7;
+    --card: #ffffff;
+    --card-hover: #fafaff;
+
+    --text: #171827;
+    --text-secondary: #747789;
+    --text-light: #a0a3b2;
+
+    --primary: #6c4df6;
+    --primary-dark: #5639dc;
+    --primary-light: #eeeaff;
+
+    --success: #2cad72;
+    --danger: #e05252;
+    --warning: #e6a52c;
+
+    --border: #e5e6ee;
+
+    --shadow:
+        0 8px 30px rgba(32, 25, 80, 0.07);
+
+    --radius: 18px;
+    --sidebar-width: 255px;
 }
 
-*{box-sizing:border-box}
+/* -------------------------
+   DARK MODE
+------------------------- */
 
-html,body{
-  margin:0;
-  min-height:100%;
+body.dark {
+    --bg: #101117;
+    --bg-secondary: #171820;
+    --card: #1b1c25;
+    --card-hover: #22232e;
+
+    --text: #f4f4f7;
+    --text-secondary: #a4a6b4;
+    --text-light: #777a8a;
+
+    --primary-light: #292344;
+
+    --border: #2b2d38;
+
+    --shadow:
+        0 8px 30px rgba(0, 0, 0, 0.22);
 }
 
-body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+/* -------------------------
+   RESET
+------------------------- */
+
+* {
+    box-sizing: border-box;
 }
 
-button,input,textarea,select{
-  font:inherit;
+html {
+    scroll-behavior: smooth;
 }
 
-button{
-  cursor:pointer;
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    transition:
+        background .2s,
+        color .2s;
 }
 
-.app{
-  min-height:100vh;
-  display:flex;
+button,
+input,
+textarea,
+select {
+    font: inherit;
 }
 
-/* ================= SIDEBAR ================= */
-
-.sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  width:250px;
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  padding:22px 15px;
-  z-index:30;
+button {
+    cursor: pointer;
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:5px 10px 28px;
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
 }
 
-.logo-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  color:#fff;
-  font-weight:900;
-  font-size:20px;
-  background:linear-gradient(135deg,var(--primary),var(--primary2));
-  box-shadow:0 8px 20px rgba(108,77,246,.25);
+input,
+textarea,
+select {
+    color: var(--text);
 }
 
-.logo-title{
-  font-weight:800;
-  font-size:17px;
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.app {
+    min-height: 100vh;
 }
 
-.logo-sub{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:2px;
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: var(--sidebar-width);
+
+    background: var(--card);
+
+    border-right:
+        1px solid var(--border);
+
+    padding: 20px 14px;
+
+    z-index: 100;
+
+    overflow-y: auto;
 }
 
-.nav-title{
-  color:#a1a4b0;
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  padding:10px;
+.logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 5px 10px 28px;
 }
 
-.nav-btn{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  border-radius:12px;
-  padding:13px 14px;
-  margin:3px 0;
-  display:flex;
-  align-items:center;
-  gap:13px;
-  text-align:left;
-  transition:.18s;
+.logo-icon {
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    color: white;
+
+    font-size: 21px;
+    font-weight: 900;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6c4df6,
+            #9b83ff
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(108, 77, 246, .25);
 }
 
-.nav-btn:hover{
-  background:#f1efff;
-  color:var(--primary);
+.logo-text {
+    min-width: 0;
 }
 
-.nav-btn.active{
-  background:#ece9ff;
-  color:var(--primary);
-  font-weight:750;
+.logo-title {
+    font-size: 17px;
+    font-weight: 850;
 }
 
-.nav-icon{
-  width:22px;
-  text-align:center;
-  font-size:18px;
+.logo-subtitle {
+    margin-top: 2px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
 }
 
-/* ================= MAIN ================= */
+.menu-label {
+    padding: 10px;
 
-.main{
-  margin-left:250px;
-  width:calc(100% - 250px);
-  min-width:0;
-  padding:24px;
+    color: var(--text-light);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
 }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:25px;
+.nav-button {
+    width: 100%;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    border-radius: 12px;
+
+    padding: 13px 14px;
+
+    margin: 3px 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    text-align: left;
+
+    transition:
+        background .18s,
+        color .18s,
+        transform .18s;
 }
 
-.search{
-  width:340px;
-  max-width:100%;
-  padding:12px 16px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  outline:none;
-  background:var(--surface);
-  color:var(--text);
+.nav-button:hover {
+    background: var(--primary-light);
+    color: var(--primary);
 }
 
-.search:focus{
-  border-color:var(--primary);
+.nav-button.active {
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-weight: 750;
 }
 
-.top-actions{
-  display:flex;
-  gap:8px;
+.nav-icon {
+    width: 22px;
+
+    text-align: center;
+
+    font-size: 18px;
 }
 
-.icon-btn{
-  width:42px;
-  height:42px;
-  border:1px solid var(--border);
-  background:var(--surface);
-  color:var(--text);
-  border-radius:12px;
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left: var(--sidebar-width);
+
+    width:
+        calc(100% - var(--sidebar-width));
+
+    min-height: 100vh;
+
+    padding: 24px;
 }
 
-/* ================= PAGES ================= */
+/* =========================================================
+   TOPBAR
+========================================================= */
 
-.page{
-  display:none;
+.topbar {
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
 }
 
-.page.active{
-  display:block;
+.search-wrapper {
+    position: relative;
+
+    width: min(390px, 100%);
 }
 
-.page-title{
-  margin:0 0 6px;
-  font-size:27px;
+.search-icon {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--text-light);
 }
 
-.page-subtitle{
-  margin:0 0 22px;
-  color:var(--muted);
+.search {
+    width: 100%;
+
+    padding:
+        12px
+        15px
+        12px
+        40px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    transition:
+        border .18s,
+        box-shadow .18s;
 }
 
-/* ================= HOME ================= */
+.search:focus {
+    border-color: var(--primary);
 
-.hero{
-  position:relative;
-  overflow:hidden;
-  padding:32px;
-  min-height:225px;
-  border-radius:25px;
-  color:#fff;
-  background:linear-gradient(135deg,#6244ef,#957cff);
-  box-shadow:var(--shadow);
+    box-shadow:
+        0 0 0 3px
+        rgba(108, 77, 246, .1);
 }
 
-.hero:after{
-  content:"";
-  position:absolute;
-  width:240px;
-  height:240px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  right:-50px;
-  top:-70px;
+.top-actions {
+    display: flex;
+
+    gap: 8px;
 }
 
-.hero h1{
-  position:relative;
-  z-index:1;
-  margin:0 0 10px;
-  font-size:32px;
+.icon-button {
+    width: 42px;
+    height: 42px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    display: grid;
+    place-items: center;
+
+    transition: .18s;
 }
 
-.hero p{
-  position:relative;
-  z-index:1;
-  max-width:650px;
-  line-height:1.6;
-  opacity:.9;
+.icon-button:hover {
+    border-color: var(--primary);
+
+    color: var(--primary);
+
+    transform: translateY(-1px);
 }
 
-.primary-btn{
-  border:0;
-  background:var(--primary);
+/* =========================================================
+   PAGES
+========================================================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+
+    animation:
+        pageIn .18s ease;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-heading {
+    margin-bottom: 22px;
+}
+
+.page-title {
+    margin: 0 0 6px;
+
+    font-size: 28px;
+    font-weight: 850;
+}
+
+.page-description {
+    margin: 0;
+
+    color: var(--text-secondary);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    padding: 20px;
+}
+
+.clickable {
+    cursor: pointer;
+
+    transition:
+        transform .18s,
+        box-shadow .18s,
+        border .18s;
+}
+
+.clickable:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 13px 35px
+        rgba(32, 25, 80, .11);
+
+    border-color:
+        rgba(108, 77, 246, .25);
+}
+
+.section-heading {
+    margin: 30px 0 14px;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.card-icon {
+    width: 46px;
+    height: 46px;
+
+    display: grid;
+    place-items: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 13px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    font-size: 21px;
+}
+
+.card h3 {
+    margin: 0 0 7px;
+
+    font-size: 16px;
+}
+
+.card p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.55;
+
+    font-size: 14px;
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+
+.hero {
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 235px;
+
+    padding: 34px;
+
+    border-radius: 25px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6041ee,
+            #987dff
+        );
+
+    box-shadow:
+        0 16px 40px
+        rgba(108, 77, 246, .2);
+}
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    right: -70px;
+    top: -90px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    right: 150px;
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.05);
+}
+
+.hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 700px;
+}
+
+.hero h1 {
+    margin: 0 0 10px;
+
+    font-size: 33px;
+}
+
+.hero p {
+    margin: 0 0 22px;
+
+    max-width: 650px;
+
+    line-height: 1.65;
+
+    opacity: .9;
+}
+
+.hero-button {
+    border: 0;
+
+    padding: 12px 18px;
+
+    border-radius: 11px;
+
+    background: white;
+
+    color: var(--primary);
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   GRIDS
+========================================================= */
+
+.grid-3 {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+}
+
+.grid-4 {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+}
+
+.grid-2 {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 16px;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        5px
+        9px;
+
+    border-radius: 99px;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.badge.success {
+    background:
+        rgba(44,173,114,.11);
+
+    color: var(--success);
+}
+
+.badge.primary {
+    background:
+        var(--primary-light);
+
+    color: var(--primary);
+}
+
+.badge.danger {
+    background:
+        rgba(224,82,82,.1);
+
+    color: var(--danger);
+}
+
+/* =========================================================
+   AI LAYOUT
+========================================================= */
+
+.ai-container {
+    height:
+        calc(100vh - 105px);
+
+    min-height: 570px;
+
+    display: grid;
+
+    grid-template-columns:
+        225px minmax(0, 1fr);
+
+    gap: 16px;
+}
+
+.chat-history-panel {
+    min-height: 0;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 13px;
+
+    overflow-y: auto;
+}
+
+.new-chat-button {
+    width: 100%;
+
+    border: 0;
+
+    padding: 12px;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-weight: 800;
+
+    margin-bottom: 13px;
+}
+
+.new-chat-button:hover {
+    background: var(--primary-dark);
+}
+
+.history-title {
+    color: var(--text-light);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    padding: 8px;
+}
+
+.history-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.history-item {
+    width: 100%;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    text-align: left;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+.history-item:hover {
+    background: var(--bg-secondary);
+
+    color: var(--text);
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+.chat-panel {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.chat-header {
+    min-height: 66px;
+
+    padding:
+        12px
+        17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.ai-profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.ai-avatar {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #9b82ff
+        );
+}
+
+.ai-name {
+    font-weight: 850;
+}
+
+.ai-model {
+    margin-top: 2px;
+
+    color: var(--text-secondary);
+
+    font-size: 10px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    max-width: 300px;
+}
+
+.chat-actions {
+    display: flex;
+
+    gap: 6px;
+}
+
+.small-button {
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+
+    color: var(--text);
+
+    border-radius: 9px;
+
+    padding:
+        8px
+        10px;
+}
+
+.small-button:hover {
+    border-color: var(--primary);
+
+    color: var(--primary);
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.messages {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    padding: 22px;
+
+    scroll-behavior: smooth;
+}
+
+.message {
+    display: flex;
+
+    width: 100%;
+
+    margin-bottom: 17px;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message.ai {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: min(780px, 82%);
+
+    padding:
+        13px
+        16px;
+
+    border-radius: 17px;
+
+    line-height: 1.62;
+
+    font-size: 14.5px;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+
+    word-break: normal;
+
+    user-select: text;
+}
+
+.message.ai .message-bubble {
+    background:
+        var(--bg-secondary);
+
+    color:
+        var(--text);
+
+    border-bottom-left-radius: 5px;
+}
+
+.message.user .message-bubble {
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    border-bottom-right-radius: 5px;
+}
+
+.message-time {
+    margin-top: 4px;
+
+    font-size: 9px;
+
+    color: var(--text-light);
+}
+
+.typing {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    min-height: 44px;
+}
+
+.typing-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--text-secondary);
+
+    animation:
+        typingAnimation 1s infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: .3s;
+}
+
+@keyframes typingAnimation {
+    0%, 80%, 100% {
+        opacity: .25;
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+/* =========================================================
+   CHAT INPUT
+========================================================= */
+
+.chat-input-area {
+    padding: 11px;
+
+    display: flex;
+
+    gap: 8px;
+
+    align-items: flex-end;
+
+    border-top:
+        1px solid var(--border);
+}
+
+.chat-input {
+    flex: 1;
+
+    min-width: 0;
+
+    min-height: 48px;
+
+    max-height: 150px;
+
+    resize: none;
+
+    padding:
+        13px
+        14px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    line-height: 1.4;
+}
+
+.chat-input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(108,77,246,.08);
+}
+
+.send-button {
+    width: 50px;
+    height: 48px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 18px;
+
+    flex-shrink: 0;
+}
+
+.send-button:hover {
+    background: var(--primary-dark);
+}
+
+/* =========================================================
+   AI FULLSCREEN
+========================================================= */
+
+.ai-fullscreen {
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    z-index: 1000 !important;
+
+    width: 100vw !important;
+
+    height: 100vh !important;
+
+    padding: 0 !important;
+
+    background: var(--bg);
+}
+
+.ai-fullscreen .ai-container {
+    height: 100vh;
+
+    min-height: 0;
+
+    grid-template-columns:
+        225px minmax(0,1fr);
+}
+
+.ai-fullscreen .chat-panel {
+    border-radius: 0;
+}
+
+.ai-fullscreen .chat-history-panel {
+    border-radius: 0;
+}
+
+body.ai-mode {
+    overflow: hidden;
+}
+
+/* =========================================================
+   TOOLS
+========================================================= */
+
+.tool-view {
+    display: none;
+
+    margin-top: 18px;
+}
+
+.tool-view.active {
+    display: block;
+
+    animation:
+        pageIn .18s ease;
+}
+
+.tool-card {
+    min-height: 150px;
+}
+
+.tool-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.tool-title-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.input {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+}
+
+.input:focus {
+    border-color: var(--primary);
+}
+
+.select {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.row {
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+.row > * {
+    min-width: 0;
+}
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.primary-button {
+    border: 0;
+
+    padding:
+        11px
+        16px;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-weight: 750;
+
+    transition: .18s;
+}
+
+.primary-button:hover {
+    background: var(--primary-dark);
+
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+.calculator {
+    width: min(400px, 100%);
+}
+
+.calculator-display {
+    width: 100%;
+
+    min-height: 85px;
+
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    padding: 16px;
+
+    margin-bottom: 10px;
+
+    border-radius: 15px;
+
+    background: #171820;
+
+    color: white;
+
+    font-size: 31px;
+
+    font-weight: 700;
+
+    overflow-x: auto;
+
+    white-space: nowrap;
+}
+
+.calculator-expression {
+    color: #aaa;
+
+    font-size: 11px;
+
+    min-height: 16px;
+
+    text-align: right;
+
+    margin-bottom: 3px;
+}
+
+.calculator-keys {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 8px;
+}
+
+.calc-key {
+    min-height: 57px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.calc-key:hover {
+    background: var(--bg-secondary);
+}
+
+.calc-key.operator {
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    border-color:
+        transparent;
+}
+
+.calc-key.equals {
+    background: var(--primary);
+
+    color: white;
+
+    border-color:
+        transparent;
+}
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer-panel {
+    width: min(600px, 100%);
+
+    text-align: center;
+}
+
+.timer-display {
+    margin: 25px 0;
+
+    font-size: 57px;
+
+    font-weight: 850;
+
+    letter-spacing: .04em;
+}
+
+.timer-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+/* =========================================================
+   CONVERTER
+========================================================= */
+
+.converter-result {
+    margin-top: 18px;
+
+    padding: 18px;
+
+    border-radius: 13px;
+
+    background: var(--bg-secondary);
+
+    color: var(--text);
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   GAMES
+========================================================= */
+
+.game-panel {
+    margin-top: 18px;
+}
+
+.game-status {
+    margin:
+        18px
+        0;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+.game-buttons {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+/* =========================================================
+   MEMORY
+========================================================= */
+
+.memory-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(55px, 90px));
+
+    gap: 9px;
+
+    margin-top: 20px;
+}
+
+.memory-card {
+    aspect-ratio: 1;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 25px;
+
+    transition: transform .15s;
+}
+
+.memory-card:hover {
+    transform: scale(1.03);
+}
+
+.memory-card.matched {
+    background:
+        var(--success);
+}
+
+/* =========================================================
+   REACTION GAME
+========================================================= */
+
+.reaction-box {
+    width: min(600px, 100%);
+
+    min-height: 230px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 17px;
+
+    background: var(--bg-secondary);
+
+    margin-top: 20px;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+.reaction-box.waiting {
+    background: var(--danger);
+
+    color: white;
+}
+
+.reaction-box.ready {
+    background: var(--success);
+
+    color: white;
+}
+
+.reaction-text {
+    font-size: 25px;
+
+    font-weight: 850;
+}
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+.notes-editor {
+    width: 100%;
+
+    min-height: 500px;
+
+    resize: vertical;
+
+    padding: 17px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 15px;
+
+    outline: none;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    line-height: 1.65;
+}
+
+.notes-editor:focus {
+    border-color: var(--primary);
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-list {
+    max-width: 800px;
+}
+
+.setting-card {
+    margin-bottom: 14px;
+}
+
+.setting-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    align-items: flex-start;
+}
+
+.setting-name {
+    font-weight: 850;
+}
+
+.setting-description {
+    margin-top: 4px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.setting-content {
+    margin-top: 15px;
+}
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+.toggle {
+    position: relative;
+
+    width: 48px;
+    height: 27px;
+
+    flex-shrink: 0;
+}
+
+.toggle input {
+    opacity: 0;
+
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 99px;
+
+    background: var(--border);
+
+    transition: .2s;
+}
+
+.toggle-slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 21px;
+    height: 21px;
+
+    left: 3px;
+    top: 3px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    transition: .2s;
+
+    box-shadow:
+        0 2px 5px
+        rgba(0,0,0,.15);
+}
+
+.toggle input:checked +
+.toggle-slider {
+    background: var(--primary);
+}
+
+.toggle input:checked +
+.toggle-slider::before {
+    transform:
+        translateX(21px);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-background {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    place-items: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,.45);
+
+    z-index: 2000;
+}
+
+.modal-background.show {
+    display: grid;
+}
+
+.modal {
+    width: min(520px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 23px;
+
+    border-radius: 20px;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.25);
+}
+
+.modal h2 {
+    margin-top: 0;
+}
+
+.modal-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    z-index: 3000;
+
+    max-width:
+        min(400px, calc(100vw - 40px));
+
+    padding:
+        13px
+        17px;
+
+    border-radius: 11px;
+
+    background: #171820;
+
+    color: white;
+
+    box-shadow:
+        0 10px 35px
+        rgba(0,0,0,.2);
+
+    opacity: 0;
+
+    transform:
+        translateY(15px);
+
+    pointer-events: none;
+
+    transition: .2s;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .grid-4 {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+@media (max-width: 850px) {
+
+    :root {
+        --sidebar-width: 72px;
+    }
+
+    .sidebar {
+        padding:
+            18px
+            8px;
+    }
+
+    .logo {
+        justify-content: center;
+
+        padding:
+            4px 0 25px;
+    }
+
+    .logo-text,
+    .menu-label,
+    .nav-text {
+        display: none;
+    }
+
+    .nav-button {
+        justify-content: center;
+
+        padding:
+            13px 5px;
+    }
+
+    .main {
+        padding: 15px;
+    }
+
+    .grid-3,
+    .grid-2 {
+        grid-template-columns:
+            1fr;
+    }
+
+    .ai-container {
+        grid-template-columns: 1fr;
+
+        min-height: 0;
+
+        height:
+            calc(100vh - 85px);
+    }
+
+    .chat-history-panel {
+        display: none;
+    }
+
+    .message-bubble {
+        max-width: 90%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .topbar {
+        align-items:
+            flex-start;
+    }
+
+    .search-wrapper {
+        flex: 1;
+    }
+
+    .hero {
+        padding: 25px;
+    }
+
+    .hero h1 {
+        font-size: 27px;
+    }
+
+    .grid-4 {
+        grid-template-columns:
+            1fr;
+    }
+
+    .timer-display {
+        font-size: 42px;
+    }
+
+    .chat-header {
+        padding:
+            10px;
+    }
+
+    .messages {
+        padding: 14px;
+    }
+
+    .ai-model {
+        max-width: 150px;
+    }
+
+    .fullscreen-ai .ai-container {
+        grid-template-columns: 1fr;
+    }
+
+    .fullscreen-ai .chat-history-panel {
+        display: none;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- ========================================================
+     UYGULAMA
+======================================================== -->
+
+<div class="app">
+
+
+<!-- ========================================================
+     SIDEBAR
+======================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ✦
+        </div>
+
+        <div class="logo-text">
+
+            <div class="logo-title">
+                My AI HUB
+            </div>
+
+            <div class="logo-subtitle">
+                Personal AI Center
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="menu-label">
+        MENÜ
+    </div>
+
+
+    <button
+        class="nav-button active"
+        data-page="home"
+    >
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        <span class="nav-text">
+            Ana Sayfa
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="ai"
+    >
+
+        <span class="nav-icon">
+            ✦
+        </span>
+
+        <span class="nav-text">
+            AI Asistan
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="games"
+    >
+
+        <span class="nav-icon">
+            🎮
+        </span>
+
+        <span class="nav-text">
+            Oyunlar
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="tools"
+    >
+
+        <span class="nav-icon">
+            🛠
+        </span>
+
+        <span class="nav-text">
+            Araçlar
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="notes"
+    >
+
+        <span class="nav-icon">
+            📝
+        </span>
+
+        <span class="nav-text">
+            Notlar
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-page="settings"
+    >
+
+        <span class="nav-icon">
+            ⚙
+        </span>
+
+        <span class="nav-text">
+            Ayarlar
+        </span>
+
+    </button>
+
+</aside>
+
+
+<!-- ========================================================
+     MAIN
+======================================================== -->
+
+<main class="main">
+
+
+<!-- ========================================================
+     TOPBAR
+======================================================== -->
+
+<header class="topbar">
+
+    <div class="search-wrapper">
+
+        <span class="search-icon">
+            🔎
+        </span>
+
+        <input
+            id="globalSearch"
+            class="search"
+            type="text"
+            placeholder="My AI HUB'da ara..."
+        >
+
+    </div>
+
+
+    <div class="top-actions">
+
+        <button
+            class="icon-button"
+            id="themeButton"
+            title="Tema"
+        >
+            ☾
+        </button>
+
+
+        <button
+            class="icon-button"
+            id="aboutButton"
+            title="Hakkında"
+        >
+            ?
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================
+     HOME
+======================================================== -->
+
+<section
+    class="page active"
+    id="page-home"
+>
+
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                My AI HUB'a hoş geldin 👋
+            </h1>
+
+            <p>
+                Yapay zekâ, oyunlar, araçlar ve
+                notlar artık tek bir yerde.
+            </p>
+
+            <button
+                class="hero-button"
+                id="heroAiButton"
+            >
+                ✦ AI Asistanı Aç
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="section-heading">
+        Hızlı Erişim
+    </h2>
+
+
+    <div class="grid-3">
+
+
+        <div
+            class="card clickable"
+            data-open-page="ai"
+        >
+
+            <div class="card-icon">
+                ✦
+            </div>
+
+            <h3>
+                AI Asistan
+            </h3>
+
+            <p>
+                Groq üzerinden yapay zekâ ile
+                sohbet et.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-open-page="games"
+        >
+
+            <div class="card-icon">
+                🎮
+            </div>
+
+            <h3>
+                Oyunlar
+            </h3>
+
+            <p>
+                Mini oyunlarla biraz eğlen.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-open-page="tools"
+        >
+
+            <div class="card-icon">
+                🛠
+            </div>
+
+            <h3>
+                Araçlar
+            </h3>
+
+            <p>
+                Hesap makinesi, kronometre,
+                dönüştürücü ve daha fazlası.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <h2 class="section-heading">
+        Sistem
+    </h2>
+
+
+    <div class="grid-3">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Groq AI
+            </h3>
+
+            <p id="homeApiStatus">
+                API anahtarı kontrol ediliyor...
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                💾
+            </div>
+
+            <h3>
+                Yerel kayıt
+            </h3>
+
+            <p>
+                Notlar, ayarlar ve sohbet geçmişi
+                cihazında saklanabilir.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📱
+            </div>
+
+            <h3>
+                Mobil uyumlu
+            </h3>
+
+            <p>
+                Telefon ve tablet ekranları için
+                tasarlandı.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     AI
+======================================================== -->
+
+<section
+    class="page"
+    id="page-ai"
+>
+
+
+    <div
+        class="ai-container"
+        id="aiContainer"
+    >
+
+
+        <!-- CHAT HISTORY -->
+
+        <aside class="chat-history-panel">
+
+            <button
+                class="new-chat-button"
+                id="newChatButton"
+            >
+                ＋ Yeni Sohbet
+            </button>
+
+
+            <div class="history-title">
+                SOHBET
+            </div>
+
+
+            <div
+                class="history-list"
+                id="historyList"
+            >
+            </div>
+
+        </aside>
+
+
+        <!-- CHAT -->
+
+        <div class="chat-panel">
+
+
+            <div class="chat-header">
+
+
+                <div class="ai-profile">
+
+                    <div class="ai-avatar">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <div class="ai-name">
+                            My AI
+                        </div>
+
+                        <div
+                            class="ai-model"
+                            id="currentModelLabel"
+                        >
+                            openai/gpt-oss-20b
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chat-actions">
+
+
+                    <button
+                        class="small-button"
+                        id="clearChatButton"
+                        title="Sohbeti temizle"
+                    >
+                        🗑
+                    </button>
+
+
+                    <button
+                        class="small-button"
+                        id="fullscreenButton"
+                        title="Tam ekran"
+                    >
+                        ⛶
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                class="messages"
+                id="messages"
+            >
+            </div>
+
+
+            <div class="chat-input-area">
+
+
+                <textarea
+                    id="chatInput"
+                    class="chat-input"
+                    rows="1"
+                    placeholder="My AI'ya bir şey sor..."
+                ></textarea>
+
+
+                <button
+                    class="send-button"
+                    id="sendButton"
+                    title="Gönder"
+                >
+                    ➤
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     GAMES
+======================================================== -->
+
+<section
+    class="page"
+    id="page-games"
+>
+
+
+    <div class="page-heading">
+
+        <h1 class="page-title">
+            Oyunlar 🎮
+        </h1>
+
+        <p class="page-description">
+            My AI HUB içindeki mini oyunlar.
+        </p>
+
+    </div>
+
+
+    <div
+        class="grid-2"
+        id="gameMenu"
+    >
+
+
+        <div
+            class="card clickable"
+            data-game="number"
+        >
+
+            <div class="card-icon">
+                🔢
+            </div>
+
+            <h3>
+                Sayı Tahmin
+            </h3>
+
+            <p>
+                1 ile 100 arasındaki sayıyı bul.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-game="rps"
+        >
+
+            <div class="card-icon">
+                ✊
+            </div>
+
+            <h3>
+                Taş Kağıt Makas
+            </h3>
+
+            <p>
+                Bilgisayara karşı oyna.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-game="memory"
+        >
+
+            <div class="card-icon">
+                🧠
+            </div>
+
+            <h3>
+                Hafıza
+            </h3>
+
+            <p>
+                Aynı kartların eşlerini bul.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-game="reaction"
+        >
+
+            <div class="card-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Refleks
+            </h3>
+
+            <p>
+                Doğru anda bas ve süreni ölç.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SAYI -->
+
+    <div
+        class="tool-view card game-panel"
+        id="game-number"
+    >
+
+        <h2>
+            🔢 Sayı Tahmin
+        </h2>
+
+        <p>
+            1 ile 100 arasında bir sayı tuttum.
+        </p>
+
+
+        <div
+            class="row"
+            style="margin-top:18px"
+        >
+
+            <input
+                class="input"
+                id="guessInput"
+                type="number"
+                min="1"
+                max="100"
+                placeholder="Tahminin"
+            >
+
+            <button
+                class="primary-button"
+                id="guessButton"
+            >
+                Tahmin Et
+            </button>
+
+        </div>
+
+
+        <div
+            class="game-status"
+            id="guessStatus"
+        >
+            Oyun hazır.
+        </div>
+
+
+        <button
+            class="small-button"
+            id="resetGuessButton"
+        >
+            Yeni Sayı
+        </button>
+
+    </div>
+
+
+    <!-- RPS -->
+
+    <div
+        class="tool-view card game-panel"
+        id="game-rps"
+    >
+
+        <h2>
+            ✊ Taş Kağıt Makas
+        </h2>
+
+        <div class="game-buttons">
+
+            <button
+                class="primary-button"
+                data-rps="Taş"
+            >
+                ✊ Taş
+            </button>
+
+            <button
+                class="primary-button"
+                data-rps="Kağıt"
+            >
+                ✋ Kağıt
+            </button>
+
+            <button
+                class="primary-button"
+                data-rps="Makas"
+            >
+                ✌️ Makas
+            </button>
+
+        </div>
+
+
+        <div
+            class="game-status"
+            id="rpsStatus"
+        >
+            Seçimini yap.
+        </div>
+
+    </div>
+
+
+    <!-- MEMORY -->
+
+    <div
+        class="tool-view card game-panel"
+        id="game-memory"
+    >
+
+        <h2>
+            🧠 Hafıza
+        </h2>
+
+        <p>
+            Aynı emojilerin eşlerini bul.
+        </p>
+
+
+        <div
+            class="memory-grid"
+            id="memoryGrid"
+        >
+        </div>
+
+
+        <div
+            class="game-status"
+            id="memoryStatus"
+        >
+            0 / 4 eşleşme
+        </div>
+
+
+        <button
+            class="small-button"
+            id="resetMemoryButton"
+        >
+            Yeniden Başlat
+        </button>
+
+    </div>
+
+
+    <!-- REACTION -->
+
+    <div
+        class="tool-view card game-panel"
+        id="game-reaction"
+    >
+
+        <h2>
+            ⚡ Refleks
+        </h2>
+
+        <p>
+            Yeşil olduğunda mümkün olduğunca
+            hızlı bas.
+        </p>
+
+
+        <div
+            class="reaction-box"
+            id="reactionBox"
+        >
+
+            <div>
+
+                <div
+                    class="reaction-text"
+                    id="reactionText"
+                >
+                    Başlamak için bas
+                </div>
+
+                <br>
+
+                <button
+                    class="primary-button"
+                    id="reactionButton"
+                >
+                    Başlat
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     TOOLS
+======================================================== -->
+
+<section
+    class="page"
+    id="page-tools"
+>
+
+
+    <div class="page-heading">
+
+        <h1 class="page-title">
+            Araçlar 🛠
+        </h1>
+
+        <p class="page-description">
+            Kullanışlı küçük araçlar.
+        </p>
+
+    </div>
+
+
+    <div class="grid-4">
+
+
+        <div
+            class="card clickable"
+            data-tool="calculator"
+        >
+
+            <div class="card-icon">
+                🧮
+            </div>
+
+            <h3>
+                Hesap Makinesi
+            </h3>
+
+            <p>
+                Dört işlem ve daha fazlası.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-tool="converter"
+        >
+
+            <div class="card-icon">
+                ↔
+            </div>
+
+            <h3>
+                Dönüştürücü
+            </h3>
+
+            <p>
+                Uzunluk ve ağırlık dönüştür.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-tool="stopwatch"
+        >
+
+            <div class="card-icon">
+                ⏱
+            </div>
+
+            <h3>
+                Kronometre
+            </h3>
+
+            <p>
+                Zamanını ölç.
+            </p>
+
+        </div>
+
+
+        <div
+            class="card clickable"
+            data-tool="countdown"
+        >
+
+            <div class="card-icon">
+                ⏳
+            </div>
+
+            <h3>
+                Geri Sayım
+            </h3>
+
+            <p>
+                Belirlediğin süreyi say.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- CALCULATOR -->
+
+    <div
+        class="tool-view card"
+        id="tool-calculator"
+    >
+
+        <h2>
+            🧮 Hesap Makinesi
+        </h2>
+
+
+        <div
+            class="calculator"
+            style="margin-top:20px"
+        >
+
+            <div
+                class="calculator-display"
+                id="calculatorDisplay"
+            >
+                0
+            </div>
+
+
+            <div
+                class="calculator-keys"
+            >
+
+                <button
+                    class="calc-key operator"
+                    data-calc="clear"
+                >
+                    AC
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="backspace"
+                >
+                    ⌫
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="%"
+                >
+                    %
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="/"
+                >
+                    ÷
+                </button>
+
+
+                <button
+                    class="calc-key"
+                    data-calc="7"
+                >
+                    7
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="8"
+                >
+                    8
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="9"
+                >
+                    9
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="*"
+                >
+                    ×
+                </button>
+
+
+                <button
+                    class="calc-key"
+                    data-calc="4"
+                >
+                    4
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="5"
+                >
+                    5
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="6"
+                >
+                    6
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="-"
+                >
+                    −
+                </button>
+
+
+                <button
+                    class="calc-key"
+                    data-calc="1"
+                >
+                    1
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="2"
+                >
+                    2
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="3"
+                >
+                    3
+                </button>
+
+                <button
+                    class="calc-key operator"
+                    data-calc="+"
+                >
+                    +
+                </button>
+
+
+                <button
+                    class="calc-key"
+                    data-calc="0"
+                >
+                    0
+                </button>
+
+                <button
+                    class="calc-key"
+                    data-calc="."
+                >
+                    .
+                </button>
+
+                <button
+                    class="calc-key equals"
+                    data-calc="="
+                    style="grid-column: span 2"
+                >
+                    =
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONVERTER -->
+
+    <div
+        class="tool-view card"
+        id="tool-converter"
+    >
+
+        <h2>
+            ↔ Birim Dönüştürücü
+        </h2>
+
+
+        <div
+            class="grid-2"
+            style="margin-top:20px"
+        >
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Değer
+                </label>
+
+                <input
+                    class="input"
+                    id="convertValue"
+                    type="number"
+                    placeholder="Örn. 10"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Dönüşüm
+                </label>
+
+                <select
+                    class="select"
+                    id="convertType"
+                >
+
+                    <option value="m-cm">
+                        Metre → Santimetre
+                    </option>
+
+                    <option value="cm-m">
+                        Santimetre → Metre
+                    </option>
+
+                    <option value="km-m">
+                        Kilometre → Metre
+                    </option>
+
+                    <option value="m-km">
+                        Metre → Kilometre
+                    </option>
+
+                    <option value="kg-g">
+                        Kilogram → Gram
+                    </option>
+
+                    <option value="g-kg">
+                        Gram → Kilogram
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            id="convertButton"
+        >
+            Dönüştür
+        </button>
+
+
+        <div
+            class="converter-result"
+            id="convertResult"
+        >
+            Sonuç burada görünecek.
+        </div>
+
+    </div>
+
+
+    <!-- STOPWATCH -->
+
+    <div
+        class="tool-view card timer-panel"
+        id="tool-stopwatch"
+    >
+
+        <h2>
+            ⏱ Kronometre
+        </h2>
+
+
+        <div
+            class="timer-display"
+            id="stopwatchDisplay"
+        >
+            00:00:00
+        </div>
+
+
+        <div class="timer-buttons">
+
+            <button
+                class="primary-button"
+                id="stopwatchStart"
+            >
+                Başlat
+            </button>
+
+            <button
+                class="small-button"
+                id="stopwatchPause"
+            >
+                Duraklat
+            </button>
+
+            <button
+                class="small-button"
+                id="stopwatchReset"
+            >
+                Sıfırla
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- COUNTDOWN -->
+
+    <div
+        class="tool-view card timer-panel"
+        id="tool-countdown"
+    >
+
+        <h2>
+            ⏳ Geri Sayım
+        </h2>
+
+
+        <div
+            class="form-group"
+            style="margin-top:20px"
+        >
+
+            <label class="form-label">
+                Süre (saniye)
+            </label>
+
+            <input
+                class="input"
+                id="countdownInput"
+                type="number"
+                min="1"
+                placeholder="60"
+            >
+
+        </div>
+
+
+        <div
+            class="timer-display"
+            id="countdownDisplay"
+        >
+            00:00
+        </div>
+
+
+        <div class="timer-buttons">
+
+            <button
+                class="primary-button"
+                id="countdownStart"
+            >
+                Başlat
+            </button>
+
+            <button
+                class="small-button"
+                id="countdownStop"
+            >
+                Durdur
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     NOTES
+======================================================== -->
+
+<section
+    class="page"
+    id="page-notes"
+>
+
+
+    <div class="page-heading">
+
+        <h1 class="page-title">
+            Notlar 📝
+        </h1>
+
+        <p class="page-description">
+            Notlarını burada saklayabilirsin.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <textarea
+            class="notes-editor"
+            id="notesEditor"
+            placeholder="Notlarını buraya yaz..."
+        ></textarea>
+
+
+        <div
+            class="row"
+            style="margin-top:12px"
+        >
+
+            <button
+                class="primary-button"
+                id="saveNotesButton"
+            >
+                💾 Kaydet
+            </button>
+
+            <button
+                class="small-button"
+                id="clearNotesButton"
+            >
+                Temizle
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================
+     SETTINGS
+======================================================== -->
+
+<section
+    class="page"
+    id="page-settings"
+>
+
+
+    <div class="page-heading">
+
+        <h1 class="page-title">
+            Ayarlar ⚙
+        </h1>
+
+        <p class="page-description">
+            My AI HUB ayarlarını buradan yönet.
+        </p>
+
+    </div>
+
+
+    <div class="settings-list">
+
+
+        <!-- API KEY -->
+
+        <div class="card setting-card">
+
+            <div class="setting-header">
+
+                <div>
+
+                    <div class="setting-name">
+                        Groq API Key
+                    </div>
+
+                    <div class="setting-description">
+                        AI asistanını kullanmak için
+                        Groq API anahtarını gir.
+                    </div>
+
+                </div>
+
+                <span
+                    class="badge primary"
+                    id="apiBadge"
+                >
+                    Ayarlanmadı
+                </span>
+
+            </div>
+
+
+            <div class="setting-content">
+
+                <input
+                    class="input"
+                    id="apiKeyInput"
+                    type="password"
+                    placeholder="BURAYA APİ KEY YAZILACAK"
+                >
+
+
+                <div
+                    style="margin-top:10px"
+                >
+
+                    <button
+                        class="primary-button"
+                        id="saveApiButton"
+                    >
+                        API Key'i Kaydet
+                    </button>
+
+                    <button
+                        class="small-button"
+                        id="removeApiButton"
+                    >
+                        Sil
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MODEL -->
+
+        <div class="card setting-card">
+
+            <div class="setting-header">
+
+                <div>
+
+                    <div class="setting-name">
+                        AI Modeli
+                    </div>
+
+                    <div class="setting-description">
+                        Groq üzerinde kullanılacak model.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-content">
+
+                <select
+                    class="select"
+                    id="modelSelect"
+                >
+
+                    <option value="openai/gpt-oss-20b">
+                        GPT-OSS 20B
+                    </option>
+
+                    <option value="openai/gpt-oss-120b">
+                        GPT-OSS 120B
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- THEME -->
+
+        <div class="card setting-card">
+
+            <div class="setting-header">
+
+                <div>
+
+                    <div class="setting-name">
+                        Koyu Tema
+                    </div>
+
+                    <div class="setting-description">
+                        My AI HUB'ı koyu görünümde kullan.
+                    </div>
+
+                </div>
+
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="darkModeToggle"
+                    >
+
+                    <span class="toggle-slider">
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ABOUT -->
+
+        <div class="card setting-card">
+
+            <div class="setting-header">
+
+                <div>
+
+                    <div class="setting-name">
+                        My AI HUB
+                    </div>
+
+                    <div class="setting-description">
+                        Kişisel AI ve araç merkezi.
+                        Tek HTML dosyası olarak çalışır.
+                    </div>
+
+                </div>
+
+                <span class="badge success">
+                    v2.0
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<!-- ========================================================
+     MODAL
+======================================================== -->
+
+<div
+    class="modal-background"
+    id="modalBackground"
+>
+
+
+    <div class="modal">
+
+        <h2 id="modalTitle">
+            Bilgi
+        </h2>
+
+
+        <div id="modalContent">
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="small-button"
+                id="modalClose"
+            >
+                Kapat
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     TOAST
+======================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+>
+</div>
+
+
+<!-- ========================================================
+     JAVASCRIPT
+======================================================== -->
+
+<script>
+
+/* =========================================================
+   SABİTLER
+========================================================= */
+
+const GROQ_ENDPOINT =
+    "https://api.groq.com/openai/v1/chat/completions";
+
+
+/*
+   Kullanıcının istediği placeholder.
+   Gerçek API anahtarını GitHub'a koymuyoruz.
+*/
+
+const API_PLACEHOLDER =
+    "BURAYA APİ KEY YAZILACAK";
+
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
+let currentModel =
+    localStorage.getItem("myai_model") ||
+    "openai/gpt-oss-20b";
+
+
+let conversation = [];
+
+
+let isSending = false;
+
+
+/* =========================================================
+   YARDIMCI FONKSİYONLAR
+========================================================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+function showToast(message) {
+
+    const toast = $("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(
+        showToast.timeout
+    );
+
+    showToast.timeout =
+        setTimeout(
+            () => {
+                toast.classList.remove("show");
+            },
+            2500
+        );
+}
+
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
+
+/* =========================================================
+   SAYFA DEĞİŞTİRME
+========================================================= */
+
+const pageNames = [
+    "home",
+    "ai",
+    "games",
+    "tools",
+    "notes",
+    "settings"
+];
+
+
+function openPage(pageName) {
+
+    if (
+        !pageNames.includes(pageName)
+    ) {
+        return;
+    }
+
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page => {
+                page.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+
+    document
+        .querySelectorAll(".nav-button")
+        .forEach(
+            button => {
+                button.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+
+    const page =
+        $("page-" + pageName);
+
+
+    if (page) {
+
+        page.classList.add(
+            "active"
+        );
+
+    }
+
+
+    const nav =
+        document.querySelector(
+            `.nav-button[data-page="${pageName}"]`
+        );
+
+
+    if (nav) {
+
+        nav.classList.add(
+            "active"
+        );
+
+    }
+
+
+    window.scrollTo(
+        {
+            top: 0,
+            behavior: "smooth"
+        }
+    );
+
+}
+
+
+document
+    .querySelectorAll(".nav-button")
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+                    openPage(
+                        button.dataset.page
+                    );
+                }
+            );
+
+        }
+    );
+
+
+document
+    .querySelectorAll("[data-open-page]")
+    .forEach(
+        element => {
+
+            element.addEventListener(
+                "click",
+                () => {
+
+                    openPage(
+                        element.dataset.openPage
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+$("heroAiButton")
+    .addEventListener(
+        "click",
+        () => {
+            openPage("ai");
+        }
+    );
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function loadTheme() {
+
+    const dark =
+        localStorage.getItem(
+            "myai_dark"
+        ) === "true";
+
+
+    document.body.classList.toggle(
+        "dark",
+        dark
+    );
+
+
+    $("darkModeToggle").checked =
+        dark;
+
+}
+
+
+function toggleTheme() {
+
+    const dark =
+        $("darkModeToggle").checked;
+
+
+    document.body.classList.toggle(
+        "dark",
+        dark
+    );
+
+
+    localStorage.setItem(
+        "myai_dark",
+        dark
+    );
+
+}
+
+
+$("themeButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            $("darkModeToggle").checked =
+                !document.body.classList.contains(
+                    "dark"
+                );
+
+            toggleTheme();
+
+        }
+    );
+
+
+$("darkModeToggle")
+    .addEventListener(
+        "change",
+        toggleTheme
+    );
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(
+    title,
+    html
+) {
+
+    $("modalTitle")
+        .textContent = title;
+
+    $("modalContent")
+        .innerHTML = html;
+
+    $("modalBackground")
+        .classList.add("show");
+
+}
+
+
+function closeModal() {
+
+    $("modalBackground")
+        .classList.remove("show");
+
+}
+
+
+$("modalClose")
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+
+$("modalBackground")
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                $("modalBackground")
+            ) {
+                closeModal();
+            }
+
+        }
+    );
+
+
+$("aboutButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            openModal(
+                "My AI HUB",
+                `
+                    <p>
+                        Kişisel AI, oyun ve araç merkezi.
+                    </p>
+
+                    <p>
+                        <b>AI:</b>
+                        Groq API
+                    </p>
+
+                    <p>
+                        <b>Arayüz:</b>
+                        Tek HTML dosyası
+                    </p>
+
+                    <p>
+                        <b>Sürüm:</b>
+                        2.0
+                    </p>
+                `
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   API KEY
+========================================================= */
+
+function getAPIKey() {
+
+    const saved =
+        localStorage.getItem(
+            "myai_api_key"
+        );
+
+
+    if (
+        saved &&
+        saved.trim()
+    ) {
+        return saved.trim();
+    }
+
+
+    return "";
+}
+
+
+function updateAPIStatus() {
+
+    const key =
+        getAPIKey();
+
+
+    const badge =
+        $("apiBadge");
+
+
+    const home =
+        $("homeApiStatus");
+
+
+    if (key) {
+
+        badge.textContent =
+            "Hazır";
+
+        badge.className =
+            "badge success";
+
+
+        home.textContent =
+            "Groq API anahtarı ayarlanmış.";
+
+    }
+    else {
+
+        badge.textContent =
+            "Ayarlanmadı";
+
+        badge.className =
+            "badge danger";
+
+
+        home.textContent =
+            "API anahtarı Ayarlar bölümünden eklenebilir.";
+
+    }
+
+}
+
+
+$("saveApiButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            const input =
+                $("apiKeyInput");
+
+            const value =
+                input.value.trim();
+
+
+            if (
+                !value ||
+                value === API_PLACEHOLDER
+            ) {
+
+                showToast(
+                    "Geçerli bir API Key gir."
+                );
+
+                return;
+            }
+
+
+            localStorage.setItem(
+                "myai_api_key",
+                value
+            );
+
+
+            input.value = "";
+
+            updateAPIStatus();
+
+            showToast(
+                "API Key kaydedildi."
+            );
+
+        }
+    );
+
+
+$("removeApiButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "myai_api_key"
+            );
+
+            updateAPIStatus();
+
+            showToast(
+                "API Key silindi."
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   MODEL
+========================================================= */
+
+function loadModel() {
+
+    $("modelSelect").value =
+        currentModel;
+
+
+    $("currentModelLabel")
+        .textContent =
+            currentModel;
+
+}
+
+
+$("modelSelect")
+    .addEventListener(
+        "change",
+        event => {
+
+            currentModel =
+                event.target.value;
+
+
+            localStorage.setItem(
+                "myai_model",
+                currentModel
+            );
+
+
+            $("currentModelLabel")
+                .textContent =
+                    currentModel;
+
+
+            showToast(
+                "AI modeli değiştirildi."
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   AI MESAJLARI
+========================================================= */
+
+function addMessage(
+    content,
+    role
+) {
+
+    const container =
+        $("messages");
+
+
+    const wrapper =
+        document.createElement("div");
+
+
+    wrapper.className =
+        "message " + role;
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+
+    bubble.className =
+        "message-bubble";
+
+
+    /*
+       textContent kullanıyoruz.
+       Böylece AI cevabı HTML olarak
+       çalıştırılamaz.
+    */
+
+    bubble.textContent =
+        content;
+
+
+    wrapper.appendChild(
+        bubble
+    );
+
+
+    container.appendChild(
+        wrapper
+    );
+
+
+    container.scrollTop =
+        container.scrollHeight;
+
+
+    return wrapper;
+
+}
+
+
+function addTyping() {
+
+    const container =
+        $("messages");
+
+
+    const wrapper =
+        document.createElement("div");
+
+
+    wrapper.className =
+        "message ai";
+
+
+    const bubble =
+        document.createElement("div");
+
+
+    bubble.className =
+        "message-bubble typing";
+
+
+    bubble.innerHTML =
+        `
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        `;
+
+
+    wrapper.appendChild(
+        bubble
+    );
+
+
+    container.appendChild(
+        wrapper
+    );
+
+
+    container.scrollTop =
+        container.scrollHeight;
+
+
+    return wrapper;
+
+}
+
+
+/* =========================================================
+   YENİ SOHBET
+========================================================= */
+
+function startNewChat() {
+
+    conversation = [];
+
+
+    $("messages")
+        .innerHTML = "";
+
+
+    addMessage(
+        "Merhaba! 👋 Ben My AI. Sana nasıl yardımcı olabilirim?",
+        "ai"
+    );
+
+
+    saveConversation();
+
+
+    showToast(
+        "Yeni sohbet başladı."
+    );
+
+}
+
+
+$("newChatButton")
+    .addEventListener(
+        "click",
+        startNewChat
+    );
+
+
+$("clearChatButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            openModal(
+                "Sohbeti temizle",
+                `
+                    <p>
+                        Mevcut sohbeti silmek istiyor musun?
+                    </p>
+
+                    <div
+                        style="
+                            display:flex;
+                            gap:8px;
+                            margin-top:18px;
+                        "
+                    >
+
+                        <button
+                            class="primary-button"
+                            id="confirmClear"
+                        >
+                            Temizle
+                        </button>
+
+                        <button
+                            class="small-button"
+                            id="cancelClear"
+                        >
+                            Vazgeç
+                        </button>
+
+                    </div>
+                `
+            );
+
+
+            setTimeout(
+                () => {
+
+                    const confirm =
+                        $("confirmClear");
+
+                    const cancel =
+                        $("cancelClear");
+
+
+                    if (confirm) {
+
+                        confirm.onclick =
+                            () => {
+
+                                closeModal();
+
+                                startNewChat();
+
+                            };
+
+                    }
+
+
+                    if (cancel) {
+
+                        cancel.onclick =
+                            closeModal;
+
+                    }
+
+                },
+                0
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   SOHBET KAYDET
+========================================================= */
+
+function saveConversation() {
+
+    try {
+
+        localStorage.setItem(
+            "myai_conversation",
+            JSON.stringify(
+                conversation
+            )
+        );
+
+    }
+    catch (error) {
+
+        console.warn(
+            "Sohbet kaydedilemedi:",
+            error
+        );
+
+    }
+
+}
+
+
+function loadConversation() {
+
+    const saved =
+        localStorage.getItem(
+            "myai_conversation"
+        );
+
+
+    if (!saved) {
+
+        addMessage(
+            "Merhaba! 👋 Ben My AI. Bana istediğin şeyi sorabilirsin.",
+            "ai"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const data =
+            JSON.parse(saved);
+
+
+        if (
+            !Array.isArray(data) ||
+            data.length === 0
+        ) {
+
+            throw new Error();
+
+        }
+
+
+        conversation =
+            data;
+
+
+        $("messages")
+            .innerHTML = "";
+
+
+        data.forEach(
+            message => {
+
+                if (
+                    message.role === "user" ||
+                    message.role === "assistant"
+                ) {
+
+                    addMessage(
+                        message.content,
+                        message.role ===
+                        "user"
+                            ? "user"
+                            : "ai"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+    catch {
+
+        conversation = [];
+
+        addMessage(
+            "Merhaba! 👋 Ben My AI. Bana istediğin şeyi sorabilirsin.",
+            "ai"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CHAT GEÇMİŞİ
+========================================================= */
+
+function updateHistory() {
+
+    const list =
+        $("historyList");
+
+
+    list.innerHTML = "";
+
+
+    const userMessages =
+        conversation.filter(
+            message =>
+                message.role === "user"
+        );
+
+
+    userMessages
+        .slice(-10)
+        .reverse()
+        .forEach(
+            message => {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                button.className =
+                    "history-item";
+
+
+                button.textContent =
+                    message.content;
+
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        $("chatInput")
+                            .value =
+                            message.content;
+
+                        $("chatInput")
+                            .focus();
+
+                    }
+                );
+
+
+                list.appendChild(
+                    button
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   AI GÖNDER
+========================================================= */
+
+async function sendAIMessage() {
+
+    if (isSending) {
+        return;
+    }
+
+
+    const input =
+        $("chatInput");
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    const apiKey =
+        getAPIKey();
+
+
+    if (!apiKey) {
+
+        showToast(
+            "Önce Ayarlar bölümünden Groq API Key ekle."
+        );
+
+
+        openPage(
+            "settings"
+        );
+
+
+        return;
+
+    }
+
+
+    isSending = true;
+
+
+    addMessage(
+        text,
+        "user"
+    );
+
+
+    input.value = "";
+
+    input.style.height =
+        "auto";
+
+
+    conversation.push(
+        {
+            role: "user",
+            content: text
+        }
+    );
+
+
+    updateHistory();
+
+
+    const typing =
+        addTyping();
+
+
+    try {
+
+        const response =
+            await fetch(
+                GROQ_ENDPOINT,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            "Bearer " +
+                            apiKey
+                    },
+
+                    body:
+                        JSON.stringify(
+                            {
+                                model:
+                                    currentModel,
+
+                                messages: [
+                                    {
+                                        role:
+                                            "system",
+
+                                        content:
+                                            "Sen My AI adlı yardımcı asistansın. Kullanıcıyla Türkçe konuş. Cevapların doğal, açık ve faydalı olsun."
+                                    },
+
+                                    ...conversation
+                                ],
+
+                                temperature:
+                                    0.7,
+
+                                max_completion_tokens:
+                                    2048
+                            }
+                        )
+                }
+            );
+
+
+        let data = {};
+
+
+        try {
+
+            data =
+                await response.json();
+
+        }
+        catch {
+
+            data = {};
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data?.error?.message ||
+                `Groq API hatası: ${response.status}`
+            );
+
+        }
+
+
+        const answer =
+            data?.choices?.[0]?.message?.content;
+
+
+        if (!answer) {
+
+            throw new Error(
+                "AI cevap göndermedi."
+            );
+
+        }
+
+
+        typing.remove();
+
+
+        addMessage(
+            answer,
+            "ai"
+        );
+
+
+        conversation.push(
+            {
+                role:
+                    "assistant",
+
+                content:
+                    answer
+            }
+        );
+
+
+        saveConversation();
+
+        updateHistory();
+
+    }
+    catch (error) {
+
+        typing.remove();
+
+
+        addMessage(
+            "AI bağlantı hatası:\n" +
+            error.message,
+            "ai"
+        );
+
+    }
+    finally {
+
+        isSending = false;
+
+    }
+
+}
+
+
+$("sendButton")
+    .addEventListener(
+        "click",
+        sendAIMessage
+    );
+
+
+$("chatInput")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendAIMessage();
+
+            }
+
+        }
+    );
+
+
+$("chatInput")
+    .addEventListener(
+        "input",
+        event => {
+
+            event.target.style.height =
+                "auto";
+
+
+            event.target.style.height =
+                Math.min(
+                    event.target.scrollHeight,
+                    150
+                ) + "px";
+
+        }
+    );
+
+
+/* =========================================================
+   AI TAM EKRAN
+========================================================= */
+
+let aiFullscreen = false;
+
+
+$("fullscreenButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            aiFullscreen =
+                !aiFullscreen;
+
+
+            $("page-ai")
+                .classList.toggle(
+                    "ai-fullscreen",
+                    aiFullscreen
+                );
+
+
+            document.body
+                .classList.toggle(
+                    "ai-mode",
+                    aiFullscreen
+                );
+
+
+            $("fullscreenButton")
+                .textContent =
+                    aiFullscreen
+                        ? "✕"
+                        : "⛶";
+
+        }
+    );
+
+
+/* =========================================================
+   OYUNLAR
+========================================================= */
+
+document
+    .querySelectorAll("[data-game]")
+    .forEach(
+        card => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    openGame(
+                        card.dataset.game
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+function openGame(name) {
+
+    document
+        .querySelectorAll(".game-panel")
+        .forEach(
+            panel => {
+
+                panel.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    const panel =
+        $("game-" + name);
+
+
+    if (!panel) {
+        return;
+    }
+
+
+    panel.classList.add(
+        "active"
+    );
+
+
+    panel.scrollIntoView(
+        {
+            behavior: "smooth",
+            block: "start"
+        }
+    );
+
+
+    if (
+        name === "memory"
+    ) {
+
+        startMemoryGame();
+
+    }
+
+}
+
+
+/* =========================================================
+   SAYI TAHMİN
+========================================================= */
+
+let guessNumber =
+    Math.floor(
+        Math.random() * 100
+    ) + 1;
+
+
+let guessAttempts = 0;
+
+
+function resetGuessGame() {
+
+    guessNumber =
+        Math.floor(
+            Math.random() * 100
+        ) + 1;
+
+
+    guessAttempts = 0;
+
+
+    $("guessInput")
+        .value = "";
+
+
+    $("guessStatus")
+        .textContent =
+            "Yeni sayı hazır.";
+
+}
+
+
+$("guessButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            const value =
+                Number(
+                    $("guessInput").value
+                );
+
+
+            if (
+                !Number.isInteger(value) ||
+                value < 1 ||
+                value > 100
+            ) {
+
+                showToast(
+                    "1 ile 100 arasında bir sayı gir."
+                );
+
+                return;
+
+            }
+
+
+            guessAttempts++;
+
+
+            if (
+                value === guessNumber
+            ) {
+
+                $("guessStatus")
+                    .textContent =
+                        `🎉 Bildin! ${guessAttempts} denemede buldun.`;
+
+            }
+            else if (
+                value < guessNumber
+            ) {
+
+                $("guessStatus")
+                    .textContent =
+                        "⬆️ Daha büyük bir sayı.";
+
+            }
+            else {
+
+                $("guessStatus")
+                    .textContent =
+                        "⬇️ Daha küçük bir sayı.";
+
+            }
+
+        }
+    );
+
+
+$("resetGuessButton")
+    .addEventListener(
+        "click",
+        resetGuessGame
+    );
+
+
+/* =========================================================
+   TAŞ KAĞIT MAKAS
+========================================================= */
+
+const rpsChoices = [
+    "Taş",
+    "Kağıt",
+    "Makas"
+];
+
+
+document
+    .querySelectorAll("[data-rps]")
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const player =
+                        button.dataset.rps;
+
+
+                    const computer =
+                        rpsChoices[
+                            Math.floor(
+                                Math.random() *
+                                rpsChoices.length
+                            )
+                        ];
+
+
+                    let result;
+
+
+                    if (
+                        player === computer
+                    ) {
+
+                        result =
+                            "Berabere.";
+
+                    }
+                    else if (
+                        (
+                            player === "Taş" &&
+                            computer === "Makas"
+                        ) ||
+                        (
+                            player === "Kağıt" &&
+                            computer === "Taş"
+                        ) ||
+                        (
+                            player === "Makas" &&
+                            computer === "Kağıt"
+                        )
+                    ) {
+
+                        result =
+                            "Kazandın! 🎉";
+
+                    }
+                    else {
+
+                        result =
+                            "Bilgisayar kazandı.";
+
+                    }
+
+
+                    $("rpsStatus")
+                        .textContent =
+                            `Sen: ${player} | Bilgisayar: ${computer} — ${result}`;
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   MEMORY GAME
+========================================================= */
+
+let memoryValues = [];
+
+let memoryOpenCards = [];
+
+let memoryLocked = false;
+
+let memoryPairs = 0;
+
+
+function startMemoryGame() {
+
+    const symbols = [
+        "🍎",
+        "🚀",
+        "⭐",
+        "🎮"
+    ];
+
+
+    memoryValues = [
+        ...symbols,
+        ...symbols
+    ];
+
+
+    memoryValues.sort(
+        () => Math.random() - .5
+    );
+
+
+    memoryOpenCards = [];
+
+    memoryLocked = false;
+
+    memoryPairs = 0;
+
+
+    const grid =
+        $("memoryGrid");
+
+
+    grid.innerHTML = "";
+
+
+    memoryValues.forEach(
+        (symbol, index) => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "memory-card";
+
+
+            button.textContent =
+                "❓";
+
+
+            button.dataset.index =
+                index;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openMemoryCard(
+                        index,
+                        button
+                    );
+
+                }
+            );
+
+
+            grid.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    $("memoryStatus")
+        .textContent =
+            "0 / 4 eşleşme";
+
+}
+
+
+function openMemoryCard(
+    index,
+    button
+) {
+
+    if (
+        memoryLocked ||
+        button.classList.contains(
+            "matched"
+        ) ||
+        memoryOpenCards.some(
+            card =>
+                card.index === index
+        )
+    ) {
+        return;
+    }
+
+
+    button.textContent =
+        memoryValues[index];
+
+
+    memoryOpenCards.push(
+        {
+            index,
+            button
+        }
+    );
+
+
+    if (
+        memoryOpenCards.length !== 2
+    ) {
+        return;
+    }
+
+
+    memoryLocked = true;
+
+
+    const first =
+        memoryOpenCards[0];
+
+
+    const second =
+        memoryOpenCards[1];
+
+
+    if (
+        memoryValues[first.index] ===
+        memoryValues[second.index]
+    ) {
+
+        first.button.classList.add(
+            "matched"
+        );
+
+
+        second.button.classList.add(
+            "matched"
+        );
+
+
+        memoryPairs++;
+
+
+        $("memoryStatus")
+            .textContent =
+                `${memoryPairs} / 4 eşleşme`;
+
+
+        memoryOpenCards = [];
+
+        memoryLocked = false;
+
+
+        if (
+            memoryPairs === 4
+        ) {
+
+            showToast(
+                "🎉 Tüm kartları buldun!"
+            );
+
+        }
+
+    }
+    else {
+
+        setTimeout(
+            () => {
+
+                first.button.textContent =
+                    "❓";
+
+                second.button.textContent =
+                    "❓";
+
+                memoryOpenCards = [];
+
+                memoryLocked = false;
+
+            },
+            650
+        );
+
+    }
+
+}
+
+
+$("resetMemoryButton")
+    .addEventListener(
+        "click",
+        startMemoryGame
+    );
+
+
+/* =========================================================
+   REFLEKS
+========================================================= */
+
+let reactionState =
+    "idle";
+
+
+let reactionStartTime = 0;
+
+let reactionTimer = null;
+
+
+function resetReaction() {
+
+    clearTimeout(
+        reactionTimer
+    );
+
+
+    reactionState =
+        "idle";
+
+
+    $("reactionBox")
+        .className =
+            "reaction-box";
+
+
+    $("reactionText")
+        .textContent =
+            "Başlamak için bas";
+
+
+    $("reactionButton")
+        .textContent =
+            "Başlat";
+
+}
+
+
+$("reactionButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            if (
+                reactionState ===
+                "idle"
+            ) {
+
+                reactionState =
+                    "waiting";
+
+
+                $("reactionBox")
+                    .className =
+                        "reaction-box waiting";
+
+
+                $("reactionText")
+                    .textContent =
+                        "Bekle...";
+
+
+                $("reactionButton")
+                    .textContent =
+                        "Bekle";
+
+
+                const delay =
+                    1200 +
+                    Math.random() * 3000;
+
+
+                reactionTimer =
+                    setTimeout(
+                        () => {
+
+                            reactionState =
+                                "ready";
+
+
+                            reactionStartTime =
+                                performance.now();
+
+
+                            $("reactionBox")
+                                .className =
+                                    "reaction-box ready";
+
+
+                            $("reactionText")
+                                .textContent =
+                                    "ŞİMDİ BAS!";
+
+
+                            $("reactionButton")
+                                .textContent =
+                                    "BAS!";
+
+                        },
+                        delay
+                    );
+
+
+            }
+            else if (
+                reactionState ===
+                "waiting"
+            ) {
+
+                clearTimeout(
+                    reactionTimer
+                );
+
+
+                reactionState =
+                    "idle";
+
+
+                $("reactionBox")
+                    .className =
+                        "reaction-box";
+
+
+                $("reactionText")
+                    .textContent =
+                        "Çok erken! 😄";
+
+
+                $("reactionButton")
+                    .textContent =
+                        "Tekrar";
+
+
+            }
+            else if (
+                reactionState ===
+                "ready"
+            ) {
+
+                const reactionTime =
+                    Math.round(
+                        performance.now() -
+                        reactionStartTime
+                    );
+
+
+                reactionState =
+                    "idle";
+
+
+                $("reactionBox")
+                    .className =
+                        "reaction-box";
+
+
+                $("reactionText")
+                    .textContent =
+                        `${reactionTime} ms ⚡`;
+
+
+                $("reactionButton")
+                    .textContent =
+                        "Tekrar Oyna";
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ARAÇLAR MENÜSÜ
+========================================================= */
+
+document
+    .querySelectorAll("[data-tool]")
+    .forEach(
+        card => {
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    openTool(
+                        card.dataset.tool
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+function openTool(name) {
+
+    document
+        .querySelectorAll(".tool-view")
+        .forEach(
+            view => {
+
+                view.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    const target =
+        $("tool-" + name);
+
+
+    if (!target) {
+        return;
+    }
+
+
+    target.classList.add(
+        "active"
+    );
+
+
+    target.scrollIntoView(
+        {
+            behavior: "smooth",
+            block: "start"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+let calculatorExpression = "";
+
+
+function updateCalculator() {
+
+    const display =
+        $("calculatorDisplay");
+
+
+    display.textContent =
+        calculatorExpression ||
+        "0";
+
+}
+
+
+function calculatorInput(
+    value
+) {
+
+    if (
+        calculatorExpression.length >=
+        40
+    ) {
+        return;
+    }
+
+
+    calculatorExpression +=
+        value;
+
+
+    updateCalculator();
+
+}
+
+
+function calculatorClear() {
+
+    calculatorExpression = "";
+
+    updateCalculator();
+
+}
+
+
+function calculatorBackspace() {
+
+    calculatorExpression =
+        calculatorExpression.slice(
+            0,
+            -1
+        );
+
+
+    updateCalculator();
+
+}
+
+
+function calculatorEquals() {
+
+    if (
+        !calculatorExpression
+    ) {
+        return;
+    }
+
+
+    /*
+       Sadece hesap makinesinin oluşturabileceği
+       karakterlere izin veriyoruz.
+    */
+
+    if (
+        !/^[0-9+\-*/%.() ]+$/
+            .test(
+                calculatorExpression
+            )
+    ) {
+
+        calculatorClear();
+
+        showToast(
+            "Geçersiz işlem."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const result =
+            Function(
+                `"use strict"; return (${calculatorExpression})`
+            )();
+
+
+        if (
+            !Number.isFinite(result)
+        ) {
+            throw new Error();
+        }
+
+
+        calculatorExpression =
+            String(result);
+
+
+        updateCalculator();
+
+    }
+    catch {
+
+        calculatorExpression = "";
+
+        updateCalculator();
+
+        showToast(
+            "Hesaplama yapılamadı."
+        );
+
+    }
+
+}
+
+
+document
+    .querySelectorAll("[data-calc]")
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const value =
+                        button.dataset.calc;
+
+
+                    if (
+                        value === "clear"
+                    ) {
+
+                        calculatorClear();
+
+                    }
+                    else if (
+                        value === "backspace"
+                    ) {
+
+                        calculatorBackspace();
+
+                    }
+                    else if (
+                        value === "="
+                    ) {
+
+                        calculatorEquals();
+
+                    }
+                    else {
+
+                        calculatorInput(
+                            value
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   CALCULATOR KLAVYE
+========================================================= */
+
+document
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                !$("page-tools")
+                    .classList.contains(
+                        "active"
+                    )
+            ) {
+                return;
+            }
+
+
+            const allowed =
+                "0123456789+-*/.%";
+
+
+            if (
+                allowed.includes(
+                    event.key
+                )
+            ) {
+
+                calculatorInput(
+                    event.key
+                );
+
+            }
+
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                calculatorEquals();
+
+            }
+
+
+            if (
+                event.key === "Backspace"
+            ) {
+
+                calculatorBackspace();
+
+            }
+
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                calculatorClear();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   CONVERTER
+========================================================= */
+
+$("convertButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            const value =
+                Number(
+                    $("convertValue").value
+                );
+
+
+            if (
+                !Number.isFinite(value)
+            ) {
+
+                showToast(
+                    "Bir değer gir."
+                );
+
+                return;
+
+            }
+
+
+            const type =
+                $("convertType").value;
+
+
+            let result = 0;
+
+            let unit = "";
+
+
+            switch(type) {
+
+                case "m-cm":
+                    result =
+                        value * 100;
+                    unit =
+                        "cm";
+                    break;
+
+                case "cm-m":
+                    result =
+                        value / 100;
+                    unit =
+                        "m";
+                    break;
+
+                case "km-m":
+                    result =
+                        value * 1000;
+                    unit =
+                        "m";
+                    break;
+
+                case "m-km":
+                    result =
+                        value / 1000;
+                    unit =
+                        "km";
+                    break;
+
+                case "kg-g":
+                    result =
+                        value * 1000;
+                    unit =
+                        "g";
+                    break;
+
+                case "g-kg":
+                    result =
+                        value / 1000;
+                    unit =
+                        "kg";
+                    break;
+
+            }
+
+
+            $("convertResult")
+                .textContent =
+                    `${result} ${unit}`;
+
+        }
+    );
+
+
+/* =========================================================
+   STOPWATCH
+========================================================= */
+
+let stopwatchRunning =
+    false;
+
+
+let stopwatchStartTime =
+    0;
+
+
+let stopwatchElapsed =
+    0;
+
+
+let stopwatchInterval =
+    null;
+
+
+function formatStopwatch(
+    milliseconds
+) {
+
+    const totalSeconds =
+        Math.floor(
+            milliseconds / 1000
+        );
+
+
+    const hours =
+        Math.floor(
+            totalSeconds / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) /
+            60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    return (
+        String(hours).padStart(2,"0") +
+        ":" +
+        String(minutes).padStart(2,"0") +
+        ":" +
+        String(seconds).padStart(2,"0")
+    );
+
+}
+
+
+function updateStopwatch() {
+
+    let elapsed =
+        stopwatchElapsed;
+
+
+    if (
+        stopwatchRunning
+    ) {
+
+        elapsed +=
+            performance.now() -
+            stopwatchStartTime;
+
+    }
+
+
+    $("stopwatchDisplay")
+        .textContent =
+            formatStopwatch(
+                elapsed
+            );
+
+}
+
+
+$("stopwatchStart")
+    .addEventListener(
+        "click",
+        () => {
+
+            if (
+                stopwatchRunning
+            ) {
+                return;
+            }
+
+
+            stopwatchRunning =
+                true;
+
+
+            stopwatchStartTime =
+                performance.now();
+
+
+            stopwatchInterval =
+                setInterval(
+                    updateStopwatch,
+                    100
+                );
+
+        }
+    );
+
+
+$("stopwatchPause")
+    .addEventListener(
+        "click",
+        () => {
+
+            if (
+                !stopwatchRunning
+            ) {
+                return;
+            }
+
+
+            stopwatchElapsed +=
+                performance.now() -
+                stopwatchStartTime;
+
+
+            stopwatchRunning =
+                false;
+
+
+            clearInterval(
+                stopwatchInterval
+            );
+
+
+            stopwatchInterval =
+                null;
+
+
+            updateStopwatch();
+
+        }
+    );
+
+
+$("stopwatchReset")
+    .addEventListener(
+        "click",
+        () => {
+
+            stopwatchRunning =
+                false;
+
+
+            stopwatchElapsed =
+                0;
+
+
+            stopwatchStartTime =
+                0;
+
+
+            clearInterval(
+                stopwatchInterval
+            );
+
+
+            stopwatchInterval =
+                null;
+
+
+            updateStopwatch();
+
+        }
+    );
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+let countdownRemaining =
+    0;
+
+
+let countdownInterval =
+    null;
+
+
+function formatCountdown(
+    seconds
+) {
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    const remainingSeconds =
+        seconds % 60;
+
+
+    return (
+        String(minutes).padStart(2,"0") +
+        ":" +
+        String(
+            remainingSeconds
+        ).padStart(2,"0")
+    );
+
+}
+
+
+function updateCountdown() {
+
+    $("countdownDisplay")
+        .textContent =
+            formatCountdown(
+                countdownRemaining
+            );
+
+}
+
+
+$("countdownStart")
+    .addEventListener(
+        "click",
+        () => {
+
+            clearInterval(
+                countdownInterval
+            );
+
+
+            const input =
+                Number(
+                    $("countdownInput").value
+                );
+
+
+            if (
+                !Number.isInteger(input) ||
+                input <= 0
+            ) {
+
+                showToast(
+                    "Geçerli bir süre gir."
+                );
+
+                return;
+
+            }
+
+
+            countdownRemaining =
+                input;
+
+
+            updateCountdown();
+
+
+            countdownInterval =
+                setInterval(
+                    () => {
+
+                        countdownRemaining--;
+
+
+                        updateCountdown();
+
+
+                        if (
+                            countdownRemaining <= 0
+                        ) {
+
+                            clearInterval(
+                                countdownInterval
+                            );
+
+
+                            countdownInterval =
+                                null;
+
+
+                            showToast(
+                                "⏰ Süre doldu!"
+                            );
+
+                        }
+
+                    },
+                    1000
+                );
+
+        }
+    );
+
+
+$("countdownStop")
+    .addEventListener(
+        "click",
+        () => {
+
+            clearInterval(
+                countdownInterval
+            );
+
+
+            countdownInterval =
+                null;
+
+        }
+    );
+
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+function loadNotes() {
+
+    $("notesEditor")
+        .value =
+            localStorage.getItem(
+                "myai_notes"
+            ) || "";
+
+}
+
+
+$("saveNotesButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            localStorage.setItem(
+                "myai_notes",
+                $("notesEditor").value
+            );
+
+
+            showToast(
+                "Notlar kaydedildi."
+            );
+
+        }
+    );
+
+
+$("clearNotesButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            $("notesEditor")
+                .value = "";
+
+
+            localStorage.removeItem(
+                "myai_notes"
+            );
+
+
+            showToast(
+                "Notlar temizlendi."
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+$("globalSearch")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !== "Enter"
+            ) {
+                return;
+            }
+
+
+            const query =
+                event.target.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (!query) {
+                return;
+            }
+
+
+            if (
+                query.includes("ai") ||
+                query.includes("yapay")
+            ) {
+
+                openPage("ai");
+
+            }
+            else if (
+                query.includes("oyun")
+            ) {
+
+                openPage("games");
+
+            }
+            else if (
+                query.includes("araç") ||
+                query.includes("hesap") ||
+                query.includes("kronometre")
+            ) {
+
+                openPage("tools");
+
+            }
+            else if (
+                query.includes("not")
+            ) {
+
+                openPage("notes");
+
+            }
+            else if (
+                query.includes("ayar")
+            ) {
+
+                openPage("settings");
+
+            }
+            else {
+
+                showToast(
+                    "Sonuç bulunamadı."
+                );
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   BAŞLANGIÇ
+========================================================= */
+
+function initialize() {
+
+    loadTheme();
+
+    loadModel();
+
+    updateAPIStatus();
+
+    loadNotes();
+
+    loadConversation();
+
+    updateHistory();
+
+    updateCalculator();
+
+    updateStopwatch();
+
+    updateCountdown();
+
+}
+
+
+initialize();
+
+</script>
+
+</body>
+  </html>
