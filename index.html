@@ -560,125 +560,2107 @@ body.ai-fullscreen .fullscreen-exit{
     display:inline-flex;
 }
 
-/* Sports */
+/* =========================================================
+   SPORTS - COMPLETE
+========================================================= */
 
-.sports-toolbar{
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    padding-bottom:5px;
-    margin-bottom:16px;
+const FOOTBALL_BASE =
+    "https://v3.football.api-sports.io";
+
+let sportsInterval = null;
+let selectedTeam = null;
+let currentTeamDetail = "next";
+
+const FOLLOWED_TEAMS_KEY =
+    "my_ai_hub_followed_teams";
+
+
+/* =========================================================
+   API
+========================================================= */
+
+function footballHeaders(){
+
+    return {
+        "x-apisports-key":
+            getStore(STORE.football)
+    };
+
 }
 
-.sports-toolbar button{
-    white-space:nowrap;
+
+async function footballFetch(endpoint){
+
+    const key =
+        getStore(STORE.football);
+
+    if(!key){
+        throw new Error(
+            "API-Football API Key bulunamadı."
+        );
+    }
+
+    const response =
+        await fetch(
+            FOOTBALL_BASE + endpoint,
+            {
+                headers:
+                    footballHeaders()
+            }
+        );
+
+    let data;
+
+    try{
+        data = await response.json();
+    }catch(e){
+        throw new Error(
+            "API geçerli veri döndürmedi."
+        );
+    }
+
+    if(!response.ok){
+        throw new Error(
+            "API hatası: " +
+            response.status
+        );
+    }
+
+    if(
+        data.errors &&
+        Object.keys(data.errors).length
+    ){
+        throw new Error(
+            JSON.stringify(data.errors)
+        );
+    }
+
+    return data;
 }
 
-.live-banner{
-    padding:12px 15px;
-    background:rgba(231,76,60,.1);
-    border:1px solid rgba(231,76,60,.25);
-    color:var(--danger);
-    border-radius:14px;
-    margin-bottom:16px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+function updateSportsConfiguration(){
+
+    const key =
+        getStore(STORE.football);
+
+    const notice =
+        document.getElementById(
+            "sportsConfigNotice"
+        );
+
+    if(notice){
+        notice.style.display =
+            key ? "none" : "block";
+    }
+
+    const home =
+        document.getElementById(
+            "homeSportsStatus"
+        );
+
+    if(home){
+        home.textContent =
+            key
+            ? "● Bağlı"
+            : "API anahtarı bekleniyor";
+    }
+
+    if(key){
+        loadLiveMatches();
+        loadFollowedTeams();
+    }
 }
 
-.match{
-    padding:15px;
-    border-bottom:1px solid var(--border);
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function safeText(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
-.match:last-child{
-    border-bottom:0;
+
+function formatDate(date){
+
+    if(!date) return "";
+
+    return new Date(date)
+        .toLocaleString(
+            "tr-TR",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
 }
 
-.match-head{
-    display:flex;
-    justify-content:space-between;
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:12px;
+
+/* =========================================================
+   MATCH CARD
+========================================================= */
+
+function matchHTML(item){
+
+    const f =
+        item.fixture || {};
+
+    const t =
+        item.teams || {};
+
+    const g =
+        item.goals || {};
+
+    const s =
+        f.status || {};
+
+    const liveStatuses = [
+        "1H",
+        "HT",
+        "2H",
+        "ET",
+        "BT",
+        "P"
+    ];
+
+    const live =
+        liveStatuses.includes(
+            s.short
+        );
+
+    const home =
+        t.home || {};
+
+    const away =
+        t.away || {};
+
+    const homeScore =
+        g.home == null
+        ? "-"
+        : g.home;
+
+    const awayScore =
+        g.away == null
+        ? "-"
+        : g.away;
+
+    return `
+        <div class="match">
+
+            <div class="match-head">
+
+                <span>
+                    ${safeText(
+                        formatDate(f.date)
+                    )}
+                </span>
+
+                <span
+                    class="${
+                        live
+                        ? "status-live"
+                        : ""
+                    }">
+
+                    ${safeText(
+                        s.long || "Başlamadı"
+                    )}
+
+                    ${
+                        live &&
+                        s.elapsed
+                        ? " " +
+                          safeText(
+                              s.elapsed
+                          ) +
+                          "'"
+                        : ""
+                    }
+
+                </span>
+
+            </div>
+
+            <div class="teams">
+
+                <div class="team">
+
+                    ${
+                        home.logo
+                        ? `
+                            <img
+                                src="${safeText(
+                                    home.logo
+                                )}">
+                          `
+                        : ""
+                    }
+
+                    <span>
+                        ${safeText(
+                            home.name
+                        )}
+                    </span>
+
+                </div>
+
+                <div class="score">
+
+                    ${homeScore}
+                    -
+                    ${awayScore}
+
+                </div>
+
+                <div class="team">
+
+                    ${
+                        away.logo
+                        ? `
+                            <img
+                                src="${safeText(
+                                    away.logo
+                                )}">
+                          `
+                        : ""
+                    }
+
+                    <span>
+                        ${safeText(
+                            away.name
+                        )}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
 }
 
-.teams{
-    display:grid;
-    grid-template-columns:1fr 65px 1fr;
-    align-items:center;
-    gap:10px;
-    text-align:center;
+
+/* =========================================================
+   LIVE
+========================================================= */
+
+async function loadLiveMatches(){
+
+    const box =
+        document.getElementById(
+            "liveMatches"
+        );
+
+    if(!box) return;
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 Canlı maçlar yükleniyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/fixtures?live=all"
+            );
+
+        const matches =
+            data.response || [];
+
+        if(!matches.length){
+
+            box.innerHTML =
+                `<p class="muted">
+                    Şu anda canlı maç yok.
+                </p>`;
+
+        }else{
+
+            box.innerHTML =
+                matches
+                .map(matchHTML)
+                .join("");
+
+        }
+
+        const updated =
+            document.getElementById(
+                "sportsUpdated"
+            );
+
+        if(updated){
+
+            updated.textContent =
+                "Son güncelleme: " +
+                new Date()
+                .toLocaleTimeString(
+                    "tr-TR"
+                );
+
+        }
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
 }
 
-.team{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    font-weight:700;
+
+/* =========================================================
+   TODAY
+========================================================= */
+
+let todayMatchesCache = [];
+
+
+async function loadTodayMatches(){
+
+    const box =
+        document.getElementById(
+            "todayMatches"
+        );
+
+    if(!box) return;
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 Maçlar yükleniyor...
+        </p>`;
+
+    const now =
+        new Date();
+
+    const date =
+        now.getFullYear() +
+        "-" +
+        String(
+            now.getMonth()+1
+        ).padStart(2,"0") +
+        "-" +
+        String(
+            now.getDate()
+        ).padStart(2,"0");
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/fixtures?date=" +
+                date +
+                "&timezone=Europe/Istanbul"
+            );
+
+        todayMatchesCache =
+            data.response || [];
+
+        renderTodayMatches();
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
 }
 
-.team img{
-    width:28px;
-    height:28px;
-    object-fit:contain;
+
+function renderTodayMatches(){
+
+    const box =
+        document.getElementById(
+            "todayMatches"
+        );
+
+    if(!box) return;
+
+    const input =
+        document.getElementById(
+            "todayLeagueFilter"
+        );
+
+    const query =
+        input
+        ? input.value
+            .toLowerCase()
+            .trim()
+        : "";
+
+    const list =
+        todayMatchesCache.filter(
+            m => {
+
+                const name =
+                    m.league?.name ||
+                    "";
+
+                return !query ||
+                    name
+                    .toLowerCase()
+                    .includes(query);
+
+            }
+        );
+
+    if(!list.length){
+
+        box.innerHTML =
+            `<p class="muted">
+                Maç bulunamadı.
+            </p>`;
+
+        return;
+
+    }
+
+    box.innerHTML =
+        list
+        .map(matchHTML)
+        .join("");
 }
 
-.score{
-    font-size:22px;
-    font-weight:900;
+
+document.getElementById(
+    "todayLeagueFilter"
+)?.addEventListener(
+    "input",
+    renderTodayMatches
+);
+
+
+/* =========================================================
+   TEAM SEARCH
+========================================================= */
+
+async function searchTeams(){
+
+    const input =
+        document.getElementById(
+            "teamSearchInput"
+        );
+
+    const box =
+        document.getElementById(
+            "teamSearchResults"
+        );
+
+    const query =
+        input.value.trim();
+
+    if(query.length < 3){
+
+        box.innerHTML =
+            `<p class="muted">
+                En az 3 karakter yaz.
+            </p>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        `<p class="muted">
+            🔎 Takımlar aranıyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/teams?search=" +
+                encodeURIComponent(query)
+            );
+
+        const results =
+            data.response || [];
+
+        if(!results.length){
+
+            box.innerHTML =
+                `<p class="muted">
+                    Takım bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        box.innerHTML = "";
+
+        results
+        .slice(0,15)
+        .forEach(function(item){
+
+            const team =
+                item.team || {};
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "btn";
+
+            button.style.width =
+                "100%";
+
+            button.style.marginBottom =
+                "8px";
+
+            button.style.textAlign =
+                "left";
+
+            button.innerHTML = `
+
+                <span
+                    style="
+                    display:flex;
+                    align-items:center;
+                    gap:12px">
+
+                    ${
+                        team.logo
+                        ? `
+                        <img
+                            src="${safeText(
+                                team.logo
+                            )}"
+                            style="
+                            width:40px;
+                            height:40px;
+                            object-fit:contain">
+                        `
+                        : ""
+                    }
+
+                    <span>
+
+                        <strong>
+                            ${safeText(
+                                team.name
+                            )}
+                        </strong>
+
+                        <br>
+
+                        <small class="muted">
+
+                            ${safeText(
+                                team.country || ""
+                            )}
+
+                            · ID:
+                            ${safeText(
+                                team.id
+                            )}
+
+                        </small>
+
+                    </span>
+
+                </span>
+            `;
+
+            button.onclick =
+                () => selectTeam(team);
+
+            box.appendChild(button);
+
+        });
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
 }
 
-.status-live{
-    color:var(--danger);
-    font-size:11px;
-    font-weight:800;
+
+document.getElementById(
+    "searchTeamBtn"
+)?.addEventListener(
+    "click",
+    searchTeams
+);
+
+
+document.getElementById(
+    "teamSearchInput"
+)?.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Enter"){
+            searchTeams();
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SELECT TEAM
+========================================================= */
+
+function selectTeam(team){
+
+    selectedTeam =
+        team;
+
+    const card =
+        document.getElementById(
+            "selectedTeamCard"
+        );
+
+    card.style.display =
+        "block";
+
+    document.getElementById(
+        "selectedTeamName"
+    ).textContent =
+        team.name || "";
+
+    document.getElementById(
+        "selectedTeamCountry"
+    ).textContent =
+        team.country || "";
+
+    document.getElementById(
+        "selectedTeamLogo"
+    ).src =
+        team.logo || "";
+
+    updateFollowButton();
+
+    loadTeamDetail(
+        currentTeamDetail
+    );
+
+    card.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
 }
 
-.news-item{
-    padding:15px 0;
-    border-bottom:1px solid var(--border);
+
+/* =========================================================
+   TEAM DETAILS
+========================================================= */
+
+document.querySelectorAll(
+    ".team-detail-tab"
+)
+.forEach(function(button){
+
+    button.addEventListener(
+        "click",
+        function(){
+
+            document
+            .querySelectorAll(
+                ".team-detail-tab"
+            )
+            .forEach(
+                b =>
+                b.classList.remove(
+                    "primary"
+                )
+            );
+
+            this.classList.add(
+                "primary"
+            );
+
+            currentTeamDetail =
+                this.dataset.teamDetail;
+
+            loadTeamDetail(
+                currentTeamDetail
+            );
+
+        }
+    );
+
+});
+
+
+async function loadTeamDetail(type){
+
+    if(!selectedTeam) return;
+
+    if(type === "next"){
+
+        const data =
+            await footballFetch(
+                "/fixtures?team=" +
+                selectedTeam.id +
+                "&next=10"
+            );
+
+        renderTeamMatches(
+            data.response || [],
+            "📅 Yaklaşan Maçlar"
+        );
+
+        return;
+    }
+
+    if(type === "last"){
+
+        const data =
+            await footballFetch(
+                "/fixtures?team=" +
+                selectedTeam.id +
+                "&last=10"
+            );
+
+        renderTeamMatches(
+            data.response || [],
+            "🕘 Son Maçlar"
+        );
+
+        return;
+    }
+
+    if(type === "squad"){
+
+        await loadSquad();
+
+        return;
+    }
+
+    if(type === "transfers"){
+
+        await loadTeamTransfers();
+
+    }
+
 }
 
-.news-item:last-child{
-    border-bottom:0;
+
+function renderTeamMatches(
+    matches,
+    title
+){
+
+    const box =
+        document.getElementById(
+            "teamDetailResult"
+        );
+
+    if(!matches.length){
+
+        box.innerHTML =
+            `<p class="muted">
+                Maç bulunamadı.
+            </p>`;
+
+        return;
+    }
+
+    box.innerHTML = `
+
+        <h3>
+            ${title}
+        </h3>
+
+        <div class="divider"></div>
+
+        ${matches
+            .map(matchHTML)
+            .join("")}
+
+    `;
+
 }
 
-.news-item a{
-    color:var(--text);
-    text-decoration:none;
-    font-weight:700;
+
+/* =========================================================
+   SQUAD
+========================================================= */
+
+async function loadSquad(){
+
+    const box =
+        document.getElementById(
+            "teamDetailResult"
+        );
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 Kadro yükleniyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/players/squads?team=" +
+                selectedTeam.id
+            );
+
+        const response =
+            data.response || [];
+
+        if(!response.length){
+
+            box.innerHTML =
+                `<p class="muted">
+                    Kadro verisi bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        const squad =
+            response[0];
+
+        const players =
+            squad.players || [];
+
+        const groups = {};
+
+        players.forEach(
+            function(player){
+
+                const position =
+                    player.position ||
+                    "Diğer";
+
+                if(!groups[position]){
+                    groups[position] = [];
+                }
+
+                groups[position]
+                .push(player);
+
+            }
+        );
+
+        let html = "";
+
+        Object.keys(groups)
+        .forEach(
+            function(position){
+
+                html += `
+                    <h3
+                        style="
+                        margin-top:18px">
+                        ${safeText(
+                            position
+                        )}
+                    </h3>
+
+                    <div
+                        class="row"
+                        style="
+                        flex-wrap:wrap;
+                        margin-top:10px">
+                `;
+
+                groups[position]
+                .forEach(
+                    function(player){
+
+                        html += `
+                            <div
+                                class="card"
+                                style="
+                                min-width:220px;
+                                flex:1">
+
+                                <div
+                                    class="row">
+
+                                    ${
+                                        player.photo
+                                        ? `
+                                        <img
+                                            src="${safeText(
+                                                player.photo
+                                            )}"
+                                            style="
+                                            width:45px;
+                                            height:45px;
+                                            border-radius:50%;
+                                            object-fit:cover">
+                                        `
+                                        : ""
+                                    }
+
+                                    <div>
+
+                                        <strong>
+                                            ${safeText(
+                                                player.name
+                                            )}
+                                        </strong>
+
+                                        <br>
+
+                                        <small
+                                            class="muted">
+
+                                            ${
+                                                player.age
+                                                ? player.age +
+                                                  " yaş"
+                                                : ""
+                                            }
+
+                                            ${
+                                                player.number
+                                                ? " · #" +
+                                                  player.number
+                                                : ""
+                                            }
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        `;
+
+                    }
+                );
+
+                html += `
+                    </div>
+                `;
+
+            }
+        );
+
+        box.innerHTML =
+            html;
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
+
 }
 
-.news-meta{
-    margin-top:6px;
-    color:var(--muted);
-    font-size:12px;
+
+/* =========================================================
+   TRANSFERS
+========================================================= */
+
+async function loadTeamTransfers(){
+
+    const box =
+        document.getElementById(
+            "teamDetailResult"
+        );
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 Transferler yükleniyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/transfers?team=" +
+                selectedTeam.id
+            );
+
+        renderTransfers(
+            data.response || [],
+            box
+        );
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
+
 }
 
-.table-wrap{
-    overflow:auto;
+
+function renderTransfers(
+    transfers,
+    box
+){
+
+    if(!transfers.length){
+
+        box.innerHTML =
+            `<p class="muted">
+                Transfer verisi bulunamadı.
+            </p>`;
+
+        return;
+    }
+
+    let html = "";
+
+    transfers.forEach(
+        function(item){
+
+            const player =
+                item.player || {};
+
+            const transfer =
+                item.transfers || [];
+
+            transfer.forEach(
+                function(t){
+
+                    html += `
+
+                        <div
+                            class="card"
+                            style="
+                            margin-bottom:10px">
+
+                            <strong>
+                                ${safeText(
+                                    player.name ||
+                                    "Oyuncu"
+                                )}
+                            </strong>
+
+                            <div
+                                class="muted"
+                                style="
+                                margin-top:6px">
+
+                                ${
+                                    safeText(
+                                        t.teams?.out?.name ||
+                                        "?"
+                                    )
+                                }
+
+                                →
+
+                                ${
+                                    safeText(
+                                        t.teams?.in?.name ||
+                                        "?"
+                                    )
+                                }
+
+                            </div>
+
+                            <small
+                                class="muted">
+
+                                ${safeText(
+                                    t.type || ""
+                                )}
+
+                            </small>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+        }
+    );
+
+    box.innerHTML =
+        html ||
+        `<p class="muted">
+            Transfer bulunamadı.
+        </p>`;
 }
 
-.standings{
-    width:100%;
-    border-collapse:collapse;
-    min-width:550px;
+
+/* =========================================================
+   FOLLOWED TEAMS
+========================================================= */
+
+function getFollowedTeams(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                FOLLOWED_TEAMS_KEY
+            ) || "[]"
+        );
+
+    }catch(e){
+
+        return [];
+
+    }
+
 }
 
-.standings th,
-.standings td{
-    padding:10px;
-    border-bottom:1px solid var(--border);
-    text-align:left;
+
+function saveFollowedTeams(list){
+
+    localStorage.setItem(
+        FOLLOWED_TEAMS_KEY,
+        JSON.stringify(list)
+    );
+
 }
 
-.standings th{
-    color:var(--muted);
-    font-size:12px;
+
+function isFollowing(id){
+
+    return getFollowedTeams()
+        .some(
+            team =>
+            Number(team.id) ===
+            Number(id)
+        );
+
 }
 
+
+function updateFollowButton(){
+
+    if(!selectedTeam)
+        return;
+
+    const button =
+        document.getElementById(
+            "followTeamBtn"
+        );
+
+    if(!button)
+        return;
+
+    button.textContent =
+        isFollowing(
+            selectedTeam.id
+        )
+        ? "★ Takipte"
+        : "☆ Takip Et";
+
+}
+
+
+document.getElementById(
+    "followTeamBtn"
+)?.addEventListener(
+    "click",
+    function(){
+
+        if(!selectedTeam)
+            return;
+
+        let list =
+            getFollowedTeams();
+
+        if(isFollowing(
+            selectedTeam.id
+        )){
+
+            list =
+                list.filter(
+                    team =>
+                    Number(team.id) !==
+                    Number(selectedTeam.id)
+                );
+
+            toast(
+                "Takipten çıkarıldı."
+            );
+
+        }else{
+
+            list.push({
+                id:selectedTeam.id,
+                name:selectedTeam.name,
+                logo:selectedTeam.logo,
+                country:selectedTeam.country
+            });
+
+            toast(
+                "Takıma takip eklendi."
+            );
+
+        }
+
+        saveFollowedTeams(list);
+
+        updateFollowButton();
+
+        loadFollowedTeams();
+
+    }
+);
+
+
+function loadFollowedTeams(){
+
+    const box =
+        document.getElementById(
+            "followedTeamsList"
+        );
+
+    if(!box)
+        return;
+
+    const list =
+        getFollowedTeams();
+
+    if(!list.length){
+
+        box.innerHTML =
+            `<p class="muted">
+                Henüz takım takip etmiyorsun.
+            </p>`;
+
+        return;
+    }
+
+    box.innerHTML = "";
+
+    list.forEach(
+        function(team){
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "btn";
+
+            button.style.margin =
+                "4px";
+
+            button.innerHTML = `
+
+                ${
+                    team.logo
+                    ? `
+                    <img
+                        src="${safeText(
+                            team.logo
+                        )}"
+                        style="
+                        width:24px;
+                        height:24px;
+                        object-fit:contain;
+                        vertical-align:middle">
+                    `
+                    : ""
+                }
+
+                ${safeText(
+                    team.name
+                )}
+
+            `;
+
+            button.onclick =
+                () => selectTeam(team);
+
+            box.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   LEAGUE SEARCH
+========================================================= */
+
+async function searchLeagues(){
+
+    const input =
+        document.getElementById(
+            "leagueSearchInput"
+        );
+
+    const box =
+        document.getElementById(
+            "leagueSearchResults"
+        );
+
+    const query =
+        input.value.trim();
+
+    if(query.length < 3){
+
+        box.innerHTML =
+            `<p class="muted">
+                En az 3 karakter yaz.
+            </p>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        `<p class="muted">
+            🔎 Ligler aranıyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/leagues?search=" +
+                encodeURIComponent(query) +
+                "&season=2026"
+            );
+
+        const results =
+            data.response || [];
+
+        if(!results.length){
+
+            box.innerHTML =
+                `<p class="muted">
+                    Lig bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        box.innerHTML =
+            results
+            .slice(0,20)
+            .map(
+                function(item){
+
+                    const league =
+                        item.league || {};
+
+                    const country =
+                        item.country || {};
+
+                    return `
+
+                        <button
+                            class="btn"
+                            style="
+                            width:100%;
+                            text-align:left;
+                            margin-bottom:8px"
+                            onclick="selectLeague(
+                                ${Number(
+                                    league.id
+                                )},
+                                '${safeText(
+                                    league.name
+                                )}'
+                            )">
+
+                            🏆
+                            <strong>
+                                ${safeText(
+                                    league.name
+                                )}
+                            </strong>
+
+                            <span
+                                class="muted">
+
+                                ·
+                                ${safeText(
+                                    country.name ||
+                                    ""
+                                )}
+
+                            </span>
+
+                        </button>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
+
+}
+
+
+document.getElementById(
+    "searchLeagueBtn"
+)?.addEventListener(
+    "click",
+    searchLeagues
+);
+
+
+document.getElementById(
+    "leagueSearchInput"
+)?.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key==="Enter"){
+            searchLeagues();
+        }
+
+    }
+);
+
+
+/* =========================================================
+   LEAGUE SELECT
+========================================================= */
+
+function selectLeague(
+    id,
+    name
+){
+
+    selectedLeague = {
+        id:id,
+        name:name
+    };
+
+    const select =
+        document.getElementById(
+            "standingsLeagueSelect"
+        );
+
+    if(select){
+
+        const exists =
+            [...select.options]
+            .some(
+                o =>
+                Number(o.value) ===
+                Number(id)
+            );
+
+        if(!exists){
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                id;
+
+            option.textContent =
+                name;
+
+            select.appendChild(
+                option
+            );
+
+        }
+
+        select.value =
+            id;
+
+    }
+
+    toast(
+        name +
+        " seçildi."
+    );
+
+}
+
+
+/* =========================================================
+   STANDINGS
+========================================================= */
+
+async function loadStandings(){
+
+    const select =
+        document.getElementById(
+            "standingsLeagueSelect"
+        );
+
+    const seasonSelect =
+        document.getElementById(
+            "standingsSeasonSelect"
+        );
+
+    const box =
+        document.getElementById(
+            "standingsResult"
+        );
+
+    const league =
+        select.value;
+
+    const season =
+        seasonSelect.value;
+
+    if(!league){
+
+        box.innerHTML =
+            `<p class="muted">
+                Önce bir lig seç.
+            </p>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 Puan durumu yükleniyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/standings?league=" +
+                league +
+                "&season=" +
+                season
+            );
+
+        const groups =
+            data.response || [];
+
+        if(!groups.length){
+
+            box.innerHTML =
+                `<p class="muted">
+                    Bu sezon için puan durumu bulunamadı.
+                </p>`;
+
+            return;
+        }
+
+        let html = "";
+
+        groups.forEach(
+            function(group){
+
+                const rows =
+                    group.league?.standings?.[0] ||
+                    [];
+
+                html += `
+
+                    <h3>
+                        ${safeText(
+                            group.league?.name ||
+                            ""
+                        )}
+                    </h3>
+
+                    <table
+                        class="standings">
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>Takım</th>
+                                <th>O</th>
+                                <th>G</th>
+                                <th>B</th>
+                                <th>M</th>
+                                <th>AV</th>
+                                <th>P</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            ${rows.map(
+                                function(row){
+
+                                    const team =
+                                        row.team ||
+                                        {};
+
+                                    return `
+
+                                        <tr>
+
+                                            <td>
+                                                ${row.rank}
+                                            </td>
+
+                                            <td>
+                                                ${
+                                                    team.logo
+                                                    ? `
+                                                    <img
+                                                        src="${safeText(
+                                                            team.logo
+                                                        )}"
+                                                        style="
+                                                        width:24px;
+                                                        height:24px;
+                                                        object-fit:contain;
+                                                        vertical-align:middle">
+                                                    `
+                                                    : ""
+                                                }
+
+                                                ${safeText(
+                                                    team.name
+                                                )}
+                                            </td>
+
+                                            <td>
+                                                ${row.all?.played ?? 0}
+                                            </td>
+
+                                            <td>
+                                                ${row.all?.win ?? 0}
+                                            </td>
+
+                                            <td>
+                                                ${row.all?.draw ?? 0}
+                                            </td>
+
+                                            <td>
+                                                ${row.all?.lose ?? 0}
+                                            </td>
+
+                                            <td>
+                                                ${row.goalsDiff ?? 0}
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    ${row.points ?? 0}
+                                                </strong>
+                                            </td>
+
+                                        </tr>
+
+                                    `;
+
+                                }
+                            ).join("")}
+
+                        </tbody>
+
+                    </table>
+                `;
+
+            }
+        );
+
+        box.innerHTML =
+            html;
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
+
+}
+
+
+document.getElementById(
+    "loadStandings"
+)?.addEventListener(
+    "click",
+    loadStandings
+);
+
+
+/* =========================================================
+   TRANSFER SEARCH
+========================================================= */
+
+document.getElementById(
+    "searchTransferTeamBtn"
+)?.addEventListener(
+    "click",
+    async function(){
+
+        const input =
+            document.getElementById(
+                "transferSearchInput"
+            );
+
+        const box =
+            document.getElementById(
+                "transferTeamResults"
+            );
+
+        const query =
+            input.value.trim();
+
+        if(query.length < 3){
+
+            box.innerHTML =
+                `<p class="muted">
+                    En az 3 karakter yaz.
+                </p>`;
+
+            return;
+        }
+
+        box.innerHTML =
+            `<p class="muted">
+                🔎 Takım aranıyor...
+            </p>`;
+
+        try{
+
+            const data =
+                await footballFetch(
+                    "/teams?search=" +
+                    encodeURIComponent(
+                        query
+                    )
+                );
+
+            const results =
+                data.response || [];
+
+            box.innerHTML =
+                results
+                .slice(0,10)
+                .map(
+                    item => `
+
+                    <button
+                        class="btn"
+                        style="
+                        width:100%;
+                        text-align:left;
+                        margin-bottom:8px"
+                        onclick="loadTransfersByTeam(
+                            ${Number(
+                                item.team.id
+                            )},
+                            '${safeText(
+                                item.team.name
+                            )}'
+                        )">
+
+                        🔄
+                        ${safeText(
+                            item.team.name
+                        )}
+
+                    </button>
+
+                `
+                )
+                .join("");
+
+            if(!results.length){
+
+                box.innerHTML =
+                    `<p class="muted">
+                        Takım bulunamadı.
+                    </p>`;
+
+            }
+
+        }catch(error){
+
+            box.innerHTML =
+                `<p style="color:var(--danger)">
+                    ❌ ${safeText(
+                        error.message
+                    )}
+                </p>`;
+
+        }
+
+    }
+);
+
+
+async function loadTransfersByTeam(
+    teamId,
+    teamName
+){
+
+    const box =
+        document.getElementById(
+            "transfersResult"
+        );
+
+    box.innerHTML =
+        `<p class="muted">
+            🔄 ${safeText(
+                teamName
+            )} transferleri yükleniyor...
+        </p>`;
+
+    try{
+
+        const data =
+            await footballFetch(
+                "/transfers?team=" +
+                teamId
+            );
+
+        renderTransfers(
+            data.response || [],
+            box
+        );
+
+    }catch(error){
+
+        box.innerHTML =
+            `<p style="color:var(--danger)">
+                ❌ ${safeText(
+                    error.message
+                )}
+            </p>`;
+
+    }
+
+}
+
+
+/* =========================================================
+   SPORTS TABS
+========================================================= */
+
+document.querySelectorAll(
+    ".sports-tab"
+)
+.forEach(
+    function(button){
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                document
+                .querySelectorAll(
+                    ".sports-tab"
+                )
+                .forEach(
+                    b =>
+                    b.classList.remove(
+                        "primary"
+                    )
+                );
+
+                this.classList.add(
+                    "primary"
+                );
+
+                const tab =
+                    this.dataset.sportTab;
+
+                document.getElementById(
+                    "sportsLiveArea"
+                ).style.display =
+                    tab === "live"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsTodayArea"
+                ).style.display =
+                    tab === "today"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsTeamArea"
+                ).style.display =
+                    tab === "team"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsLeaguesArea"
+                ).style.display =
+                    tab === "leagues"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsStandingsArea"
+                ).style.display =
+                    tab === "standings"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsTransfersArea"
+                ).style.display =
+                    tab === "transfers"
+                    ? "block"
+                    : "none";
+
+                document.getElementById(
+                    "sportsNewsArea"
+                ).style.display =
+                    tab === "news"
+                    ? "block"
+                    : "none";
+
+
+                if(tab === "live"){
+                    loadLiveMatches();
+                }
+
+                if(tab === "today"){
+                    loadTodayMatches();
+                }
+
+                if(tab === "team"){
+                    loadFollowedTeams();
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+document.getElementById(
+    "refreshSports"
+)?.addEventListener(
+    "click",
+    function(){
+
+        const active =
+            document.querySelector(
+                ".sports-tab.primary"
+            );
+
+        const tab =
+            active?.dataset.sportTab ||
+            "live";
+
+        if(tab === "live")
+            loadLiveMatches();
+
+        if(tab === "today")
+            loadTodayMatches();
+
+        if(tab === "team")
+            loadFollowedTeams();
+
+        if(tab === "standings")
+            loadStandings();
+
+        toast(
+            "Spor verileri yenilendi."
+        );
+
+    }
+);
+
+
+/* =========================================================
+   AUTO LIVE UPDATE
+========================================================= */
+
+if(sportsInterval){
+
+    clearInterval(
+        sportsInterval
+    );
+
+}
+
+sportsInterval =
+    setInterval(
+        function(){
+
+            const page =
+                document.getElementById(
+                    "page-sports"
+                );
+
+            if(
+                page &&
+                page.classList.contains(
+                    "active"
+                ) &&
+                getStore(STORE.football)
+            ){
+
+                loadLiveMatches();
+
+            }
+
+        },
+        60000
+    );
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+updateSportsConfiguration();
 /* Calculator */
 
 .calculator{
